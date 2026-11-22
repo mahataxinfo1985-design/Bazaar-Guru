@@ -14,26 +14,7 @@ export function maskAccountNumber(accNumber: string): string {
   return `•••• •••• •••• ${last4}`;
 }
 
-export const DEFAULT_BANK_ACCOUNTS: BankAccount[] = [
-  {
-    id: 'bank_default_1',
-    businessId: 'default',
-    accountName: 'Primary Current Account',
-    bankName: 'HDFC Bank',
-    accountHolderName: 'Bazaar-Guru Commercial',
-    accountNumber: '50200012345678',
-    ifscCode: 'HDFC0001234',
-    branchName: 'MG Road Branch',
-    accountType: 'current',
-    openingBalance: 0,
-    openingBalanceDate: '2024-04-01',
-    currentBalance: 0,
-    linkedAccountId: 'acc_1020',
-    isDefault: true,
-    isActive: true,
-    createdAt: new Date().toISOString()
-  }
-];
+export const DEFAULT_BANK_ACCOUNTS: BankAccount[] = [];
 
 export const DEFAULT_CASH_ACCOUNTS: CashAccount[] = [
   {

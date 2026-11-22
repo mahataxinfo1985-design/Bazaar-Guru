@@ -24,7 +24,7 @@ export default function SyncStatusPill({
       <button
         onClick={onOpenHub}
         className="flex items-center gap-1.5 px-2 py-0.5 rounded-md hover:bg-white text-[12px] font-medium text-[#12263A] transition cursor-pointer"
-        title={isOnline ? 'Online - Cloud Sync Active' : 'Offline - Storing in IndexedDB'}
+        title={isOnline ? 'Online - Cloud Sync Active' : 'Offline - Changes Protected Locally'}
       >
         <span 
           className={`w-2 h-2 rounded-full ${isOnline ? 'bg-[#1E8E5A]' : 'bg-[#B7791F]'}`} 

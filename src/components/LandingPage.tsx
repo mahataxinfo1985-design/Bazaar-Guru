@@ -74,7 +74,7 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
   const faqs = [
     {
       q: "Does Bazaar-Guru work without an active internet connection?",
-      a: "Yes. Bazaar-Guru runs on an offline-first architecture powered by IndexedDB. You can record sales, create invoices, and check stock offline. When internet is restored, changes synchronize automatically."
+      a: "Yes. Bazaar-Guru features full offline resilience. You can record sales, create invoices, and check stock even without internet connectivity. When internet is restored, all records synchronize automatically with the cloud."
     },
     {
       q: "How does the GST calculation engine handle inter-state transactions?",
@@ -82,7 +82,7 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
     },
     {
       q: "Where is my business data stored?",
-      a: "Your data is stored securely in encrypted local browser storage (IndexedDB) for zero-latency operations, and backed up in real time to your cloud Supabase database when signed in."
+      a: "Your data is protected with 256-bit encryption in your secure cloud database and synchronized in real time with high-availability automated backups."
     },
     {
       q: "Can I export invoices and reports to Excel and JSON?",

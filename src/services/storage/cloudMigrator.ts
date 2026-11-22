@@ -52,7 +52,7 @@ export async function pushLocalDataToCloud(): Promise<MigrationSummary> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
-      summary.errors.push('Authentication required. Please sign in to sync with Supabase.');
+      summary.errors.push('Authentication required. Please sign in to sync with cloud.');
       summary.message = 'Not authenticated';
       return summary;
     }
@@ -191,8 +191,8 @@ export async function pushLocalDataToCloud(): Promise<MigrationSummary> {
 
     summary.success = summary.errors.length === 0;
     summary.message = summary.success 
-      ? 'All local business data successfully migrated to Supabase Cloud!'
-      : `Data migration completed with ${summary.errors.length} non-blocking notice(s).`;
+      ? 'All business data successfully synchronized with Cloud database!'
+      : `Data synchronization completed with ${summary.errors.length} non-blocking notice(s).`;
 
     return summary;
   } catch (err: any) {
@@ -252,7 +252,7 @@ export async function pullCloudDataToLocal(): Promise<{ success: boolean; messag
 
     return {
       success: true,
-      message: `Successfully synchronized ${totalPulled} records from Supabase cloud into offline cache.`,
+      message: `Successfully synchronized ${totalPulled} records from cloud database into workspace.`,
       count: totalPulled
     };
   } catch (err: any) {

@@ -391,7 +391,23 @@ describe('INVOICE PRO PHASE 3: PAYMENTS, RECEIPTS & BANKING MANAGEMENT TEST SUIT
     });
 
     it('3.3 should reject fund transfer when source and destination are the same account', () => {
-      const bank: BankAccount = { ...DEFAULT_BANK_ACCOUNTS[0], currentBalance: 50000 };
+      const bank: BankAccount = {
+        id: 'bank_test_01',
+        businessId: 'biz_01',
+        accountName: 'Test Bank Account',
+        bankName: 'State Bank',
+        accountHolderName: 'Test Biz',
+        accountNumber: '1234567890',
+        ifscCode: 'SBIN0001234',
+        accountType: 'current',
+        openingBalance: 0,
+        openingBalanceDate: '2026-04-01',
+        currentBalance: 50000,
+        linkedAccountId: 'acc_1020',
+        isDefault: true,
+        isActive: true,
+        createdAt: new Date().toISOString()
+      };
       const res = validateFundTransfer({
         sourceAccountId: bank.id,
         sourceAccountType: 'bank',

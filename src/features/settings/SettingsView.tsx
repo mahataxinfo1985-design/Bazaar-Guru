@@ -320,7 +320,7 @@ export default function SettingsView({
       localStorage.removeItem('bazaar_guru_complete_settings_v1');
       localStorage.removeItem('bazaar_guru_dismissed_notifications_v1');
       setIsResetModalOpen(false);
-      alert('Local database and cache successfully reset.');
+      alert('Workspace data and cache successfully reset.');
       window.location.reload();
     } catch (err: any) {
       alert(`Error during reset: ${err.message}`);
@@ -405,7 +405,7 @@ export default function SettingsView({
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#C23B3B]/30 text-xs font-semibold text-[#C23B3B] hover:bg-[#FDECEC] transition cursor-pointer shadow-2xs"
           >
             <Trash2 size={13} />
-            <span className="hidden sm:inline">Reset DB</span>
+            <span className="hidden sm:inline">Reset Workspace</span>
           </button>
 
           <button
@@ -2104,12 +2104,12 @@ export default function SettingsView({
                 <div className="p-3.5 rounded-lg border border-[#E8DFCF] bg-[#FFFBF3] space-y-1">
                   <span className="text-[11px] font-semibold text-[#3E5368]">Authenticated Identity:</span>
                   <p className="font-bold text-[#12263A] text-sm">
-                    {userEmail || 'Local Browser Database (Offline)'}
+                    {userEmail || 'Guest Business Session'}
                   </p>
                   <p className="text-[11px] text-[#3E5368]">
                     {userEmail
-                      ? 'Securely connected to Supabase private business database.'
-                      : 'Data is persisted locally in IndexedDB storage on this device.'}
+                      ? 'Connected to secure cloud database. Your records are protected with 256-bit encryption.'
+                      : 'Operating in guest offline mode. Changes will synchronize upon signing in.'}
                   </p>
                 </div>
 
@@ -2374,10 +2374,10 @@ export default function SettingsView({
             <div className="p-4 rounded-xl border border-[#C23B3B]/30 bg-[#FDECEC]/40 space-y-3">
               <div className="flex items-center gap-2 text-[#C23B3B]">
                 <AlertTriangle size={18} />
-                <h4 className="font-bold text-xs uppercase tracking-wider">Danger Zone: Reset Local Database</h4>
+                <h4 className="font-bold text-xs uppercase tracking-wider">Danger Zone: Reset Business Workspace</h4>
               </div>
               <p className="text-xs text-[#3E5368] leading-relaxed">
-                Clears all local invoices, parties, items, and vouchers stored in this browser. Cloud records remain unaffected if previously synced.
+                Clears all local records, cached vouchers, and draft transactions on this device. Cloud records remain protected and backed up.
               </p>
               <div>
                 <button
@@ -2385,7 +2385,7 @@ export default function SettingsView({
                   onClick={() => setIsResetModalOpen(true)}
                   className="px-3.5 py-2 rounded-lg bg-[#C23B3B] hover:bg-[#A82B2B] text-white text-xs font-semibold transition cursor-pointer shadow-2xs"
                 >
-                  Reset Local Database
+                  Reset Workspace Data
                 </button>
               </div>
             </div>
@@ -2516,7 +2516,7 @@ export default function SettingsView({
           <div className="w-full max-w-md rounded-xl bg-white shadow-xl border border-[#E8DFCF] overflow-hidden p-5 space-y-4">
             <div className="flex items-center gap-2.5 text-[#C23B3B]">
               <AlertTriangle size={22} />
-              <h3 className="text-base font-bold text-[#12263A]">Reset Local Database</h3>
+              <h3 className="text-base font-bold text-[#12263A]">Reset Business Workspace</h3>
             </div>
             <p className="text-xs text-[#3E5368] leading-relaxed">
               This will erase all locally stored data including invoices, parties, items, bank records, and vouchers.

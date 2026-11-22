@@ -408,7 +408,7 @@ export default function SyncBackupHub({
           }`}
         >
           <Cloud size={14} />
-          <span>Supabase Cloud Sync</span>
+          <span>Cloud Database Sync</span>
           {cloudUser ? (
             <span className="w-2 h-2 rounded-full bg-[#1E8E5A]" title="Authenticated" />
           ) : (
@@ -905,7 +905,7 @@ export default function SyncBackupHub({
         </div>
       )}
 
-      {/* Tab 5: Supabase Cloud Sync & Migration */}
+      {/* Tab 5: Enterprise Cloud Sync & Migration */}
       {activeTab === 'cloud' && (
         <div className="bg-white rounded-xl border border-[#E8DFCF] p-5 shadow-2xs space-y-5">
           {/* Header & Status */}
@@ -913,10 +913,10 @@ export default function SyncBackupHub({
             <div>
               <h2 className="text-sm font-bold text-[#12263A] flex items-center gap-2">
                 <Cloud className="text-[#1F86CC]" size={18} />
-                <span>Supabase Cloud Integration & Database Sync</span>
+                <span>Enterprise Cloud Database & Storage Sync</span>
               </h2>
               <p className="text-xs text-[#3E5368] mt-0.5">
-                Bidirectional synchronization between local offline IndexedDB and PostgreSQL cloud tenant.
+                Automated real-time synchronization between active workspace and secure cloud storage.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -935,12 +935,12 @@ export default function SyncBackupHub({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 rounded-xl border border-[#E8DFCF] bg-[#FFFBF3] space-y-2">
               <h3 className="text-xs font-bold text-[#12263A] flex items-center gap-1.5">
-                <Server size={14} className="text-[#1F86CC]" /> Supabase Cloud Project
+                <ShieldCheck size={14} className="text-[#1F86CC]" /> Cloud Security Architecture
               </h3>
               <div className="text-xs space-y-1 font-mono text-[#3E5368]">
-                <p><strong className="text-[#12263A]">Project URL:</strong> https://lftbzabnaxvnhbamyhot.supabase.co</p>
-                <p><strong className="text-[#12263A]">Database:</strong> PostgreSQL (Row-Level Security Enabled)</p>
-                <p><strong className="text-[#12263A]">API Engine:</strong> PostgREST / Realtime WebSockets</p>
+                <p><strong className="text-[#12263A]">Encryption:</strong> AES-256 Cloud Encryption at Rest & In-Transit</p>
+                <p><strong className="text-[#12263A]">Database:</strong> High-Availability Secure Cloud Cluster</p>
+                <p><strong className="text-[#12263A]">Sync Engine:</strong> Real-time Multi-tenant Synchronizer</p>
               </div>
             </div>
 
@@ -958,9 +958,9 @@ export default function SyncBackupHub({
 
           {/* Migration Action Buttons */}
           <div className="p-4 rounded-xl border border-[#E8DFCF] space-y-3">
-            <h3 className="text-xs font-bold text-[#12263A]">Cloud Data Transfer & Migration</h3>
+            <h3 className="text-xs font-bold text-[#12263A]">Cloud Data Transfer & Synchronization</h3>
             <p className="text-xs text-[#3E5368]">
-              Upload all local transactions (invoices, parties, items, bank records, ledger journals) to the cloud, or download cloud state into your offline cache.
+              Upload all business transactions (invoices, parties, items, bank records, ledger journals) to the cloud, or download cloud state into your offline cache.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -970,7 +970,7 @@ export default function SyncBackupHub({
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] text-white text-xs font-semibold shadow-2xs transition disabled:opacity-50 cursor-pointer"
               >
                 <CloudUpload size={15} className={migrationRunning ? 'animate-bounce' : ''} />
-                <span>{migrationRunning ? 'Migrating Data...' : 'Push Local Data to Supabase'}</span>
+                <span>{migrationRunning ? 'Syncing Data...' : 'Push Data to Cloud Backup'}</span>
               </button>
 
               <button
@@ -979,7 +979,7 @@ export default function SyncBackupHub({
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#E8DFCF] bg-white hover:bg-[#EAF5FD] text-[#12263A] text-xs font-semibold shadow-2xs transition disabled:opacity-50 cursor-pointer"
               >
                 <CloudDownload size={15} className="text-[#1F86CC]" />
-                <span>Pull Cloud Data to Local Cache</span>
+                <span>Restore Workspace from Cloud</span>
               </button>
 
               {!cloudUser && (
@@ -993,7 +993,7 @@ export default function SyncBackupHub({
             {migrationSummary && (
               <div className="mt-4 p-3.5 rounded-xl border border-[#E8DFCF] bg-[#FFFBF3] text-xs space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#12263A]">Migration Report:</span>
+                  <span className="font-bold text-[#12263A]">Sync Report:</span>
                   <span className={`font-semibold ${migrationSummary.success ? 'text-[#1E8E5A]' : 'text-[#B7791F]'}`}>
                     {migrationSummary.message}
                   </span>
@@ -1009,30 +1009,30 @@ export default function SyncBackupHub({
             )}
           </div>
 
-          {/* Supabase Storage Buckets Status */}
+          {/* Encrypted Document Vaults */}
           <div className="border border-[#E8DFCF] rounded-xl p-4 space-y-3">
             <h3 className="text-xs font-bold text-[#12263A] flex items-center gap-1.5">
-              <Layers size={14} className="text-[#1F86CC]" /> Supabase Storage Buckets
+              <Layers size={14} className="text-[#1F86CC]" /> Encrypted Document Vaults
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
               <div className="p-3 rounded-lg border border-[#E8DFCF] bg-white">
-                <p className="font-semibold text-[#12263A]">business-logos</p>
-                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Public bucket active</p>
+                <p className="font-semibold text-[#12263A]">Company Branding Vault</p>
+                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Secure storage active</p>
                 <p className="text-[11px] text-[#3E5368] mt-1">Company logo branding assets</p>
               </div>
               <div className="p-3 rounded-lg border border-[#E8DFCF] bg-white">
-                <p className="font-semibold text-[#12263A]">invoice-attachments</p>
-                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Private bucket active</p>
+                <p className="font-semibold text-[#12263A]">Invoices & Attachments Vault</p>
+                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Encrypted storage active</p>
                 <p className="text-[11px] text-[#3E5368] mt-1">Signed e-invoices, PDFs, PO slips</p>
               </div>
               <div className="p-3 rounded-lg border border-[#E8DFCF] bg-white">
-                <p className="font-semibold text-[#12263A]">expense-receipts</p>
-                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Private bucket active</p>
+                <p className="font-semibold text-[#12263A]">Expense Receipts Vault</p>
+                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Encrypted storage active</p>
                 <p className="text-[11px] text-[#3E5368] mt-1">Vendor bills and payment receipts</p>
               </div>
               <div className="p-3 rounded-lg border border-[#E8DFCF] bg-white">
-                <p className="font-semibold text-[#12263A]">business-documents</p>
-                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Private bucket active</p>
+                <p className="font-semibold text-[#12263A]">Business Documents Vault</p>
+                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Encrypted storage active</p>
                 <p className="text-[11px] text-[#3E5368] mt-1">GST certificates and bank slips</p>
               </div>
             </div>

@@ -121,8 +121,11 @@ import { getUnresolvedConflicts } from './services/sync/conflictService';
 import { registerCurrentDevice } from './services/sync/deviceService';
 
 export default function App() {
-  // Navigation & UI State - Default to 'landing' for unauthenticated visitors
-  const [currentTab, setCurrentTab] = useState<string>('landing');
+  // Navigation & UI State - Persist active view across tab switches
+  const [currentTab, setCurrentTab] = useState<string>(() => {
+    return sessionStorage.getItem('bg_active_tab') || 'landing';
+  });
+  const currentUserIdRef = useRef<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [quickActionMenuOpen, setQuickActionMenuOpen] = useState(false);
@@ -164,7 +167,7 @@ export default function App() {
   const [stockAdjustmentModalOpen, setStockAdjustmentModalOpen] = useState(false);
 
   // Banking & Treasury State
-  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>(DEFAULT_BANK_ACCOUNTS);
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
   const [cashAccounts, setCashAccounts] = useState<CashAccount[]>(DEFAULT_CASH_ACCOUNTS);
   const [fundTransfers, setFundTransfers] = useState<FundTransfer[]>([]);
   const [chequeRecords, setChequeRecords] = useState<ChequeRecord[]>([]);
@@ -364,6 +367,8 @@ export default function App() {
       setExpenses(cloudExpenses || []);
       setPaymentVouchers(cloudVouchers || []);
       setJournalEntries(cloudJournals || []);
+      // Filter out any stale mock bank accounts
+      setBankAccounts(prev => prev.filter(ba => ba.id !== 'bank_default_1' && ba.accountNumber !== '50200012345678'));
       if (cloudAccounts && cloudAccounts.length > 0) {
         setAccounts(cloudAccounts);
       }
@@ -424,8 +429,10 @@ export default function App() {
         }
 
         // Authenticated user -> Load their authoritative business records from Supabase
+        currentUserIdRef.current = initialSession.user.id;
         await loadCloudBusinessData(initialSession.user.id, initialSession.user);
-        setCurrentTab('dashboard');
+        const savedTab = sessionStorage.getItem('bg_active_tab');
+        setCurrentTab(savedTab && savedTab !== 'landing' ? savedTab : 'dashboard');
       } catch (err) {
         console.error('Failed to bootstrap application:', err);
         if (isMounted) setCurrentTab('landing');
@@ -447,14 +454,27 @@ export default function App() {
     // Setup Auth listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!isMounted) return;
+      const prevUserId = currentUserIdRef.current;
       setSession(newSession);
       setUser(newSession?.user ?? null);
 
       if ((event === 'SIGNED_IN' || event === 'USER_UPDATED') && newSession?.user) {
-        await loadCloudBusinessData(newSession.user.id, newSession.user);
-        setCurrentTab('dashboard');
+        // Prevent unnecessary full reload when user returns to or focuses the browser tab
+        if (newSession.user.id !== prevUserId) {
+          currentUserIdRef.current = newSession.user.id;
+          await loadCloudBusinessData(newSession.user.id, newSession.user);
+        }
+        // Retain user's current view if they were already inside the application
+        setCurrentTab(prev => {
+          if (prev === 'landing') {
+            const savedTab = sessionStorage.getItem('bg_active_tab');
+            return savedTab && savedTab !== 'landing' ? savedTab : 'dashboard';
+          }
+          return prev;
+        });
         setIsAuthModalOpen(false);
       } else if (event === 'SIGNED_OUT') {
+        currentUserIdRef.current = null;
         setUser(null);
         setSession(null);
         setInvoices([]);
@@ -463,6 +483,7 @@ export default function App() {
         setExpenses([]);
         setPaymentVouchers([]);
         setJournalEntries([]);
+        setBankAccounts([]);
         setProfile(DEFAULT_BUSINESS_PROFILE);
         const db = await getIDB().catch(() => null);
         if (db) {
@@ -471,6 +492,7 @@ export default function App() {
             db.clear('items').catch(() => {}),
             db.clear('invoices').catch(() => {}),
             db.clear('expenses').catch(() => {}),
+            db.clear('bank_accounts').catch(() => {}),
             db.clear('notifications').catch(() => {}),
           ]);
         }
@@ -480,6 +502,7 @@ export default function App() {
         localStorage.removeItem('invoice_pro_invoices');
         localStorage.removeItem('bazaar_guru_complete_settings_v1');
         localStorage.removeItem('bazaar_guru_dismissed_notifications_v1');
+        sessionStorage.removeItem('bg_active_tab');
         setCurrentTab('landing');
       }
     });
@@ -491,6 +514,15 @@ export default function App() {
       subscription.unsubscribe();
     };
   }, []);
+
+  // Sync active view into session storage to preserve state across tab switches
+  useEffect(() => {
+    if (currentTab && currentTab !== 'landing') {
+      sessionStorage.setItem('bg_active_tab', currentTab);
+    } else if (currentTab === 'landing') {
+      sessionStorage.removeItem('bg_active_tab');
+    }
+  }, [currentTab]);
 
   // Sync background runner
   const triggerSync = async () => {

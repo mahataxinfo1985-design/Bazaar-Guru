@@ -719,7 +719,12 @@ export async function initializeLocalDatabase(): Promise<{
 
   // Bank Accounts
   let bankAccounts = await db.getAll('bank_accounts');
-  if (bankAccounts.length === 0) {
+  // Purge legacy mock bank account (bank_default_1 / 50200012345678)
+  if (bankAccounts.some(ba => ba.id === 'bank_default_1' || ba.accountNumber === '50200012345678')) {
+    await db.delete('bank_accounts', 'bank_default_1').catch(() => {});
+    bankAccounts = bankAccounts.filter(ba => ba.id !== 'bank_default_1' && ba.accountNumber !== '50200012345678');
+  }
+  if (bankAccounts.length === 0 && DEFAULT_BANK_ACCOUNTS.length > 0) {
     bankAccounts = DEFAULT_BANK_ACCOUNTS;
     const tx = db.transaction('bank_accounts', 'readwrite');
     for (const ba of bankAccounts) {
