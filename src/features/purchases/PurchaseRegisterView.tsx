@@ -103,7 +103,7 @@ export default function PurchaseRegisterView({
 
       {/* Table */}
       <div className="rounded-xl border border-[#E8DFCF] bg-white shadow-xs overflow-visible">
-        <div className="overflow-x-auto min-h-[280px]">
+        <div className="overflow-x-auto min-h-[360px] pb-24">
           <table className="w-full text-left border-collapse text-[13px]">
             <thead>
               <tr className="bg-[#FFFBF3] border-b border-[#E8DFCF] text-[#3E5368] text-[12px] font-semibold">
@@ -129,12 +129,14 @@ export default function PurchaseRegisterView({
                   const party = parties.find((p) => p.id === inv.partyId);
                   const isCancelled = inv.status === 'Cancelled';
                   const isMenuOpen = openMenuId === inv.id;
-                  const openUpwards = idx >= Math.max(0, filteredPurchases.length - 2);
+                  const openUpwards = filteredPurchases.length > 4 && idx >= filteredPurchases.length - 2;
 
                   return (
                     <tr
                       key={inv.id}
-                      className={`hover:bg-[#FFFBF3] transition-colors ${
+                      className={`hover:bg-[#FFFBF3] transition-colors relative ${
+                        isMenuOpen ? 'z-40' : 'z-0'
+                      } ${
                         isCancelled ? 'opacity-70 bg-[#FDECEC]/30' : ''
                       }`}
                     >
@@ -190,7 +192,7 @@ export default function PurchaseRegisterView({
                             </button>
                           )}
 
-                          <div className="relative">
+                          <div className={`relative ${isMenuOpen ? 'z-50' : 'z-10'}`}>
                             <button
                               onClick={() => setOpenMenuId(isMenuOpen ? null : inv.id)}
                               className="p-1.5 hover:bg-[#EAF5FD] text-[#3E5368] hover:text-[#12263A] rounded-md transition cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center"

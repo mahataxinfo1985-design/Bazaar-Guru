@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   LayoutDashboard, Receipt, ShoppingCart, Landmark, Users, 
-  Boxes, BookOpen, BarChart3, Wallet, CloudUpload, Settings, 
+  Boxes, BookOpen, BarChart3, Wallet, Settings, 
   X, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
@@ -36,7 +36,6 @@ export default function Sidebar({
     { id: 'accounting', label: 'Accounting & Ledgers', icon: BookOpen },
     { id: 'reports', label: 'GST & Sales Reports', icon: BarChart3 },
     { id: 'expenses', label: 'Expenses', icon: Wallet },
-    { id: 'sync-backup', label: 'Sync & Backup', icon: CloudUpload },
     { id: 'settings', label: 'Business Profile', icon: Settings },
   ];
 

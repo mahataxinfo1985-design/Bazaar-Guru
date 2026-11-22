@@ -18,7 +18,7 @@ import {
   BusinessUser, BusinessNumberingConfig
 } from '../../types/workspace';
 import { DEFAULT_WAREHOUSE } from '../inventory/warehouseService';
-import { DEFAULT_BUSINESS_PROFILE, MOCK_PARTIES, MOCK_ITEMS, MOCK_INVOICES } from '../../data/mockData';
+import { DEFAULT_BUSINESS_PROFILE } from '../../data/mockData';
 import { generateDefaultAccounts } from '../accounting/chartOfAccounts';
 import { createSalesInvoiceJournalEntry, createPurchaseInvoiceJournalEntry } from '../accounting/journalEngine';
 import { DEFAULT_ACCOUNTING_PERIODS } from '../accounting/periodService';
@@ -557,9 +557,9 @@ export async function initializeLocalDatabase(): Promise<{
   if (typeof indexedDB === 'undefined') {
     // Node.js / test environment
     const profile = DEFAULT_BUSINESS_PROFILE;
-    const parties = [...MOCK_PARTIES];
-    const items = [...MOCK_ITEMS];
-    const invoices = [...MOCK_INVOICES];
+    const parties: Party[] = [];
+    const items: Item[] = [];
+    const invoices: Invoice[] = [];
     const accounts = generateDefaultAccounts('local_business');
     const accountingPeriods = [...DEFAULT_ACCOUNTING_PERIODS];
     const bankAccounts = [...DEFAULT_BANK_ACCOUNTS];
@@ -617,36 +617,42 @@ export async function initializeLocalDatabase(): Promise<{
   let parties = await db.getAll('parties');
   if (parties.length === 0) {
     const saved = localStorage.getItem('invoice_pro_parties');
-    parties = saved ? JSON.parse(saved) : MOCK_PARTIES;
-    const tx = db.transaction('parties', 'readwrite');
-    for (const p of parties) {
-      await tx.store.put(p);
+    parties = saved ? JSON.parse(saved) : [];
+    if (parties.length > 0) {
+      const tx = db.transaction('parties', 'readwrite');
+      for (const p of parties) {
+        await tx.store.put(p);
+      }
+      await tx.done;
     }
-    await tx.done;
   }
 
   // Items
   let items = await db.getAll('items');
   if (items.length === 0) {
     const saved = localStorage.getItem('invoice_pro_items');
-    items = saved ? JSON.parse(saved) : MOCK_ITEMS;
-    const tx = db.transaction('items', 'readwrite');
-    for (const it of items) {
-      await tx.store.put(it);
+    items = saved ? JSON.parse(saved) : [];
+    if (items.length > 0) {
+      const tx = db.transaction('items', 'readwrite');
+      for (const it of items) {
+        await tx.store.put(it);
+      }
+      await tx.done;
     }
-    await tx.done;
   }
 
   // Invoices
   let invoices = await db.getAll('invoices');
   if (invoices.length === 0) {
     const saved = localStorage.getItem('invoice_pro_invoices');
-    invoices = saved ? JSON.parse(saved) : MOCK_INVOICES;
-    const tx = db.transaction('invoices', 'readwrite');
-    for (const inv of invoices) {
-      await tx.store.put(inv);
+    invoices = saved ? JSON.parse(saved) : [];
+    if (invoices.length > 0) {
+      const tx = db.transaction('invoices', 'readwrite');
+      for (const inv of invoices) {
+        await tx.store.put(inv);
+      }
+      await tx.done;
     }
-    await tx.done;
   }
 
   // Expenses

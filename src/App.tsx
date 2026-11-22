@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Menu, Wifi, WifiOff, RefreshCw, Plus, CreditCard, Search, RotateCcw,
-  ChevronDown, Receipt, ShoppingCart, Users, Package
+  ChevronDown, Receipt, ShoppingCart, Users, Package, LogOut, Settings
 } from 'lucide-react';
 import { 
   Invoice, Party, Item, Expense, BusinessProfile, InvoiceStatus, PaymentStatus, PartyType 
@@ -18,6 +18,15 @@ import {
 import { 
   enqueueMutation, syncPendingMutations, getPendingMutations 
 } from './services/storage/syncQueue';
+
+// Supabase Direct Cloud API
+import { 
+  fetchProfile, fetchParties, fetchItems, fetchInvoices, 
+  fetchExpenses, fetchAccounts, fetchJournalEntries, fetchPaymentVouchers,
+  upsertInvoice, upsertParty, upsertItem, upsertExpense, 
+  insertPaymentVoucher, softDeleteInvoice, deleteParty, deleteItem, deleteExpense,
+  upsertProfile
+} from './lib/db';
 
 // Inventory & Stock Tracking
 import { 
@@ -104,8 +113,6 @@ import { BankingView } from './features/banking/BankingView';
 import ReportsView from './features/reports/ReportsView';
 import ExpensesView from './features/expenses/ExpensesView';
 import SettingsView from './features/settings/SettingsView';
-import SyncBackupHub from './features/settings/SyncBackupHub';
-import SyncStatusPill from './components/SyncStatusPill';
 import NotificationCenter from './components/NotificationCenter';
 import GlobalSearchModal from './components/modals/GlobalSearchModal';
 import ReturnModal from './components/modals/ReturnModal';
@@ -114,17 +121,20 @@ import { getUnresolvedConflicts } from './services/sync/conflictService';
 import { registerCurrentDevice } from './services/sync/deviceService';
 
 export default function App() {
-  // Navigation & UI State
-  const [currentTab, setCurrentTab] = useState<string>('dashboard');
+  // Navigation & UI State - Default to 'landing' for unauthenticated visitors
+  const [currentTab, setCurrentTab] = useState<string>('landing');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [quickActionMenuOpen, setQuickActionMenuOpen] = useState(false);
   const quickActionRef = useRef<HTMLDivElement>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [pendingSyncCount, setPendingSyncCount] = useState(0);
   const [conflictCount, setConflictCount] = useState(0);
   const [isSyncing, setIsSyncing] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [session, setSession] = useState<any>(null);
 
   // Business Data State
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -255,16 +265,35 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, []);
 
-  // Close quick action menu on outside click
+  // Close quick action & user menus on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (quickActionRef.current && !quickActionRef.current.contains(e.target as Node)) {
         setQuickActionMenuOpen(false);
       }
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Real Sign Out action
+  const handleSignOut = async () => {
+    if (confirm('Are you sure you want to sign out from Bazaar-Guru?')) {
+      await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
+      setInvoices([]);
+      setParties([]);
+      setItems([]);
+      setExpenses([]);
+      setPaymentVouchers([]);
+      setJournalEntries([]);
+      setCurrentTab('landing');
+    }
+  };
 
   // Refresh pending mutation count and conflicts
   const refreshPendingCount = useCallback(async () => {
@@ -282,50 +311,78 @@ export default function App() {
     }
   }, []);
 
-  // Initialize Local IndexedDB on startup
+  // Cloud-First: Authoritative Data Loading from Supabase
+  const loadCloudBusinessData = async (userId: string) => {
+    try {
+      const [
+        cloudProfile,
+        cloudParties,
+        cloudItems,
+        cloudInvoices,
+        cloudExpenses,
+        cloudAccounts,
+        cloudJournals,
+        cloudVouchers
+      ] = await Promise.all([
+        fetchProfile(userId).catch(() => null),
+        fetchParties().catch(() => []),
+        fetchItems().catch(() => []),
+        fetchInvoices().catch(() => []),
+        fetchExpenses().catch(() => []),
+        fetchAccounts().catch(() => []),
+        fetchJournalEntries().catch(() => []),
+        fetchPaymentVouchers().catch(() => []),
+      ]);
+
+      if (cloudProfile && cloudProfile.name) {
+        setProfile(cloudProfile);
+      }
+      setParties(cloudParties || []);
+      setItems(cloudItems || []);
+      setInvoices(cloudInvoices || []);
+      setExpenses(cloudExpenses || []);
+      setPaymentVouchers(cloudVouchers || []);
+      setJournalEntries(cloudJournals || []);
+      if (cloudAccounts && cloudAccounts.length > 0) {
+        setAccounts(cloudAccounts);
+      }
+    } catch (err) {
+      console.error('Error loading authoritative cloud data:', err);
+      // Fallback to local cache if offline
+      const localData = await initializeLocalDatabase().catch(() => null);
+      if (localData) {
+        if (localData.invoices) setInvoices(localData.invoices);
+        if (localData.parties) setParties(localData.parties);
+        if (localData.items) setItems(localData.items);
+        if (localData.profile) setProfile(localData.profile);
+      }
+    }
+  };
+
+  // Initialize Session & Authenticated Workspace
   useEffect(() => {
     let isMounted = true;
 
     async function bootstrap() {
       try {
-        const localData = await initializeLocalDatabase();
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
         if (!isMounted) return;
 
-        setInvoices(localData.invoices);
-        setParties(localData.parties);
-        setItems(localData.items);
-        setExpenses(localData.expenses);
-        setProfile(localData.profile || DEFAULT_BUSINESS_PROFILE);
-        setAccounts(localData.accounts && localData.accounts.length > 0 ? localData.accounts : DEFAULT_CHART_OF_ACCOUNTS);
-        setJournalEntries(localData.journalEntries);
-        setPaymentVouchers(localData.paymentVouchers);
-        setAccountingPeriods(localData.accountingPeriods && localData.accountingPeriods.length > 0 ? localData.accountingPeriods : DEFAULT_ACCOUNTING_PERIODS);
+        setSession(initialSession);
+        setUser(initialSession?.user ?? null);
 
-        // Banking & Treasury
-        if (localData.bankAccounts && localData.bankAccounts.length > 0) setBankAccounts(localData.bankAccounts);
-        if (localData.cashAccounts && localData.cashAccounts.length > 0) setCashAccounts(localData.cashAccounts);
-        if (localData.fundTransfers) setFundTransfers(localData.fundTransfers);
-        if (localData.chequeRecords) setChequeRecords(localData.chequeRecords);
-        if (localData.bankStatements) setBankStatements(localData.bankStatements);
-        if (localData.bankStatementLines) setBankStatementLines(localData.bankStatementLines);
-        if (localData.bankReconciliations) setBankReconciliations(localData.bankReconciliations);
+        if (!initialSession?.user) {
+          // Unauthenticated visitors ALWAYS see the public landing page first!
+          setCurrentTab('landing');
+          return;
+        }
 
-        // Inventory & Stock Tracking
-        if (localData.warehouses && localData.warehouses.length > 0) setWarehouses(localData.warehouses);
-        if (localData.stockMovements) setStockMovements(localData.stockMovements);
-        if (localData.inventoryLayers) setInventoryLayers(localData.inventoryLayers);
-        if (localData.productBatches) setProductBatches(localData.productBatches);
-        if (localData.stockTransfers) setStockTransfers(localData.stockTransfers);
-        if (localData.stockAdjustments) setStockAdjustments(localData.stockAdjustments);
-
-
-        // Phase 5: Startup recovery & Device Registration
-        await recoverDanglingOperations();
-        await registerCurrentDevice(localData.profile?.id || 'primary_business');
-
-        await refreshPendingCount();
+        // Authenticated user -> Load their authoritative business records from Supabase
+        await loadCloudBusinessData(initialSession.user.id);
+        setCurrentTab('dashboard');
       } catch (err) {
-        console.error('Failed to bootstrap local database:', err);
+        console.error('Failed to bootstrap application:', err);
+        if (isMounted) setCurrentTab('landing');
       }
     }
 
@@ -342,14 +399,25 @@ export default function App() {
     window.addEventListener('offline', handleOffline);
 
     // Setup Auth listener
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (isMounted) setUser(session?.user ?? null);
-    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      if (!isMounted) return;
+      setSession(newSession);
+      setUser(newSession?.user ?? null);
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (isMounted) {
-        setUser(session?.user ?? null);
-        if (session?.user) triggerSync();
+      if ((event === 'SIGNED_IN' || event === 'USER_UPDATED') && newSession?.user) {
+        await loadCloudBusinessData(newSession.user.id);
+        setCurrentTab('dashboard');
+        setIsAuthModalOpen(false);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setSession(null);
+        setInvoices([]);
+        setParties([]);
+        setItems([]);
+        setExpenses([]);
+        setPaymentVouchers([]);
+        setJournalEntries([]);
+        setCurrentTab('landing');
       }
     });
 
@@ -359,7 +427,7 @@ export default function App() {
       window.removeEventListener('offline', handleOffline);
       subscription.unsubscribe();
     };
-  }, [refreshPendingCount]);
+  }, []);
 
   // Sync background runner
   const triggerSync = async () => {
@@ -502,7 +570,16 @@ export default function App() {
         await idbPut('inventory_layers', l);
       }
 
-      // G. Enqueue Sync
+      // G. Direct Cloud Persistence & Enqueue Sync
+      if (user?.id) {
+        upsertInvoice(finalInvoice, user.id).catch(err => console.error('Cloud invoice persist error:', err));
+        for (const it of updatedItems) {
+          upsertItem(it, user.id).catch(() => {});
+        }
+        for (const p of updatedParties) {
+          upsertParty(p, user.id).catch(() => {});
+        }
+      }
       await enqueueMutation('upsert_invoice', finalInvoice.id, finalInvoice);
 
       // H. Update in-memory state
@@ -609,7 +686,16 @@ export default function App() {
         await idbPut('inventory_layers', l);
       }
 
-      // F. Enqueue Sync
+      // F. Direct Cloud Persistence & Enqueue Sync
+      if (user?.id) {
+        upsertInvoice(finalBill, user.id).catch(err => console.error('Cloud purchase bill persist error:', err));
+        for (const it of updatedItems) {
+          upsertItem(it, user.id).catch(() => {});
+        }
+        for (const p of updatedParties) {
+          upsertParty(p, user.id).catch(() => {});
+        }
+      }
       await enqueueMutation('upsert_invoice', finalBill.id, finalBill);
 
       // G. Update in-memory state
@@ -670,7 +756,16 @@ export default function App() {
       await idbPut('payment_vouchers', voucher);
       await idbPut('journal_entries', journal);
 
-      // E. Enqueue Sync
+      // E. Direct Cloud Persistence & Enqueue Sync
+      if (user?.id) {
+        insertPaymentVoucher(voucher, user.id).catch(err => console.error('Cloud voucher persist error:', err));
+        for (const inv of updatedInvoices) {
+          upsertInvoice(inv, user.id).catch(() => {});
+        }
+        for (const p of updatedParties) {
+          upsertParty(p, user.id).catch(() => {});
+        }
+      }
       await enqueueMutation('record_payment', voucher.id, voucher);
 
       // F. Update State
@@ -739,6 +834,9 @@ export default function App() {
         await idbPut('journal_entries', reversalJournal);
       }
 
+      if (user?.id) {
+        upsertInvoice(cancelledInvoice, user.id).catch(() => {});
+      }
       await enqueueMutation('cancel_invoice', cancelledInvoice.id, cancelledInvoice);
 
       setInvoices(prev => prev.map(i => i.id === invoice.id ? cancelledInvoice : i));
@@ -762,6 +860,9 @@ export default function App() {
     try {
       const deletedInv: Invoice = { ...invoice, deleted: true };
       await idbPut('invoices', deletedInv);
+      if (user?.id) {
+        softDeleteInvoice(invoice.id).catch(() => {});
+      }
       await enqueueMutation('cancel_invoice', invoice.id, deletedInv);
       setInvoices(prev => prev.filter(i => i.id !== invoice.id));
       await refreshPendingCount();
@@ -775,6 +876,9 @@ export default function App() {
   const handleSaveParty = async (party: Party) => {
     try {
       await idbPut('parties', party);
+      if (user?.id) {
+        upsertParty(party, user.id).catch(e => console.error('Cloud party sync error:', e));
+      }
       await enqueueMutation('upsert_party', party.id, party);
 
       // Auto-generate opening balance journal if specified and not already existing
@@ -798,6 +902,9 @@ export default function App() {
     if (!confirm('Are you sure you want to delete this party?')) return;
     try {
       await idbDelete('parties', id);
+      if (user?.id) {
+        deleteParty(id).catch(() => {});
+      }
       await enqueueMutation('delete_party', id, {});
       setParties(prev => prev.filter(p => p.id !== id));
       await refreshPendingCount();
@@ -1034,6 +1141,9 @@ export default function App() {
   const handleSaveItem = async (item: Item) => {
     try {
       await idbPut('items', item);
+      if (user?.id) {
+        upsertItem(item, user.id).catch(e => console.error('Cloud item sync error:', e));
+      }
       await enqueueMutation('upsert_item', item.id, item);
       setItems(prev => [item, ...prev.filter(i => i.id !== item.id)]);
       setItemModalOpen(false);
@@ -1054,6 +1164,9 @@ export default function App() {
       await idbPut('expenses', expense);
       await idbPut('journal_entries', journal);
 
+      if (user?.id) {
+        upsertExpense(expense, user.id).catch(e => console.error('Cloud expense sync error:', e));
+      }
       await enqueueMutation('upsert_expense', expense.id, expense);
 
       setExpenses(prev => [expense, ...prev.filter(e => e.id !== expense.id)]);
@@ -1071,6 +1184,9 @@ export default function App() {
     if (!confirm('Are you sure you want to delete this expense?')) return;
     try {
       await idbDelete('expenses', id);
+      if (user?.id) {
+        deleteExpense(id).catch(() => {});
+      }
       await enqueueMutation('delete_expense', id, {});
       setExpenses(prev => prev.filter(e => e.id !== id));
       await refreshPendingCount();
@@ -1085,6 +1201,9 @@ export default function App() {
     try {
       await idbPut('profile', { ...newProfile, id: 'business_profile' });
       setProfile(newProfile);
+      if (user?.id) {
+        upsertProfile(newProfile, user.id).catch(() => {});
+      }
       await refreshPendingCount();
       if (isOnline) triggerSync();
     } catch (err: any) {
@@ -1690,18 +1809,23 @@ export default function App() {
       case 'accounting': return 'Accounting & Ledgers';
       case 'reports': return 'GST & Sales Reports';
       case 'expenses': return 'Expenses';
-      case 'sync-backup': return 'Sync & Backup';
-      case 'settings': return 'Business Profile';
+      case 'settings': return 'Settings Centre';
       default: return 'Workspace';
     }
   };
 
-  // Fullscreen Landing Page (No sidebar, no dashboard header)
-  if (currentTab === 'landing') {
+  // Fullscreen Landing Page (Unauthenticated Visitors Always See This First)
+  if (currentTab === 'landing' || !session) {
     return (
       <div className="min-h-screen bg-[#FFF8EC]">
         <LandingPage 
-          onEnterApp={() => setCurrentTab('dashboard')} 
+          onEnterApp={() => {
+            if (session) {
+              setCurrentTab('dashboard');
+            } else {
+              setIsAuthModalOpen(true);
+            }
+          }} 
           onLoginClick={() => setIsAuthModalOpen(true)} 
         />
         {isAuthModalOpen && (
@@ -1842,6 +1966,55 @@ export default function App() {
 
             {/* Notification Center */}
             <NotificationCenter onNavigate={(tab) => setCurrentTab(tab)} />
+
+            {/* Authenticated User Menu with Real Sign Out */}
+            <div className="relative" ref={userMenuRef}>
+              <button
+                type="button"
+                onClick={() => setUserMenuOpen(prev => !prev)}
+                className="flex items-center gap-2 p-1.5 pl-2 pr-2.5 rounded-lg border border-[#E8DFCF] hover:bg-[#FFFBF3] transition cursor-pointer text-xs"
+                title="Account menu"
+              >
+                <div className="w-7 h-7 rounded-full bg-[#E0771A] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
+                  {(user?.email?.[0] || 'U').toUpperCase()}
+                </div>
+                <div className="text-left hidden md:block max-w-[120px] truncate">
+                  <span className="font-semibold text-[#12263A] block truncate text-xs">
+                    {user?.email?.split('@')[0] || 'Account'}
+                  </span>
+                </div>
+                <ChevronDown size={14} className={`text-[#3E5368] transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {userMenuOpen && (
+                <div className="absolute right-0 mt-2 w-60 bg-white rounded-xl shadow-xl border border-[#E8DFCF] py-2 z-50 text-[13px] animate-in fade-in duration-100">
+                  <div className="px-3.5 py-2 border-b border-[#E8DFCF]/70">
+                    <p className="font-bold text-[#12263A] truncate">{profile.name || 'Bazaar-Guru Workspace'}</p>
+                    <p className="text-[11px] text-[#3E5368] truncate font-mono mt-0.5">{user?.email || 'Logged in'}</p>
+                  </div>
+
+                  <div className="py-1">
+                    <button
+                      onClick={() => { setUserMenuOpen(false); setCurrentTab('settings'); }}
+                      className="flex items-center gap-2 w-full px-3.5 py-2 text-left text-[#12263A] hover:bg-[#EAF5FD] transition cursor-pointer"
+                    >
+                      <Settings size={15} className="text-[#1F86CC]" />
+                      <span>Business Settings</span>
+                    </button>
+                  </div>
+
+                  <div className="pt-1 border-t border-[#E8DFCF]/70">
+                    <button
+                      onClick={() => { setUserMenuOpen(false); handleSignOut(); }}
+                      className="flex items-center gap-2 w-full px-3.5 py-2 text-left text-[#C23B3B] hover:bg-[#FDECEC] transition cursor-pointer font-medium"
+                    >
+                      <LogOut size={15} />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
@@ -2038,17 +2211,6 @@ export default function App() {
               onAddExpense={() => setExpenseModal({ isOpen: true, expenseToEdit: null })}
               onEditExpense={(exp) => setExpenseModal({ isOpen: true, expenseToEdit: exp })}
               onDeleteExpense={handleDeleteExpense}
-            />
-          )}
-
-          {currentTab === 'sync-backup' && (
-            <SyncBackupHub
-              isOnline={isOnline}
-              onTriggerSync={triggerSync}
-              onRestoreCompleted={() => {
-                alert('Dataset restored successfully! Reloading...');
-                window.location.reload();
-              }}
             />
           )}
 
