@@ -298,12 +298,12 @@ export const StatementImportModal: React.FC<StatementImportModalProps> = ({
           )}
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="flex items-center justify-end gap-2.5 pt-3.5 border-t border-[#E8DFCF]">
             <button
               type="button"
               onClick={onClose}
               disabled={isProcessing}
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100:bg-slate-800"
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-[#3E5368] hover:bg-[#FFFBF3] border border-[#E8DFCF] cursor-pointer"
             >
               Cancel
             </button>
@@ -312,7 +312,7 @@ export const StatementImportModal: React.FC<StatementImportModalProps> = ({
                 type="button"
                 onClick={handleSaveImport}
                 disabled={isProcessing || previewLines.length === 0}
-                className="px-6 py-2 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#E0771A] hover:bg-[#B85D0F] disabled:opacity-50 flex items-center gap-2 cursor-pointer shadow-2xs"
               >
                 {isProcessing ? 'Importing...' : `Import ${previewLines.length} Transactions`}
               </button>

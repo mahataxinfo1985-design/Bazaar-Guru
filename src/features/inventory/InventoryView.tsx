@@ -57,6 +57,10 @@ export default function InventoryView({
     return getNearExpiryBatches(batches, 60);
   }, [batches]);
 
+  const critical7DayBatches = useMemo(() => {
+    return getNearExpiryBatches(batches, 7);
+  }, [batches]);
+
   const expiredBatches = useMemo(() => {
     return getExpiredBatches(batches);
   }, [batches]);
@@ -81,79 +85,81 @@ export default function InventoryView({
   const categories = Array.from(new Set(products.map(p => p.category || 'General')));
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-5 animate-in fade-in duration-200">
       
       {/* Header & Main Actions */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Inventory & Stock Management Hub</h2>
-          <p className="text-sm text-slate-500">
+          <h2 className="text-xl font-bold tracking-tight text-[#12263A]">Inventory & Stock Management Hub</h2>
+          <p className="text-xs text-[#3E5368] mt-0.5">
             Real-time stock valuation, multi-godown transfers, batch/expiry alerts, and movement ledgers.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={onOpenTransferModal}
-            className="flex items-center gap-1.5 rounded-xl border border-purple-200 bg-purple-50 text-purple-700 px-3.5 py-2 text-xs font-bold hover:bg-purple-100 transition shadow-xs cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-[#E8DFCF] bg-white text-[#12263A] px-3.5 py-2 text-xs font-semibold hover:bg-[#FFFBF3] transition shadow-2xs cursor-pointer"
           >
-            <ArrowRightLeft size={15} /> Transfer Stock
+            <ArrowRightLeft size={14} className="text-[#1F86CC]" /> Transfer Stock
           </button>
           <button
             onClick={onOpenAdjustmentModal}
-            className="flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 text-amber-700 px-3.5 py-2 text-xs font-bold hover:bg-amber-100 transition shadow-xs cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-[#E8DFCF] bg-white text-[#12263A] px-3.5 py-2 text-xs font-semibold hover:bg-[#FFFBF3] transition shadow-2xs cursor-pointer"
           >
-            <SlidersHorizontal size={15} /> Stock Adjustment
+            <SlidersHorizontal size={14} className="text-[#E0771A]" /> Stock Adjustment
           </button>
           <button
             onClick={onAddProduct}
-            className="flex items-center gap-1.5 rounded-xl bg-blue-700 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-blue-800 transition cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] px-4 py-2 text-xs font-semibold text-white shadow-2xs transition-all cursor-pointer"
           >
-            <Plus size={16} /> Add Product
+            <Plus size={15} /> Add Product
           </button>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
-            <span className="text-xs uppercase font-bold tracking-wider">Total Stock Valuation</span>
-            <DollarSign size={18} className="text-emerald-600" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs">
+          <div className="flex items-center justify-between text-[#3E5368] mb-1">
+            <span className="text-[11px] font-semibold">Total Stock Valuation</span>
+            <DollarSign size={16} className="text-[#1E8E5A]" />
           </div>
-          <h3 className="text-2xl font-bold font-mono text-slate-900">{formatCurrency(totalValuation)}</h3>
-          <p className="text-[11px] text-slate-400 mt-1">Based on Weighted Average Cost</p>
+          <h3 className="text-xl font-bold tabular-nums text-[#12263A]">{formatCurrency(totalValuation)}</h3>
+          <p className="text-[11px] text-[#3E5368]/80 mt-1">Weighted average cost</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
-            <span className="text-xs uppercase font-bold tracking-wider">Catalogue Items</span>
-            <Package size={18} className="text-blue-600" />
+        <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs">
+          <div className="flex items-center justify-between text-[#3E5368] mb-1">
+            <span className="text-[11px] font-semibold">Catalogue Items</span>
+            <Package size={16} className="text-[#1F86CC]" />
           </div>
-          <h3 className="text-2xl font-bold font-mono text-slate-900">{totalProducts}</h3>
-          <p className="text-[11px] text-slate-400 mt-1">Goods, Raw Materials & Services</p>
+          <h3 className="text-xl font-bold tabular-nums text-[#12263A]">{totalProducts}</h3>
+          <p className="text-[11px] text-[#3E5368]/80 mt-1">Goods, raw materials & services</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
-            <span className="text-xs uppercase font-bold tracking-wider">Low Stock Alerts</span>
-            <AlertTriangle size={18} className="text-amber-500" />
+        <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs">
+          <div className="flex items-center justify-between text-[#3E5368] mb-1">
+            <span className="text-[11px] font-semibold">Low Stock Alerts</span>
+            <AlertTriangle size={16} className="text-[#B7791F]" />
           </div>
-          <h3 className="text-2xl font-bold font-mono text-amber-600">{lowStockCount}</h3>
-          <p className="text-[11px] text-slate-400 mt-1">Items at or below reorder level</p>
+          <h3 className={`text-xl font-bold tabular-nums ${lowStockCount > 0 ? 'text-[#C23B3B]' : 'text-[#1E8E5A]'}`}>
+            {lowStockCount}
+          </h3>
+          <p className="text-[11px] text-[#3E5368]/80 mt-1">Items at or below reorder level</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
-            <span className="text-xs uppercase font-bold tracking-wider">Active Godowns</span>
-            <WarehouseIcon size={18} className="text-purple-600" />
+        <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs">
+          <div className="flex items-center justify-between text-[#3E5368] mb-1">
+            <span className="text-[11px] font-semibold">Active Godowns</span>
+            <WarehouseIcon size={16} className="text-[#1F86CC]" />
           </div>
-          <h3 className="text-2xl font-bold font-mono text-slate-900">{warehouses.length}</h3>
-          <p className="text-[11px] text-slate-400 mt-1">Multi-location storage locations</p>
+          <h3 className="text-xl font-bold tabular-nums text-[#12263A]">{warehouses.length}</h3>
+          <p className="text-[11px] text-[#3E5368]/80 mt-1">Multi-location godowns</p>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200 overflow-x-auto bg-white rounded-t-xl px-2">
+      <div className="flex items-center gap-1.5 overflow-x-auto border-b border-[#E8DFCF] pb-2 text-xs font-semibold scrollbar-none">
         {[
           { id: 'products', label: 'Product Master' },
           { id: 'summary', label: 'Stock Summary' },
@@ -162,34 +168,37 @@ export default function InventoryView({
           { id: 'adjustments', label: 'Stock Adjustments' },
           { id: 'batches', label: `Batches & Expiry (${nearExpiryBatches.length + expiredBatches.length})` },
           { id: 'alerts', label: `Low Stock Alerts (${lowStockCount})` },
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`px-4 py-3 text-xs font-bold uppercase tracking-wider border-b-2 whitespace-nowrap transition cursor-pointer ${
-              activeTab === tab.id
-                ? 'border-blue-700 text-blue-700'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+        ].map(tab => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`px-3.5 py-2 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
+                isActive
+                  ? 'bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30 shadow-2xs font-semibold'
+                  : 'text-[#3E5368] hover:bg-[#FFFBF3] hover:text-[#12263A]'
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* TAB 1: PRODUCT MASTER */}
       {activeTab === 'products' && (
         <div className="space-y-4">
           {/* Filters Bar */}
-          <div className="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white p-3 rounded-2xl border border-slate-200 shadow-xs">
+          <div className="flex flex-col sm:flex-row gap-2.5 items-center justify-between bg-white p-2.5 rounded-xl border border-[#E8DFCF] shadow-2xs">
             <div className="relative w-full sm:w-80">
-              <Search size={16} className="absolute left-3 top-2.5 text-slate-400" />
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#3E5368]" />
               <input
                 type="text"
-                placeholder="Search by Name, SKU, Barcode, HSN..."
+                placeholder="Search by name, SKU, barcode, HSN..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-600 outline-none"
+                className="w-full pl-9 pr-3 h-10 text-xs rounded-lg border border-[#E8DFCF] bg-[#FFFBF3] text-[#12263A] placeholder-[#3E5368]/60 focus:bg-white focus:outline-hidden focus:border-[#3BA0E6] focus:ring-1 focus:ring-[#3BA0E6]"
               />
             </div>
 
@@ -197,7 +206,7 @@ export default function InventoryView({
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-white text-slate-700 focus:ring-2 focus:ring-blue-600 outline-none"
+                className="h-10 px-3 text-xs rounded-lg border border-[#E8DFCF] bg-[#FFFBF3] text-[#12263A] focus:outline-hidden focus:border-[#3BA0E6]"
               >
                 <option value="">All Categories</option>
                 {categories.map(c => <option key={c} value={c}>{c}</option>)}
@@ -206,7 +215,7 @@ export default function InventoryView({
               <select
                 value={selectedProductType}
                 onChange={(e) => setSelectedProductType(e.target.value)}
-                className="px-3 py-1.5 text-xs rounded-xl border border-slate-300 bg-white text-slate-700 focus:ring-2 focus:ring-blue-600 outline-none"
+                className="h-10 px-3 text-xs rounded-lg border border-[#E8DFCF] bg-[#FFFBF3] text-[#12263A] focus:outline-hidden focus:border-[#3BA0E6]"
               >
                 <option value="">All Item Types</option>
                 <option value="goods">Goods</option>
@@ -218,58 +227,58 @@ export default function InventoryView({
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {filteredProducts.map(p => (
               <div
                 key={p.id}
                 onClick={() => onEditProduct(p)}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs flex flex-col justify-between hover:border-blue-400 hover:shadow-md transition cursor-pointer"
+                className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs flex flex-col justify-between hover:border-[#3BA0E6]/50 transition cursor-pointer"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm truncate">{p.name}</h4>
-                      <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-400">
-                        {p.sku && <span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-slate-700">SKU: {p.sku}</span>}
-                        {p.barcode && <span className="font-mono flex items-center gap-1"><Barcode size={12} /> {p.barcode}</span>}
+                      <h4 className="font-bold text-[#12263A] text-sm truncate">{p.name}</h4>
+                      <div className="flex items-center gap-2 mt-0.5 text-[11px] text-[#3E5368]">
+                        {p.sku && <span className="bg-[#EEF2F6] px-1.5 py-0.5 rounded text-[#12263A]">SKU: {p.sku}</span>}
+                        {p.barcode && <span className="flex items-center gap-1"><Barcode size={12} /> {p.barcode}</span>}
                       </div>
                     </div>
-                    <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">
+                    <span className="text-xs font-semibold text-[#1F86CC] bg-[#EAF5FD] border border-[#3BA0E6]/30 px-2 py-0.5 rounded-sm">
                       GST {p.gstRate}%
                     </span>
                   </div>
 
-                  <div className="mt-3 space-y-1.5 text-xs text-slate-500 font-medium">
+                  <div className="mt-3 space-y-1 text-xs text-[#3E5368]">
                     <div className="flex justify-between">
                       <span>HSN / SAC:</span>
-                      <span className="text-slate-700 font-mono font-bold">{p.hsnCode}</span>
+                      <span className="text-[#12263A] font-semibold">{p.hsnCode}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Selling Price:</span>
-                      <span className="text-slate-900 font-bold font-mono">{formatCurrency(p.unitPrice)}</span>
+                      <span className="text-[#12263A] font-bold tabular-nums">{formatCurrency(p.unitPrice)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Purchase Cost:</span>
-                      <span className="text-slate-600 font-mono">{formatCurrency(p.purchasePrice || p.averageCost || 0)}</span>
+                      <span className="text-[#3E5368] tabular-nums">{formatCurrency(p.purchasePrice || p.averageCost || 0)}</span>
                     </div>
                     {p.mrp && p.mrp > 0 && (
                       <div className="flex justify-between">
                         <span>MRP:</span>
-                        <span className="text-slate-500 font-mono">{formatCurrency(p.mrp)}</span>
+                        <span className="text-[#3E5368] tabular-nums">{formatCurrency(p.mrp)}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="text-slate-400 font-medium">Stock in Hand:</span>
+                <div className="mt-3.5 pt-2.5 border-t border-[#E8DFCF] flex items-center justify-between text-xs">
+                  <span className="text-[#3E5368] font-medium">Stock in Hand:</span>
                   <span
-                    className={`px-2.5 py-0.5 rounded-full font-bold text-xs font-mono ${
+                    className={`px-2 py-0.5 rounded-sm font-semibold text-xs tabular-nums ${
                       p.itemType === 'service'
-                        ? 'bg-purple-50 text-purple-700 border border-purple-100'
+                        ? 'bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30'
                         : p.stockQty <= (p.reorderLevel || 10)
-                        ? 'bg-red-50 text-red-600 border border-red-200'
-                        : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        ? 'bg-[#FDECEC] text-[#C23B3B] border border-[#C23B3B]/20'
+                        : 'bg-[#E6F6EE] text-[#1E8E5A] border border-[#1E8E5A]/20'
                     }`}
                   >
                     {p.itemType === 'service' ? 'Service' : `${p.stockQty} ${p.unit}`}
@@ -283,14 +292,14 @@ export default function InventoryView({
 
       {/* TAB 2: STOCK SUMMARY */}
       {activeTab === 'summary' && (
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 text-sm">Product-wise Stock Summary & Closing Valuation</h3>
-            <span className="text-xs text-slate-500 font-medium">Reconciled from stock movements</span>
+        <div className="bg-white rounded-xl border border-[#E8DFCF] overflow-hidden shadow-2xs">
+          <div className="p-3.5 border-b border-[#E8DFCF] flex items-center justify-between">
+            <h3 className="font-bold text-[#12263A] text-sm">Product-wise Stock Summary & Closing Valuation</h3>
+            <span className="text-xs text-[#3E5368]">Reconciled from stock movements</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200">
+              <thead className="bg-[#FFFBF3] text-[#3E5368] font-semibold border-b border-[#E8DFCF]">
                 <tr>
                   <th className="p-3">Product Name</th>
                   <th className="p-3">SKU</th>
@@ -304,23 +313,23 @@ export default function InventoryView({
                   <th className="p-3 text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8DFCF]">
                 {stockSummary.map(row => (
-                  <tr key={row.productId} className="hover:bg-slate-50/80 transition">
-                    <td className="p-3 font-bold text-slate-900">{row.productName}</td>
-                    <td className="p-3 font-mono text-slate-500">{row.sku}</td>
-                    <td className="p-3 text-slate-600">{row.category}</td>
-                    <td className="p-3 text-right font-mono text-slate-600">{row.openingStock} {row.unit}</td>
-                    <td className="p-3 text-right font-mono text-emerald-600">+{row.stockIn}</td>
-                    <td className="p-3 text-right font-mono text-red-600">-{row.stockOut}</td>
-                    <td className="p-3 text-right font-mono font-bold text-slate-900">{row.closingStock} {row.unit}</td>
-                    <td className="p-3 text-right font-mono text-slate-600">{formatCurrency(row.averageCost)}</td>
-                    <td className="p-3 text-right font-mono font-bold text-slate-900">{formatCurrency(row.valuation)}</td>
+                  <tr key={row.productId} className="hover:bg-[#FFFBF3] transition">
+                    <td className="p-3 font-semibold text-[#12263A]">{row.productName}</td>
+                    <td className="p-3 text-[#3E5368]">{row.sku}</td>
+                    <td className="p-3 text-[#3E5368]">{row.category}</td>
+                    <td className="p-3 text-right tabular-nums text-[#3E5368]">{row.openingStock} {row.unit}</td>
+                    <td className="p-3 text-right tabular-nums text-[#1E8E5A]">+{row.stockIn}</td>
+                    <td className="p-3 text-right tabular-nums text-[#C23B3B]">-{row.stockOut}</td>
+                    <td className="p-3 text-right tabular-nums font-bold text-[#12263A]">{row.closingStock} {row.unit}</td>
+                    <td className="p-3 text-right tabular-nums text-[#3E5368]">{formatCurrency(row.averageCost)}</td>
+                    <td className="p-3 text-right tabular-nums font-bold text-[#12263A]">{formatCurrency(row.valuation)}</td>
                     <td className="p-3 text-center">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        row.status === 'Out of Stock' ? 'bg-red-100 text-red-700' :
-                        row.status === 'Low Stock' ? 'bg-amber-100 text-amber-700' :
-                        'bg-emerald-100 text-emerald-700'
+                      <span className={`px-2 py-0.5 rounded-sm text-[10px] font-semibold ${
+                        row.status === 'Out of Stock' ? 'bg-[#FDECEC] text-[#C23B3B] border border-[#C23B3B]/20' :
+                        row.status === 'Low Stock' ? 'bg-[#FFF3DC] text-[#B7791F] border border-[#B7791F]/20' :
+                        'bg-[#E6F6EE] text-[#1E8E5A] border border-[#1E8E5A]/20'
                       }`}>
                         {row.status}
                       </span>
@@ -335,14 +344,14 @@ export default function InventoryView({
 
       {/* TAB 3: STOCK MOVEMENT LEDGER */}
       {activeTab === 'ledger' && (
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 text-sm">Chronological Stock Movement Audit Ledger</h3>
-            <span className="text-xs text-slate-500 font-mono font-semibold">{stockLedger.length} Movements Logged</span>
+        <div className="bg-white rounded-xl border border-[#E8DFCF] overflow-hidden shadow-2xs">
+          <div className="p-3.5 border-b border-[#E8DFCF] flex items-center justify-between">
+            <h3 className="font-bold text-[#12263A] text-sm">Chronological Stock Movement Audit Ledger</h3>
+            <span className="text-xs text-[#3E5368] font-semibold">{stockLedger.length} Movements Logged</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200">
+              <thead className="bg-[#FFFBF3] text-[#3E5368] font-semibold border-b border-[#E8DFCF]">
                 <tr>
                   <th className="p-3">Date</th>
                   <th className="p-3">Movement Type</th>
@@ -356,25 +365,25 @@ export default function InventoryView({
                   <th className="p-3 text-right">Total Value</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 font-mono">
+              <tbody className="divide-y divide-[#E8DFCF]">
                 {stockLedger.map(m => (
-                  <tr key={m.id} className="hover:bg-slate-50/80 transition">
-                    <td className="p-3 text-slate-600">{formatDate(m.date)}</td>
+                  <tr key={m.id} className="hover:bg-[#FFFBF3] transition">
+                    <td className="p-3 text-[#3E5368]">{formatDate(m.date)}</td>
                     <td className="p-3">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold font-sans uppercase ${
-                        m.quantityIn > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+                      <span className={`px-2 py-0.5 rounded-sm text-[10px] font-semibold ${
+                        m.quantityIn > 0 ? 'bg-[#E6F6EE] text-[#1E8E5A] border border-[#1E8E5A]/20' : 'bg-[#FDECEC] text-[#C23B3B] border border-[#C23B3B]/20'
                       }`}>
                         {m.movementType.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="p-3 text-slate-600 uppercase font-sans text-[11px]">{m.referenceType}</td>
-                    <td className="p-3 font-bold text-blue-700">{m.referenceNumber}</td>
-                    <td className="p-3 font-sans text-slate-700">{m.warehouseName}</td>
-                    <td className="p-3 text-right text-emerald-600">{m.quantityIn > 0 ? `+${m.quantityIn}` : '-'}</td>
-                    <td className="p-3 text-right text-red-600">{m.quantityOut > 0 ? `-${m.quantityOut}` : '-'}</td>
-                    <td className="p-3 text-right font-bold text-slate-900">{m.runningBalance}</td>
-                    <td className="p-3 text-right text-slate-600">{formatCurrency(m.unitCost)}</td>
-                    <td className="p-3 text-right font-bold text-slate-900">{formatCurrency(m.totalValue)}</td>
+                    <td className="p-3 text-[#3E5368] uppercase text-[11px]">{m.referenceType}</td>
+                    <td className="p-3 font-semibold text-[#1F86CC]">{m.referenceNumber}</td>
+                    <td className="p-3 text-[#12263A]">{m.warehouseName}</td>
+                    <td className="p-3 text-right tabular-nums text-[#1E8E5A]">{m.quantityIn > 0 ? `+${m.quantityIn}` : '-'}</td>
+                    <td className="p-3 text-right tabular-nums text-[#C23B3B]">{m.quantityOut > 0 ? `-${m.quantityOut}` : '-'}</td>
+                    <td className="p-3 text-right tabular-nums font-bold text-[#12263A]">{m.runningBalance}</td>
+                    <td className="p-3 text-right tabular-nums text-[#3E5368]">{formatCurrency(m.unitCost)}</td>
+                    <td className="p-3 text-right tabular-nums font-bold text-[#12263A]">{formatCurrency(m.totalValue)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -385,19 +394,19 @@ export default function InventoryView({
 
       {/* TAB 4: GODOWN TRANSFERS */}
       {activeTab === 'transfers' && (
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 text-sm">Inter-Godown Stock Transfers</h3>
+        <div className="bg-white rounded-xl border border-[#E8DFCF] overflow-hidden shadow-2xs">
+          <div className="p-3.5 border-b border-[#E8DFCF] flex items-center justify-between">
+            <h3 className="font-bold text-[#12263A] text-sm">Inter-Godown Stock Transfers</h3>
             <button
               onClick={onOpenTransferModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-700 text-white rounded-xl text-xs font-bold hover:bg-purple-800 transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#E0771A] hover:bg-[#B85D0F] text-white rounded-lg text-xs font-semibold transition cursor-pointer"
             >
               <Plus size={14} /> New Transfer
             </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200">
+              <thead className="bg-[#FFFBF3] text-[#3E5368] font-semibold border-b border-[#E8DFCF]">
                 <tr>
                   <th className="p-3">Transfer No</th>
                   <th className="p-3">Date</th>
@@ -408,35 +417,35 @@ export default function InventoryView({
                   <th className="p-3">Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8DFCF]">
                 {transfers.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-6 text-center text-slate-400">
+                    <td colSpan={7} className="p-6 text-center text-[#3E5368]">
                       No inter-godown transfers recorded yet.
                     </td>
                   </tr>
                 ) : (
                   transfers.map(t => (
-                    <tr key={t.id} className="hover:bg-slate-50/80 transition">
-                      <td className="p-3 font-mono font-bold text-purple-700">{t.transferNumber}</td>
-                      <td className="p-3 font-mono text-slate-600">{formatDate(t.date)}</td>
-                      <td className="p-3 font-medium text-slate-800">{t.sourceWarehouseName || t.sourceWarehouseId}</td>
-                      <td className="p-3 font-medium text-slate-800">{t.destinationWarehouseName || t.destinationWarehouseId}</td>
+                    <tr key={t.id} className="hover:bg-[#FFFBF3] transition">
+                      <td className="p-3 font-semibold text-[#1F86CC]">{t.transferNumber}</td>
+                      <td className="p-3 text-[#3E5368]">{formatDate(t.date)}</td>
+                      <td className="p-3 font-medium text-[#12263A]">{t.sourceWarehouseName || t.sourceWarehouseId}</td>
+                      <td className="p-3 font-medium text-[#12263A]">{t.destinationWarehouseName || t.destinationWarehouseId}</td>
                       <td className="p-3">
                         <div className="space-y-0.5">
                           {t.lines.map((l, i) => (
-                            <span key={i} className="block text-[11px] text-slate-700">
-                              {l.productName} • <strong>{l.quantity}</strong> (Value: {formatCurrency(l.totalValue)})
+                            <span key={i} className="block text-[11px] text-[#3E5368]">
+                              {l.productName} • <strong className="text-[#12263A]">{l.quantity}</strong> (Value: {formatCurrency(l.totalValue)})
                             </span>
                           ))}
                         </div>
                       </td>
                       <td className="p-3 text-center">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 uppercase">
+                        <span className="px-2 py-0.5 rounded-sm text-[10px] font-semibold bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30 uppercase">
                           {t.status}
                         </span>
                       </td>
-                      <td className="p-3 text-slate-500 italic">{t.notes || '—'}</td>
+                      <td className="p-3 text-[#3E5368] italic">{t.notes || '—'}</td>
                     </tr>
                   ))
                 )}
@@ -448,19 +457,19 @@ export default function InventoryView({
 
       {/* TAB 5: STOCK ADJUSTMENTS */}
       {activeTab === 'adjustments' && (
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 text-sm">Stock Adjustment & Physical Count Vouchers</h3>
+        <div className="bg-white rounded-xl border border-[#E8DFCF] overflow-hidden shadow-2xs">
+          <div className="p-3.5 border-b border-[#E8DFCF] flex items-center justify-between">
+            <h3 className="font-bold text-[#12263A] text-sm">Stock Adjustment & Physical Count Vouchers</h3>
             <button
               onClick={onOpenAdjustmentModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 text-white rounded-xl text-xs font-bold hover:bg-amber-700 transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#E0771A] hover:bg-[#B85D0F] text-white rounded-lg text-xs font-semibold transition cursor-pointer"
             >
               <Plus size={14} /> New Adjustment
             </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200">
+              <thead className="bg-[#FFFBF3] text-[#3E5368] font-semibold border-b border-[#E8DFCF]">
                 <tr>
                   <th className="p-3">Voucher No</th>
                   <th className="p-3">Date</th>
@@ -471,41 +480,41 @@ export default function InventoryView({
                   <th className="p-3">Narration</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8DFCF]">
                 {adjustments.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-6 text-center text-slate-400">
+                    <td colSpan={7} className="p-6 text-center text-[#3E5368]">
                       No stock adjustment vouchers recorded yet.
                     </td>
                   </tr>
                 ) : (
                   adjustments.map(a => (
-                    <tr key={a.id} className="hover:bg-slate-50/80 transition">
-                      <td className="p-3 font-mono font-bold text-amber-700">{a.adjustmentNumber}</td>
-                      <td className="p-3 font-mono text-slate-600">{formatDate(a.date)}</td>
-                      <td className="p-3 font-medium text-slate-800">{a.warehouseName || a.warehouseId}</td>
+                    <tr key={a.id} className="hover:bg-[#FFFBF3] transition">
+                      <td className="p-3 font-semibold text-[#E0771A]">{a.adjustmentNumber}</td>
+                      <td className="p-3 text-[#3E5368]">{formatDate(a.date)}</td>
+                      <td className="p-3 font-medium text-[#12263A]">{a.warehouseName || a.warehouseId}</td>
                       <td className="p-3">
                         <div className="space-y-0.5">
                           {a.lines.map((l, i) => (
-                            <span key={i} className="block text-[11px] text-slate-700">
-                              {l.productName}: Diff <strong className={l.differenceQuantity < 0 ? 'text-red-600' : 'text-emerald-600'}>
+                            <span key={i} className="block text-[11px] text-[#3E5368]">
+                              {l.productName}: Diff <strong className={l.differenceQuantity < 0 ? 'text-[#C23B3B]' : 'text-[#1E8E5A]'}>
                                 {l.differenceQuantity > 0 ? `+${l.differenceQuantity}` : l.differenceQuantity}
                               </strong> ({l.reason})
                             </span>
                           ))}
                         </div>
                       </td>
-                      <td className={`p-3 text-right font-mono font-bold ${
-                        a.totalAdjustmentValue < 0 ? 'text-red-600' : a.totalAdjustmentValue > 0 ? 'text-emerald-600' : 'text-slate-700'
+                      <td className={`p-3 text-right tabular-nums font-bold ${
+                        a.totalAdjustmentValue < 0 ? 'text-[#C23B3B]' : a.totalAdjustmentValue > 0 ? 'text-[#1E8E5A]' : 'text-[#12263A]'
                       }`}>
                         {formatCurrency(a.totalAdjustmentValue)}
                       </td>
                       <td className="p-3 text-center">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 uppercase">
+                        <span className="px-2 py-0.5 rounded-sm text-[10px] font-semibold bg-[#FFF3DC] text-[#B7791F] border border-[#B7791F]/20 uppercase">
                           {a.status}
                         </span>
                       </td>
-                      <td className="p-3 text-slate-500 italic">{a.narration || '—'}</td>
+                      <td className="p-3 text-[#3E5368] italic">{a.narration || '—'}</td>
                     </tr>
                   ))
                 )}
@@ -518,37 +527,42 @@ export default function InventoryView({
       {/* TAB 6: BATCHES & EXPIRY */}
       {activeTab === 'batches' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
-              <h4 className="font-bold text-red-900 text-xs uppercase flex items-center gap-1.5 mb-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="bg-[#FDECEC] border border-[#C23B3B]/20 rounded-xl p-4">
+              <h4 className="font-bold text-[#C23B3B] text-xs flex items-center gap-1.5 mb-2">
                 <AlertTriangle size={15} /> Expired Stock ({expiredBatches.length})
               </h4>
               <div className="space-y-1.5 text-xs">
                 {expiredBatches.length === 0 ? (
-                  <p className="text-red-600 italic">No expired stock recorded.</p>
+                  <p className="text-[#C23B3B] italic">No expired stock recorded.</p>
                 ) : (
                   expiredBatches.map(b => (
-                    <div key={b.id} className="flex justify-between bg-white p-2 rounded-lg border border-red-100 font-mono">
+                    <div key={b.id} className="flex justify-between bg-white p-2 rounded-lg border border-[#C23B3B]/20 tabular-nums">
                       <span>Batch: {b.batchNumber}</span>
-                      <span className="font-bold text-red-700">Expired: {b.expiryDate} (Qty: {b.remainingQuantity})</span>
+                      <span className="font-bold text-[#C23B3B]">Expired: {b.expiryDate} (Qty: {b.remainingQuantity})</span>
                     </div>
                   ))
                 )}
               </div>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
-              <h4 className="font-bold text-amber-900 text-xs uppercase flex items-center gap-1.5 mb-2">
-                <AlertTriangle size={15} /> Near Expiry in 60 Days ({nearExpiryBatches.length})
+            <div className="bg-[#FFF3DC] border border-[#B7791F]/20 rounded-xl p-4">
+              <h4 className="font-bold text-[#B7791F] text-xs flex items-center gap-1.5 mb-2">
+                <AlertTriangle size={15} /> Near Expiry ({nearExpiryBatches.length})
+                {critical7DayBatches.length > 0 && (
+                  <span className="ml-auto px-2 py-0.5 text-[10px] font-bold bg-[#C23B3B] text-white rounded-sm animate-pulse">
+                    {critical7DayBatches.length} Expiring &lt;7 Days
+                  </span>
+                )}
               </h4>
               <div className="space-y-1.5 text-xs">
                 {nearExpiryBatches.length === 0 ? (
-                  <p className="text-amber-600 italic">No batches expiring within 60 days.</p>
+                  <p className="text-[#B7791F] italic">No batches expiring within 60 days.</p>
                 ) : (
                   nearExpiryBatches.map(b => (
-                    <div key={b.id} className="flex justify-between bg-white p-2 rounded-lg border border-amber-100 font-mono">
+                    <div key={b.id} className="flex justify-between bg-white p-2 rounded-lg border border-[#B7791F]/20 tabular-nums">
                       <span>Batch: {b.batchNumber}</span>
-                      <span className="font-bold text-amber-700">Expires: {b.expiryDate} (Qty: {b.remainingQuantity})</span>
+                      <span className="font-bold text-[#B7791F]">Expires: {b.expiryDate} (Qty: {b.remainingQuantity})</span>
                     </div>
                   ))
                 )}
@@ -556,14 +570,14 @@ export default function InventoryView({
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-            <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-              <h3 className="font-bold text-slate-900 text-sm">All Product Batches</h3>
-              <span className="text-xs text-slate-500 font-mono font-semibold">{batches.length} Batches Tracked</span>
+          <div className="bg-white rounded-xl border border-[#E8DFCF] overflow-hidden shadow-2xs">
+            <div className="p-3.5 border-b border-[#E8DFCF] flex items-center justify-between">
+              <h3 className="font-bold text-[#12263A] text-sm">All Product Batches</h3>
+              <span className="text-xs text-[#3E5368] font-semibold">{batches.length} Batches Tracked</span>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200">
+                <thead className="bg-[#FFFBF3] text-[#3E5368] font-semibold border-b border-[#E8DFCF]">
                   <tr>
                     <th className="p-3">Batch Number</th>
                     <th className="p-3">Product</th>
@@ -574,16 +588,16 @@ export default function InventoryView({
                     <th className="p-3 text-right">Batch Cost</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 font-mono">
+                <tbody className="divide-y divide-[#E8DFCF]">
                   {batches.map(b => (
-                    <tr key={b.id} className="hover:bg-slate-50/80 transition">
-                      <td className="p-3 font-bold text-slate-900">{b.batchNumber}</td>
-                      <td className="p-3 font-sans text-slate-700">{b.productName || b.productId}</td>
-                      <td className="p-3 text-slate-500">{b.manufacturingDate ? formatDate(b.manufacturingDate) : '—'}</td>
-                      <td className="p-3 font-bold text-amber-700">{formatDate(b.expiryDate)}</td>
-                      <td className="p-3 text-right text-slate-600">{b.quantityReceived}</td>
-                      <td className="p-3 text-right font-bold text-slate-900">{b.remainingQuantity}</td>
-                      <td className="p-3 text-right text-slate-600">{formatCurrency(b.unitCost)}</td>
+                    <tr key={b.id} className="hover:bg-[#FFFBF3] transition">
+                      <td className="p-3 font-semibold text-[#12263A]">{b.batchNumber}</td>
+                      <td className="p-3 text-[#3E5368]">{b.productName || b.productId}</td>
+                      <td className="p-3 text-[#3E5368]">{b.manufacturingDate ? formatDate(b.manufacturingDate) : '—'}</td>
+                      <td className="p-3 font-semibold text-[#B7791F]">{formatDate(b.expiryDate)}</td>
+                      <td className="p-3 text-right tabular-nums text-[#3E5368]">{b.quantityReceived}</td>
+                      <td className="p-3 text-right tabular-nums font-bold text-[#12263A]">{b.remainingQuantity}</td>
+                      <td className="p-3 text-right tabular-nums text-[#3E5368]">{formatCurrency(b.unitCost)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -595,14 +609,14 @@ export default function InventoryView({
 
       {/* TAB 7: LOW STOCK ALERTS */}
       {activeTab === 'alerts' && (
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-            <h3 className="font-bold text-slate-900 text-sm">Items Below Minimum / Reorder Level</h3>
-            <span className="text-xs text-red-600 font-bold">{lowStockAlerts.length} Action Items Required</span>
+        <div className="bg-white rounded-xl border border-[#E8DFCF] overflow-hidden shadow-2xs">
+          <div className="p-3.5 border-b border-[#E8DFCF] flex items-center justify-between">
+            <h3 className="font-bold text-[#12263A] text-sm">Items Below Minimum / Reorder Level</h3>
+            <span className="text-xs text-[#C23B3B] font-semibold">{lowStockAlerts.length} Action Items Required</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-bold border-b border-slate-200">
+              <thead className="bg-[#FFFBF3] text-[#3E5368] font-semibold border-b border-[#E8DFCF]">
                 <tr>
                   <th className="p-3">Product Name</th>
                   <th className="p-3">SKU</th>
@@ -613,27 +627,27 @@ export default function InventoryView({
                   <th className="p-3 text-center">Urgency</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8DFCF]">
                 {lowStockAlerts.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-6 text-center text-emerald-600 font-bold">
+                    <td colSpan={7} className="p-6 text-center text-[#1E8E5A] font-semibold">
                       All products have healthy inventory levels above reorder thresholds!
                     </td>
                   </tr>
                 ) : (
                   lowStockAlerts.map(a => (
-                    <tr key={a.productId} className="hover:bg-slate-50/80 transition">
-                      <td className="p-3 font-bold text-slate-900">{a.productName}</td>
-                      <td className="p-3 font-mono text-slate-500">{a.sku}</td>
-                      <td className="p-3 text-right font-mono font-bold text-red-600">{a.currentStock} {a.unit}</td>
-                      <td className="p-3 text-right font-mono text-slate-600">{a.reorderLevel} {a.unit}</td>
-                      <td className="p-3 text-right font-mono text-slate-600">{a.minStockLevel} {a.unit}</td>
-                      <td className="p-3 text-right font-mono font-bold text-amber-700">+{a.deficit} {a.unit}</td>
+                    <tr key={a.productId} className="hover:bg-[#FFFBF3] transition">
+                      <td className="p-3 font-semibold text-[#12263A]">{a.productName}</td>
+                      <td className="p-3 text-[#3E5368]">{a.sku}</td>
+                      <td className="p-3 text-right tabular-nums font-bold text-[#C23B3B]">{a.currentStock} {a.unit}</td>
+                      <td className="p-3 text-right tabular-nums text-[#3E5368]">{a.reorderLevel} {a.unit}</td>
+                      <td className="p-3 text-right tabular-nums text-[#3E5368]">{a.minStockLevel} {a.unit}</td>
+                      <td className="p-3 text-right tabular-nums font-bold text-[#B7791F]">+{a.deficit} {a.unit}</td>
                       <td className="p-3 text-center">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          a.currentStock <= 0 ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'
+                        <span className={`px-2 py-0.5 rounded-sm text-[10px] font-semibold ${
+                          a.currentStock <= 0 ? 'bg-[#FDECEC] text-[#C23B3B] border border-[#C23B3B]/20' : 'bg-[#FFF3DC] text-[#B7791F] border border-[#B7791F]/20'
                         }`}>
-                          {a.currentStock <= 0 ? 'CRITICAL: OUT OF STOCK' : 'LOW STOCK REORDER'}
+                          {a.currentStock <= 0 ? 'Out of Stock' : 'Low Stock'}
                         </span>
                       </td>
                     </tr>

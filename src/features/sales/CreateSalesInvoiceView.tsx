@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, ArrowLeft, Save, FileCheck, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, ArrowLeft, Save } from 'lucide-react';
 import { Invoice, InvoiceItem, Party, Item, BusinessProfile, InvoiceType, PaymentMode, InvoiceStatus } from '../../types';
 import { calculateInvoiceTotals, INDIAN_STATES } from '../../utils/gstEngine';
 import { round2, safeSub } from '../../utils/decimal';
@@ -191,37 +191,37 @@ export default function CreateSalesInvoiceView({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-6">
       {/* Top Bar */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-[#E8DFCF] pb-4">
         <div className="flex items-center gap-3">
           <button
             onClick={onCancel}
-            className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-800 transition cursor-pointer"
+            className="p-2 hover:bg-[#EAF5FD] text-[#3E5368] rounded-lg transition cursor-pointer"
+            title="Back to Sales"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={20} />
           </button>
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-slate-900">
-              {editingInvoice ? `Edit Invoice: ${editingInvoice.invoiceNumber}` : 'Create New Sales Document'}
+            <h2 className="text-2xl font-semibold text-[#12263A] tracking-tight">
+              {editingInvoice ? `Edit Invoice: ${editingInvoice.invoiceNumber}` : 'Create Sales Invoice'}
             </h2>
-            <p className="text-xs text-slate-500">GST-compliant tax invoicing with automated ledger postings.</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => handleSave('Draft')}
-            className="rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+            className="rounded-lg border border-[#14689F] bg-white px-4 py-2 text-[14px] font-semibold text-[#14689F] hover:bg-[#EAF5FD] transition cursor-pointer min-h-[40px]"
           >
             Save as Draft
           </button>
           <button
             onClick={() => handleSave('Active')}
-            className="flex items-center gap-1.5 rounded-lg bg-blue-700 px-4 py-2 text-xs font-bold text-white shadow-2xs hover:bg-blue-800 transition cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] px-5 py-2 text-[14px] font-semibold text-white shadow-xs transition cursor-pointer min-h-[40px]"
           >
-            <Save size={14} />
-            <span>Generate & Finalize Invoice</span>
+            <Save size={16} />
+            <span>Save & Issue Invoice</span>
           </button>
         </div>
       </div>
@@ -230,16 +230,16 @@ export default function CreateSalesInvoiceView({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Form Details */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Document Metadata Card */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs space-y-4">
-            <h3 className="font-bold text-sm text-slate-900 border-b border-slate-100 pb-2">Invoice Particulars</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-medium">
+          {/* Document Particulars Card */}
+          <div className="rounded-xl border border-[#E8DFCF] bg-white p-5 shadow-xs space-y-4">
+            <h3 className="font-semibold text-base text-[#12263A] border-b border-[#E8DFCF] pb-2">Invoice Particulars</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-[13px]">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Doc Type</label>
+                <label className="block text-[13px] font-medium text-[#12263A] mb-1">Document type</label>
                 <select
                   value={invoiceType}
                   onChange={(e) => setInvoiceType(e.target.value as any)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:border-blue-500 focus:outline-hidden bg-white"
+                  className="w-full h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden bg-white"
                 >
                   <option value="Tax Invoice">Tax Invoice</option>
                   <option value="Non-GST Invoice">Non-GST Invoice</option>
@@ -251,55 +251,55 @@ export default function CreateSalesInvoiceView({
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Invoice Number</label>
+                <label className="block text-[13px] font-medium text-[#12263A] mb-1">Invoice number</label>
                 <input
                   type="text"
                   required
                   value={invoiceNumber}
                   onChange={(e) => setInvoiceNumber(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs font-mono font-bold focus:border-blue-500 focus:outline-hidden"
+                  className="w-full h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] font-medium text-[#12263A] focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">PO / Ref Number</label>
+                <label className="block text-[13px] font-medium text-[#12263A] mb-1">Reference number</label>
                 <input
                   type="text"
                   value={referenceNumber}
                   onChange={(e) => setReferenceNumber(e.target.value)}
-                  placeholder="Optional reference"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:border-blue-500 focus:outline-hidden font-mono"
+                  placeholder="Optional PO / Ref"
+                  className="w-full h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Invoice Date</label>
+                <label className="block text-[13px] font-medium text-[#12263A] mb-1">Invoice date</label>
                 <input
                   type="date"
                   required
                   value={invoiceDate}
                   onChange={(e) => setInvoiceDate(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:border-blue-500 focus:outline-hidden"
+                  className="w-full h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Due Date</label>
+                <label className="block text-[13px] font-medium text-[#12263A] mb-1">Due date</label>
                 <input
                   type="date"
                   required
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:border-blue-500 focus:outline-hidden"
+                  className="w-full h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Payment Mode</label>
+                <label className="block text-[13px] font-medium text-[#12263A] mb-1">Payment mode</label>
                 <select
                   value={paymentMode}
                   onChange={(e) => setPaymentMode(e.target.value as any)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs focus:border-blue-500 focus:outline-hidden bg-white"
+                  className="w-full h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden bg-white"
                 >
                   <option value="Cash">Cash</option>
                   <option value="UPI">UPI</option>
@@ -313,28 +313,28 @@ export default function CreateSalesInvoiceView({
           </div>
 
           {/* Customer Selection Card */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-              <h3 className="font-bold text-sm text-slate-900">Customer Details</h3>
+          <div className="rounded-xl border border-[#E8DFCF] bg-white p-5 shadow-xs space-y-4">
+            <div className="flex justify-between items-center border-b border-[#E8DFCF] pb-2">
+              <h3 className="font-semibold text-base text-[#12263A]">Customer Details</h3>
               <button
                 type="button"
                 onClick={onOpenPartyModal}
-                className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-[13px] font-semibold text-[#14689F] hover:underline flex items-center gap-1 cursor-pointer"
               >
-                <Plus size={14} /> Add New Customer
+                <Plus size={15} /> Add customer
               </button>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                Select Customer <span className="text-red-500">*</span>
+              <label className="block text-[13px] font-medium text-[#12263A] mb-1">
+                Select customer <span className="text-[#C23B3B]">*</span>
               </label>
               <select
                 value={partyId}
                 onChange={(e) => setPartyId(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs font-medium focus:border-blue-500 focus:outline-hidden bg-white"
+                className="w-full h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] font-medium text-[#12263A] focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden bg-white cursor-pointer"
               >
-                <option value="">-- Choose Registered Customer --</option>
+                <option value="">-- Choose registered customer --</option>
                 {parties
                   .filter((p) => p.type === 'customer')
                   .map((p) => (
@@ -345,26 +345,26 @@ export default function CreateSalesInvoiceView({
               </select>
 
               {selectedParty && (
-                <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-200 grid grid-cols-2 gap-2 text-xs text-slate-600">
+                <div className="mt-3 p-3.5 bg-[#FFFBF3] rounded-lg border border-[#E8DFCF] grid grid-cols-2 gap-3 text-[13px] text-[#3E5368]">
                   <div>
-                    <span className="font-bold text-slate-700">Billing Address: </span>
+                    <span className="font-semibold text-[#12263A]">Billing address: </span>
                     {selectedParty.billingAddress}
                   </div>
                   <div>
-                    <span className="font-bold text-slate-700">GSTIN: </span>
+                    <span className="font-semibold text-[#12263A]">GSTIN: </span>
                     <span className="font-mono">{selectedParty.gstin || 'Unregistered'}</span>
                   </div>
                   <div>
-                    <span className="font-bold text-slate-700">Place of Supply: </span>
+                    <span className="font-semibold text-[#12263A]">Place of supply: </span>
                     {selectedParty.state} (
                     {selectedParty.state.toLowerCase() === businessProfile.state.toLowerCase()
-                      ? 'Intrastate CGST+SGST'
+                      ? 'Intrastate CGST + SGST'
                       : 'Interstate IGST'}
                     )
                   </div>
                   <div>
-                    <span className="font-bold text-slate-700">Current Outstanding: </span>
-                    <span className="font-mono font-bold text-slate-900">
+                    <span className="font-semibold text-[#12263A]">Outstanding: </span>
+                    <span className="font-semibold tabular-nums text-[#12263A]">
                       ₹{selectedParty.outstandingBalance || 0}
                     </span>
                   </div>
@@ -374,29 +374,29 @@ export default function CreateSalesInvoiceView({
           </div>
 
           {/* Line Items Card */}
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs space-y-4">
-            <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-              <h3 className="font-bold text-sm text-slate-900">Invoice Items</h3>
+          <div className="rounded-xl border border-[#E8DFCF] bg-white p-5 shadow-xs space-y-4">
+            <div className="flex justify-between items-center border-b border-[#E8DFCF] pb-2">
+              <h3 className="font-semibold text-base text-[#12263A]">Invoice Items</h3>
               <button
                 type="button"
                 onClick={onOpenItemModal}
-                className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-[13px] font-semibold text-[#14689F] hover:underline flex items-center gap-1 cursor-pointer"
               >
-                <Plus size={14} /> Add Product Master
+                <Plus size={15} /> Add product to catalogue
               </button>
             </div>
 
             {/* Quick Add Dropdown */}
             <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                Select Item from Catalog to Add
+              <label className="block text-[13px] font-medium text-[#12263A] mb-1">
+                Select item from catalogue
               </label>
               <select
                 value=""
                 onChange={(e) => {
                   if (e.target.value) handleAddLineItem(e.target.value);
                 }}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs font-medium focus:border-blue-500 focus:outline-hidden bg-white"
+                className="w-full h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] font-medium text-[#12263A] focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden bg-white cursor-pointer"
               >
                 <option value="">-- Choose item to add line --</option>
                 {items.map((it) => (
@@ -407,167 +407,198 @@ export default function CreateSalesInvoiceView({
               </select>
             </div>
 
-            {/* Line Items List */}
-            <div className="space-y-3">
-              {billItems.length === 0 ? (
-                <div className="p-6 text-center text-xs text-slate-400 bg-slate-50 rounded-lg border border-dashed border-slate-300">
-                  No line items added. Choose an item from the dropdown above.
-                </div>
-              ) : (
-                billItems.map((item, idx) => (
-                  <div key={item.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2 text-xs">
-                    <div className="flex justify-between items-center">
-                      <span className="font-bold text-slate-900">
-                        #{idx + 1}. {item.name}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveLineItem(item.id)}
-                        className="p-1 text-red-500 hover:bg-red-50 rounded transition"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                      <div>
-                        <label className="block text-[9px] uppercase font-bold text-slate-400">Qty</label>
-                        <input
-                          type="number"
-                          min="1"
-                          value={item.qty}
-                          onChange={(e) => handleUpdateLineItem(item.id, 'qty', parseFloat(e.target.value) || 0)}
-                          className="w-full rounded border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[9px] uppercase font-bold text-slate-400">Rate (₹)</label>
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          value={item.unitPrice}
-                          onChange={(e) =>
-                            handleUpdateLineItem(item.id, 'unitPrice', parseFloat(e.target.value) || 0)
-                          }
-                          className="w-full rounded border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[9px] uppercase font-bold text-slate-400">Discount (%)</label>
-                        <input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={item.discount}
-                          onChange={(e) =>
-                            handleUpdateLineItem(item.id, 'discount', parseFloat(e.target.value) || 0)
-                          }
-                          className="w-full rounded border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[9px] uppercase font-bold text-slate-400">GST %</label>
-                        <select
-                          value={item.gstRate}
-                          onChange={(e) =>
-                            handleUpdateLineItem(item.id, 'gstRate', parseFloat(e.target.value) || 0)
-                          }
-                          className="w-full rounded border border-slate-300 bg-white px-2 py-1 text-xs"
+            {/* Line Items Container with Sticky Columns */}
+            <div className="overflow-x-auto">
+              <div className="min-w-[650px] space-y-3">
+                {billItems.length === 0 ? (
+                  <div className="p-8 text-center text-[13px] text-[#3E5368] bg-[#FFFBF3] rounded-lg border border-dashed border-[#E8DFCF]">
+                    No line items added yet. Choose an item from the dropdown above.
+                  </div>
+                ) : (
+                  billItems.map((item, idx) => (
+                    <div key={item.id} className="p-3.5 bg-[#FFFBF3] rounded-lg border border-[#E8DFCF] space-y-2 text-[13px]">
+                      <div className="flex justify-between items-center">
+                        <span className="font-semibold text-[#12263A]">
+                          #{idx + 1}. {item.name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveLineItem(item.id)}
+                          className="p-1.5 text-[#C23B3B] hover:bg-[#FDECEC] rounded-md transition cursor-pointer"
+                          title="Remove item"
                         >
-                          <option value="0">0%</option>
-                          <option value="5">5%</option>
-                          <option value="12">12%</option>
-                          <option value="18">18%</option>
-                          <option value="28">28%</option>
-                        </select>
+                          <Trash2 size={16} />
+                        </button>
                       </div>
-                      <div>
-                        <label className="block text-[9px] uppercase font-bold text-slate-400 text-right">Line Total</label>
-                        <div className="pt-1 text-right font-mono font-bold text-slate-900">
-                          ₹{((item.qty * item.unitPrice) * (1 - item.discount / 100) * (1 + item.gstRate / 100)).toFixed(2)}
+
+                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <div>
+                          <label className="block text-[12px] font-medium text-[#3E5368] mb-1">Quantity</label>
+                          <input
+                            type="number"
+                            min="1"
+                            value={item.qty}
+                            onChange={(e) => handleUpdateLineItem(item.id, 'qty', parseFloat(e.target.value) || 0)}
+                            className="w-full h-9 rounded-md border border-[#E8DFCF] bg-white px-2 text-[13px] tabular-nums"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[12px] font-medium text-[#3E5368] mb-1">Rate (₹)</label>
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={item.unitPrice}
+                            onChange={(e) =>
+                              handleUpdateLineItem(item.id, 'unitPrice', parseFloat(e.target.value) || 0)
+                            }
+                            className="w-full h-9 rounded-md border border-[#E8DFCF] bg-white px-2 text-[13px] tabular-nums"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[12px] font-medium text-[#3E5368] mb-1">Discount (%)</label>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={item.discount}
+                            onChange={(e) =>
+                              handleUpdateLineItem(item.id, 'discount', parseFloat(e.target.value) || 0)
+                            }
+                            className="w-full h-9 rounded-md border border-[#E8DFCF] bg-white px-2 text-[13px] tabular-nums"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[12px] font-medium text-[#3E5368] mb-1">GST slab</label>
+                          <select
+                            value={item.gstRate}
+                            onChange={(e) =>
+                              handleUpdateLineItem(item.id, 'gstRate', parseFloat(e.target.value) || 0)
+                            }
+                            className="w-full h-9 rounded-md border border-[#E8DFCF] bg-white px-2 text-[13px] cursor-pointer"
+                          >
+                            <option value="0">0%</option>
+                            <option value="5">5%</option>
+                            <option value="12">12%</option>
+                            <option value="18">18%</option>
+                            <option value="28">28%</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[12px] font-medium text-[#3E5368] mb-1 text-right">Line total</label>
+                          <div className="pt-1.5 text-right font-semibold tabular-nums text-[#12263A]">
+                            ₹{((item.qty * item.unitPrice) * (1 - item.discount / 100) * (1 + item.gstRate / 100)).toFixed(2)}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
-              )}
+                  ))
+                )}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Right 1 Col: Summary & Payment Allocation */}
         <div className="space-y-6">
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs space-y-4">
-            <h3 className="font-bold text-sm text-slate-900 border-b border-slate-100 pb-2">Calculation Summary</h3>
+          {/* Real-time Tax & Totals Card */}
+          <div className="rounded-xl border border-[#E8DFCF] bg-white p-5 shadow-xs space-y-3.5">
+            <h3 className="font-semibold text-base text-[#12263A] border-b border-[#E8DFCF] pb-2">Calculation Summary</h3>
 
-            <div className="space-y-2 text-xs font-medium text-slate-600">
+            <div className="space-y-2 text-[13px] text-[#3E5368]">
               <div className="flex justify-between">
-                <span>Subtotal:</span>
-                <span className="font-mono text-slate-900">₹{calculationResults.subtotal.toFixed(2)}</span>
+                <span>Subtotal (gross)</span>
+                <span className="font-semibold tabular-nums text-[#12263A]">₹{calculationResults.subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-red-600">
-                <span>Total Discount:</span>
-                <span className="font-mono">-₹{calculationResults.discount.toFixed(2)}</span>
+              <div className="flex justify-between">
+                <span>Total discount</span>
+                <span className="font-semibold tabular-nums text-[#1E8E5A]">-₹{calculationResults.discount.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between pt-1 border-t border-slate-100">
-                <span>Taxable Amount:</span>
-                <span className="font-mono font-bold text-slate-900">₹{calculationResults.taxableAmount.toFixed(2)}</span>
+              <div className="flex justify-between pt-1 border-t border-[#E8DFCF]/60">
+                <span className="font-semibold text-[#12263A]">Taxable value</span>
+                <span className="font-semibold tabular-nums text-[#12263A]">₹{calculationResults.taxableAmount.toFixed(2)}</span>
               </div>
 
               {calculationResults.cgst > 0 && (
-                <div className="flex justify-between">
-                  <span>CGST:</span>
-                  <span className="font-mono">₹{calculationResults.cgst.toFixed(2)}</span>
+                <div className="flex justify-between text-[#14689F]">
+                  <span>CGST</span>
+                  <span className="font-semibold tabular-nums">+₹{calculationResults.cgst.toFixed(2)}</span>
                 </div>
               )}
               {calculationResults.sgst > 0 && (
-                <div className="flex justify-between">
-                  <span>SGST:</span>
-                  <span className="font-mono">₹{calculationResults.sgst.toFixed(2)}</span>
+                <div className="flex justify-between text-[#14689F]">
+                  <span>SGST</span>
+                  <span className="font-semibold tabular-nums">+₹{calculationResults.sgst.toFixed(2)}</span>
                 </div>
               )}
               {calculationResults.igst > 0 && (
-                <div className="flex justify-between">
-                  <span>IGST:</span>
-                  <span className="font-mono">₹{calculationResults.igst.toFixed(2)}</span>
-                </div>
-              )}
-              {calculationResults.roundOff !== 0 && (
-                <div className="flex justify-between">
-                  <span>Round Off:</span>
-                  <span className="font-mono">₹{calculationResults.roundOff.toFixed(2)}</span>
+                <div className="flex justify-between text-[#14689F]">
+                  <span>IGST</span>
+                  <span className="font-semibold tabular-nums">+₹{calculationResults.igst.toFixed(2)}</span>
                 </div>
               )}
 
-              <div className="flex justify-between items-center pt-2 border-t-2 border-slate-900 font-bold text-sm text-slate-950">
-                <span>Grand Total:</span>
-                <span className="font-mono text-blue-700 text-base">₹{calculationResults.grandTotal.toFixed(2)}</span>
+              {calculationResults.roundOff !== 0 && (
+                <div className="flex justify-between text-[#3E5368]">
+                  <span>Round off</span>
+                  <span className="font-semibold tabular-nums">{calculationResults.roundOff > 0 ? `+₹${calculationResults.roundOff.toFixed(2)}` : `-₹${Math.abs(calculationResults.roundOff).toFixed(2)}`}</span>
+                </div>
+              )}
+
+              <div className="flex justify-between pt-2 border-t border-[#E8DFCF] text-base font-bold text-[#12263A]">
+                <span>Grand Total</span>
+                <span className="tabular-nums text-[#E0771A]">₹{calculationResults.grandTotal.toFixed(2)}</span>
               </div>
-              <p className="font-serif italic text-[10px] text-slate-400">{calculationResults.amountInWords}</p>
+              <p className="text-[12px] text-[#3E5368] italic pt-1">{calculationResults.amountInWords}</p>
             </div>
 
-            {/* Payment Received Input */}
-            <div className="pt-3 border-t border-slate-100 space-y-2">
+            {/* Payment Collection */}
+            <div className="pt-3 border-t border-[#E8DFCF] space-y-3">
               <div>
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                  Amount Received Now (₹)
+                <label className="block text-[13px] font-medium text-[#12263A] mb-1">
+                  Amount received (₹)
                 </label>
                 <input
                   type="number"
                   min="0"
                   step="0.01"
-                  value={amountReceived || ''}
+                  value={amountReceived}
                   onChange={(e) => setAmountReceived(parseFloat(e.target.value) || 0)}
-                  placeholder="0.00"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs font-mono font-bold focus:border-blue-500 focus:outline-hidden"
+                  className="w-full h-10 rounded-lg border border-[#E8DFCF] px-3 text-[14px] font-semibold text-[#12263A] tabular-nums focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden"
                 />
               </div>
 
-              <div className="flex justify-between items-center text-xs font-bold pt-1">
-                <span className="text-slate-500">Balance Due:</span>
-                <span className="font-mono text-red-600">₹{balanceDue.toFixed(2)}</span>
+              <div className="flex justify-between text-[13px] font-semibold pt-1">
+                <span className="text-[#3E5368]">Balance due</span>
+                <span className={`tabular-nums ${balanceDue > 0 ? 'text-[#C23B3B]' : 'text-[#1E8E5A]'}`}>
+                  ₹{balanceDue.toFixed(2)}
+                </span>
               </div>
+            </div>
+          </div>
+
+          {/* Notes & Terms Card */}
+          <div className="rounded-xl border border-[#E8DFCF] bg-white p-5 shadow-xs space-y-3">
+            <h3 className="font-semibold text-base text-[#12263A] border-b border-[#E8DFCF] pb-2">Notes & Terms</h3>
+            <div>
+              <label className="block text-[12px] font-medium text-[#3E5368] mb-1">Invoice notes</label>
+              <textarea
+                rows={2}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Remarks visible to customer..."
+                className="w-full rounded-lg border border-[#E8DFCF] p-2.5 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:outline-hidden"
+              />
+            </div>
+            <div>
+              <label className="block text-[12px] font-medium text-[#3E5368] mb-1">Terms & Conditions</label>
+              <textarea
+                rows={2}
+                value={terms}
+                onChange={(e) => setTerms(e.target.value)}
+                placeholder="Payment terms..."
+                className="w-full rounded-lg border border-[#E8DFCF] p-2.5 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:outline-hidden"
+              />
             </div>
           </div>
         </div>

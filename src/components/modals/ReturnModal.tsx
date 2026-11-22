@@ -194,19 +194,19 @@ export default function ReturnModal({
             </table>
           </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
+          <div className="flex justify-end gap-2.5 pt-3 border-t border-[#E8DFCF]">
             <button
               type="button"
               onClick={onClose}
               disabled={processing}
-              className="px-4 py-2 border border-slate-300 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-50"
+              className="px-4 py-2 border border-[#E8DFCF] text-[#3E5368] text-xs font-semibold rounded-lg hover:bg-[#FFFBF3] transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={processing}
-              className="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="px-5 py-2 bg-[#E0771A] hover:bg-[#B85D0F] text-white text-xs font-semibold rounded-lg disabled:opacity-50 transition cursor-pointer shadow-2xs"
             >
               {processing ? 'Processing Return...' : `Generate ${isSale ? 'Credit Note' : 'Debit Note'}`}
             </button>

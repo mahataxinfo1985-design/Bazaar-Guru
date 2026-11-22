@@ -100,14 +100,14 @@ export default function ExpenseModal({ isOpen, onClose, onSave, expenseToEdit }:
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-      <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+      <div className="w-full max-w-lg rounded-xl bg-white shadow-xl border border-[#E8DFCF] overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex h-14 items-center justify-between border-b border-slate-200 bg-slate-900 px-6 text-white shrink-0">
-          <span className="text-sm font-bold tracking-wide uppercase">
+        <div className="flex h-14 items-center justify-between border-b border-[#E8DFCF] bg-[#FFFBF3] px-6 text-[#12263A] shrink-0">
+          <span className="text-sm font-bold">
             {expenseToEdit ? 'Edit Expense Record' : 'Record New Expense'}
           </span>
-          <button onClick={onClose} className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition">
+          <button onClick={onClose} className="rounded-lg p-1.5 text-[#3E5368] hover:bg-[#EAF5FD] hover:text-[#12263A] transition cursor-pointer">
             <X size={18} />
           </button>
         </div>
@@ -316,18 +316,18 @@ export default function ExpenseModal({ isOpen, onClose, onSave, expenseToEdit }:
         </form>
 
         {/* Footer Actions */}
-        <div className="flex h-16 items-center justify-end gap-2 border-t border-slate-200 bg-slate-50 px-6 shrink-0">
+        <div className="flex h-14 items-center justify-end gap-2.5 border-t border-[#E8DFCF] bg-[#FFFBF3] px-6 shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+            className="rounded-lg border border-[#E8DFCF] bg-white px-4 py-2 text-xs font-semibold text-[#3E5368] hover:bg-[#FFFBF3] transition cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handleSubmit}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition cursor-pointer"
+            className="rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] px-5 py-2 text-xs font-semibold text-white shadow-2xs transition cursor-pointer"
           >
             Save Record
           </button>

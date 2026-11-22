@@ -49,14 +49,14 @@ export default function PartyLedgerModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-xs">
       <div className="w-full max-w-4xl rounded-xl bg-white shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="flex h-16 items-center justify-between border-b border-slate-100 bg-slate-900 px-6 text-white no-print">
+        <div className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 no-print">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white font-bold">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-700 font-bold border border-blue-200">
               <User size={18} />
             </div>
             <div>
-              <h2 className="font-bold text-sm md:text-base leading-tight">{party.name}</h2>
-              <p className="text-[10px] text-slate-400 font-mono">
+              <h2 className="font-bold text-sm md:text-base leading-tight text-slate-900">{party.name}</h2>
+              <p className="text-[10px] text-slate-500 font-mono">
                 {party.type.toUpperCase()} LEDGER • GSTIN: {party.gstin || 'Unregistered'}
               </p>
             </div>
@@ -65,7 +65,7 @@ export default function PartyLedgerModal({
           <div className="flex items-center gap-2">
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition cursor-pointer"
+              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
             >
               <Download size={14} />
               <span className="hidden sm:inline">Export CSV</span>
@@ -79,7 +79,7 @@ export default function PartyLedgerModal({
             </button>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white transition ml-2"
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition ml-2"
             >
               <X size={18} />
             </button>

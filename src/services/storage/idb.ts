@@ -806,6 +806,17 @@ export async function idbDelete<K extends keyof InvoiceProDBSchema>(
   await (db as any).delete(storeName, key);
 }
 
+export async function idbClear<K extends keyof InvoiceProDBSchema>(
+  storeName: K
+): Promise<void> {
+  if (typeof indexedDB === 'undefined') {
+    getMemoryStore(storeName as string).clear();
+    return;
+  }
+  const db = await getIDB();
+  await (db as any).clear(storeName);
+}
+
 export async function idbGetAll<K extends keyof InvoiceProDBSchema>(
   storeName: K
 ): Promise<InvoiceProDBSchema[K]['value'][]> {

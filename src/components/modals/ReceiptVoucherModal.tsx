@@ -184,12 +184,12 @@ export function ReceiptVoucherModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
       <div className="w-full max-w-2xl rounded-xl bg-white shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex h-14 items-center justify-between border-b border-slate-100 bg-slate-900 px-6 text-white shrink-0">
+        <div className="flex h-14 items-center justify-between border-b border-slate-200 bg-white px-6 shrink-0">
           <div className="flex items-center gap-2">
-            <Receipt className="w-5 h-5 text-emerald-400" />
-            <span className="font-bold text-sm tracking-wide">Record Customer Receipt (Payment In)</span>
+            <Receipt className="w-5 h-5 text-emerald-600" />
+            <span className="font-bold text-sm tracking-wide text-slate-900">Record Customer Receipt (Payment In)</span>
           </div>
-          <button onClick={onClose} className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white">
+          <button onClick={onClose} className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700">
             <X size={18} />
           </button>
         </div>

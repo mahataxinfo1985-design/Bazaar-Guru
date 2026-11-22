@@ -76,19 +76,21 @@ export default function ItemModal({ isOpen, onClose, onSave }: ItemModalProps) {
   const unitOptions = ['PCS', 'BOX', 'LTR', 'KGS', 'NOS', 'MTR', 'BAG', 'HRS', 'SET'];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-      <div className="w-full max-w-md rounded-xl bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 border border-slate-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+      <div className="w-full max-w-md rounded-xl bg-white shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 border border-[#E8DFCF]">
         
         {/* Header */}
-        <div className="flex items-center justify-between bg-slate-900 px-6 py-4 text-white">
+        <div className="flex items-center justify-between bg-[#FFFBF3] px-6 py-4 border-b border-[#E8DFCF]">
           <div className="flex items-center gap-2.5">
-            <Package size={20} className="text-blue-400" />
-            <h2 className="text-lg font-bold">Add New Product / Service</h2>
+            <div className="p-2 rounded-lg bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30">
+              <Package size={18} />
+            </div>
+            <h2 className="text-base font-bold text-[#12263A]">Add New Product / Service</h2>
           </div>
           <button 
             type="button"
             onClick={onClose} 
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+            className="rounded-lg p-1.5 text-[#3E5368] hover:bg-[#EAF5FD] hover:text-[#12263A] transition-colors cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -219,19 +221,19 @@ export default function ItemModal({ isOpen, onClose, onSave }: ItemModalProps) {
           </div>
 
           {/* Buttons */}
-          <div className="flex items-center justify-end gap-3 border-t border-slate-100 pt-4 mt-6">
+          <div className="flex items-center justify-end gap-2.5 border-t border-[#E8DFCF] pt-3.5 mt-5">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+              className="rounded-lg border border-[#E8DFCF] px-4 py-2 text-xs font-semibold text-[#3E5368] hover:bg-[#FFFBF3] transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex items-center gap-1.5 rounded-lg bg-accent-blue px-5 py-2 text-sm font-bold text-white shadow-sm hover:bg-blue-800 hover:shadow-blue-800/10"
+              className="flex items-center gap-1.5 rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] px-5 py-2 text-xs font-semibold text-white shadow-2xs transition cursor-pointer"
             >
-              <Plus size={16} />
+              <Plus size={15} />
               <span>Save Product</span>
             </button>
           </div>

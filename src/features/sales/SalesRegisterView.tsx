@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, Search, Eye, Share2, Edit3, Copy, X, Trash2, DollarSign } from 'lucide-react';
+import { Plus, Search, Eye, Edit3, Copy, X, Trash2, DollarSign, MoreHorizontal } from 'lucide-react';
 import { Invoice, Party, BusinessProfile } from '../../types';
 import ExportDropdown from '../../components/shared/ExportDropdown';
-import { generateInvoicePDF } from '../../utils/pdfGenerator';
-import { exportInvoiceJSON } from '../../utils/exportHelpers';
 
 interface SalesRegisterViewProps {
   invoices: Invoice[];
@@ -39,6 +37,7 @@ export default function SalesRegisterView({
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const filteredInvoices = invoices.filter((inv) => {
     if (inv.deleted) return false;
@@ -55,14 +54,11 @@ export default function SalesRegisterView({
   });
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Sales Register</h2>
-          <p className="text-sm text-slate-500">
-            Log tax invoices, bills of supply, and sales returns for your customer base.
-          </p>
+          <h2 className="text-2xl font-semibold text-[#12263A] tracking-tight">Sales Register</h2>
         </div>
         <div className="flex items-center gap-3">
           <ExportDropdown
@@ -75,7 +71,7 @@ export default function SalesRegisterView({
           />
           <button
             onClick={onCreateInvoice}
-            className="flex items-center gap-1.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-bold text-white shadow-2xs hover:bg-blue-800 transition cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] px-4 py-2 text-[14px] font-semibold text-white shadow-xs transition cursor-pointer min-h-[40px]"
           >
             <Plus size={16} />
             <span>Create Invoice</span>
@@ -84,15 +80,15 @@ export default function SalesRegisterView({
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-2xs flex flex-col md:flex-row items-center gap-4">
+      <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-xs flex flex-col md:flex-row items-center gap-3">
         <div className="relative w-full md:flex-1">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#3E5368]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by invoice number, customer name, HSN..."
-            className="w-full rounded-lg border border-slate-300 pl-10 pr-4 py-2 text-sm focus:border-blue-500 focus:outline-hidden"
+            className="w-full h-10 rounded-lg border border-[#E8DFCF] pl-10 pr-4 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:ring-2 focus:ring-[#3BA0E6]/20 focus:outline-hidden bg-white"
           />
         </div>
 
@@ -100,7 +96,7 @@ export default function SalesRegisterView({
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="w-full md:w-40 rounded-lg border border-slate-300 px-3 py-2 text-xs focus:border-blue-500 focus:outline-hidden bg-white"
+            className="w-full md:w-44 h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:outline-hidden bg-white cursor-pointer"
           >
             <option value="All">All Types</option>
             <option value="Tax Invoice">Tax Invoice</option>
@@ -114,7 +110,7 @@ export default function SalesRegisterView({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full md:w-40 rounded-lg border border-slate-300 px-3 py-2 text-xs focus:border-blue-500 focus:outline-hidden bg-white"
+            className="w-full md:w-44 h-10 rounded-lg border border-[#E8DFCF] px-3 text-[13px] text-[#12263A] focus:border-[#1F86CC] focus:outline-hidden bg-white cursor-pointer"
           >
             <option value="All">All Payments</option>
             <option value="Paid">Paid</option>
@@ -126,26 +122,26 @@ export default function SalesRegisterView({
       </div>
 
       {/* Invoices Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden">
+      <div className="rounded-xl border border-[#E8DFCF] bg-white shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse text-[13px]">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 text-[10px] uppercase font-bold tracking-wider">
-                <th className="p-4">Invoice No</th>
-                <th className="p-4">Customer</th>
-                <th className="p-4">Date</th>
-                <th className="p-4">Due Date</th>
-                <th className="p-4 text-right">Taxable (₹)</th>
-                <th className="p-4 text-right">Grand Total (₹)</th>
-                <th className="p-4 text-right">Balance Due (₹)</th>
-                <th className="p-4">Status</th>
-                <th className="p-4 text-center">Actions</th>
+              <tr className="bg-[#FFFBF3] border-b border-[#E8DFCF] text-[#3E5368] text-[12px] font-semibold">
+                <th className="p-3.5">Invoice No</th>
+                <th className="p-3.5">Customer</th>
+                <th className="p-3.5">Date</th>
+                <th className="p-3.5">Due Date</th>
+                <th className="p-3.5 text-right">Taxable (₹)</th>
+                <th className="p-3.5 text-right">Grand Total (₹)</th>
+                <th className="p-3.5 text-right">Balance Due (₹)</th>
+                <th className="p-3.5">Status</th>
+                <th className="p-3.5 text-center w-24">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs">
+            <tbody className="divide-y divide-[#E8DFCF]/60">
               {filteredInvoices.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="p-8 text-center text-slate-400">
+                  <td colSpan={9} className="p-8 text-center text-[#3E5368]">
                     No sales invoices found matching your filters.
                   </td>
                 </tr>
@@ -153,100 +149,126 @@ export default function SalesRegisterView({
                 filteredInvoices.map((inv) => {
                   const party = parties.find((p) => p.id === inv.partyId);
                   const isCancelled = inv.status === 'Cancelled';
+                  const isMenuOpen = openMenuId === inv.id;
+
                   return (
                     <tr
                       key={inv.id}
-                      className={`hover:bg-slate-50 transition-colors ${
-                        isCancelled ? 'opacity-70 bg-red-50/30' : ''
+                      className={`hover:bg-[#FFFBF3] transition-colors ${
+                        isCancelled ? 'opacity-70 bg-[#FDECEC]/30' : ''
                       }`}
                     >
-                      <td className="p-4 font-bold text-slate-900">
+                      <td className="p-3.5 font-medium text-[#12263A]">
                         {inv.invoiceNumber}
-                        <span className="block text-[9px] text-slate-400 font-medium">{inv.type}</span>
-                        {isCancelled && (
-                          <span className="block text-[9px] text-red-500 font-bold uppercase">Cancelled</span>
-                        )}
+                        <span className="block text-[12px] text-[#3E5368]">{inv.type}</span>
                       </td>
-                      <td className="p-4">
-                        <p className="font-semibold text-slate-900">{party?.name || 'Party'}</p>
-                        <p className="text-[10px] text-slate-400 font-mono">{party?.gstin || 'Unregistered'}</p>
+                      <td className="p-3.5">
+                        <p className="font-medium text-[#12263A]">{party?.name || 'Party'}</p>
+                        <p className="text-[12px] text-[#3E5368] font-mono">{party?.gstin || 'Unregistered'}</p>
                       </td>
-                      <td className="p-4 font-medium text-slate-600">{inv.date}</td>
-                      <td className="p-4 font-medium text-slate-600">{inv.dueDate}</td>
-                      <td className="p-4 text-right font-mono font-semibold">
+                      <td className="p-3.5 text-[#3E5368]">{inv.date}</td>
+                      <td className="p-3.5 text-[#3E5368]">{inv.dueDate}</td>
+                      <td className="p-3.5 text-right font-medium tabular-nums text-[#12263A]">
                         ₹{inv.taxableAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="p-4 text-right font-mono font-bold text-slate-950">
+                      <td className="p-3.5 text-right font-semibold tabular-nums text-[#12263A]">
                         ₹{inv.grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="p-4 text-right font-mono font-bold text-red-600">
+                      <td className="p-3.5 text-right font-semibold tabular-nums text-[#C23B3B]">
                         ₹{inv.balanceDue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="p-4">
+                      <td className="p-3.5">
                         <span
-                          className={`inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                          className={`badge-status ${
                             isCancelled
-                              ? 'bg-red-100 text-red-700 border border-red-200'
+                              ? 'badge-draft'
                               : inv.paymentStatus === 'Paid'
-                              ? 'bg-green-50 text-green-700 border border-green-200'
+                              ? 'badge-paid'
                               : inv.paymentStatus === 'Partial'
-                              ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                              : 'bg-red-50 text-red-700 border border-red-200'
+                              ? 'badge-partial'
+                              : 'badge-overdue'
                           }`}
                         >
                           {isCancelled ? 'Cancelled' : inv.paymentStatus}
                         </span>
                       </td>
-                      <td className="p-4">
+                      <td className="p-3.5 text-center relative">
                         <div className="flex items-center justify-center gap-1">
+                          {/* Inline Action 1: View */}
                           <button
                             onClick={() => onViewInvoice(inv)}
-                            className="p-1 hover:bg-slate-100 rounded-md text-slate-500 hover:text-slate-900 transition-colors"
-                            title="View Document"
+                            className="p-1.5 hover:bg-[#EAF5FD] text-[#14689F] rounded-md transition cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center"
+                            title="View document"
                           >
-                            <Eye size={14} />
+                            <Eye size={16} />
                           </button>
+
+                          {/* Inline Action 2: Record Payment (if balance due) */}
                           {party && inv.balanceDue > 0 && !isCancelled && (
                             <button
                               onClick={() => onRecordPayment(party, inv)}
-                              className="p-1 hover:bg-emerald-50 rounded-md text-emerald-600 hover:text-emerald-700 transition-colors"
-                              title="Record Payment"
+                              className="p-1.5 hover:bg-[#E6F6EE] text-[#1E8E5A] rounded-md transition cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center"
+                              title="Record payment"
                             >
-                              <DollarSign size={14} />
+                              <DollarSign size={16} />
                             </button>
                           )}
-                          {!isCancelled && (
-                            <>
-                              <button
-                                onClick={() => onEditInvoice(inv)}
-                                className="p-1 hover:bg-blue-50 rounded-md text-blue-500 hover:text-blue-700 transition-colors"
-                                title="Edit"
+
+                          {/* Overflow Menu (⋯) for Edit, Duplicate, Cancel, Delete */}
+                          <div className="relative">
+                            <button
+                              onClick={() => setOpenMenuId(isMenuOpen ? null : inv.id)}
+                              className="p-1.5 hover:bg-[#EAF5FD] text-[#3E5368] hover:text-[#12263A] rounded-md transition cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center"
+                              title="More options"
+                            >
+                              <MoreHorizontal size={16} />
+                            </button>
+
+                            {isMenuOpen && (
+                              <div 
+                                className="absolute right-0 top-8 w-44 bg-white rounded-lg shadow-lg border border-[#E8DFCF] z-30 py-1 text-left text-[13px]"
+                                onMouseLeave={() => setOpenMenuId(null)}
                               >
-                                <Edit3 size={14} />
-                              </button>
-                              <button
-                                onClick={() => onDuplicateInvoice(inv)}
-                                className="p-1 hover:bg-emerald-50 rounded-md text-emerald-500 hover:text-emerald-700 transition-colors"
-                                title="Duplicate"
-                              >
-                                <Copy size={14} />
-                              </button>
-                              <button
-                                onClick={() => onCancelInvoice(inv)}
-                                className="p-1 hover:bg-amber-50 rounded-md text-amber-500 hover:text-amber-700 transition-colors"
-                                title="Cancel Invoice"
-                              >
-                                <X size={14} />
-                              </button>
-                            </>
-                          )}
-                          <button
-                            onClick={() => onSoftDeleteInvoice(inv)}
-                            className="p-1 hover:bg-red-50 rounded-md text-red-400 hover:text-red-600 transition-colors"
-                            title="Hide / Delete"
-                          >
-                            <Trash2 size={14} />
-                          </button>
+                                {!isCancelled && (
+                                  <>
+                                    <button
+                                      onClick={() => { setOpenMenuId(null); onEditInvoice(inv); }}
+                                      className="w-full px-3.5 py-2 hover:bg-[#FFFBF3] text-[#12263A] flex items-center gap-2 cursor-pointer"
+                                    >
+                                      <Edit3 size={14} className="text-[#14689F]" />
+                                      <span>Edit invoice</span>
+                                    </button>
+                                    <button
+                                      onClick={() => { setOpenMenuId(null); onDuplicateInvoice(inv); }}
+                                      className="w-full px-3.5 py-2 hover:bg-[#FFFBF3] text-[#12263A] flex items-center gap-2 cursor-pointer"
+                                    >
+                                      <Copy size={14} className="text-[#1E8E5A]" />
+                                      <span>Duplicate</span>
+                                    </button>
+                                    <button
+                                      onClick={() => { setOpenMenuId(null); onCancelInvoice(inv); }}
+                                      className="w-full px-3.5 py-2 hover:bg-[#FFFBF3] text-[#B7791F] flex items-center gap-2 cursor-pointer"
+                                    >
+                                      <X size={14} />
+                                      <span>Cancel invoice</span>
+                                    </button>
+                                  </>
+                                )}
+                                <button
+                                  onClick={() => {
+                                    setOpenMenuId(null);
+                                    if (confirm('Delete this invoice?')) {
+                                      onSoftDeleteInvoice(inv);
+                                    }
+                                  }}
+                                  className="w-full px-3.5 py-2 hover:bg-[#FDECEC] text-[#C23B3B] flex items-center gap-2 cursor-pointer"
+                                >
+                                  <Trash2 size={14} />
+                                  <span>Delete</span>
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </td>
                     </tr>

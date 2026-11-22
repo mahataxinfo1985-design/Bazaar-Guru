@@ -161,7 +161,7 @@ export const FundTransferModal: React.FC<FundTransferModalProps> = ({
           </div>
           <button 
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600:text-slate-200 rounded-lg hover:bg-white/80:bg-slate-800 transition-colors"
+            className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -369,23 +369,23 @@ export const FundTransferModal: React.FC<FundTransferModalProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E8DFCF]">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100:bg-slate-800 transition-colors"
+              className="px-4 py-2 rounded-lg text-xs font-semibold text-[#3E5368] hover:bg-[#FFFBF3] border border-[#E8DFCF] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || isLocked}
-              className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-lg shadow-blue-200 flex items-center gap-2"
+              className="px-5 py-2 rounded-lg text-xs font-semibold text-white bg-[#E0771A] hover:bg-[#B85D0F] disabled:opacity-50 transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer"
             >
               {isSubmitting ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   <span>Transferring...</span>
                 </>
               ) : (

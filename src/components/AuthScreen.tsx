@@ -71,39 +71,42 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-slate-800 rounded-2xl shadow-xl border border-slate-700 overflow-hidden">
+    <div className="min-h-screen bg-[#FFF8EC] flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-[#E8DFCF] overflow-hidden">
         {/* Header */}
-        <div className="p-8 text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-          <div className="inline-flex p-3 bg-white/10 rounded-xl mb-3">
-            <Building2 className="w-8 h-8" />
+        <div className="p-6 text-center bg-[#FFFBF3] border-b border-[#E8DFCF]">
+          <div className="flex justify-center mb-2">
+            <img 
+              src="/logo.png" 
+              alt="Bazaar-Guru" 
+              className="h-14 w-auto object-contain" 
+            />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">Bazaar-Guru</h1>
-          <p className="text-blue-100 mt-1 text-sm font-medium">Professional GST Invoicing & Expense Suite</p>
+          <p className="text-[#3E5368] text-xs font-semibold">Professional GST Invoicing & Accounting Suite</p>
         </div>
 
         {/* Body */}
-        <div className="p-8">
+        <div className="p-6">
           {message && (
-            <div className={`p-4 rounded-lg mb-6 flex items-start gap-3 text-sm ${
+            <div className={`p-3.5 rounded-lg mb-5 flex items-start gap-2.5 text-xs font-semibold ${
               message.type === 'success' 
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                ? 'bg-[#E6F6EE] text-[#1E8E5A] border border-[#1E8E5A]/20' 
+                : 'bg-[#FDECEC] text-[#C23B3B] border border-[#C23B3B]/20'
             }`}>
-              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{message.text}</span>
             </div>
           )}
 
-          <form onSubmit={handleAuth} className="space-y-5">
+          <form onSubmit={handleAuth} className="space-y-4">
             {isSignUp && !magicLink && (
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                <label className="block text-[11px] font-semibold text-[#3E5368] uppercase tracking-wider mb-1.5">
                   Business / Company Name
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
-                    <Building2 className="w-5 h-5" />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#3E5368]/60">
+                    <Building2 className="w-4 h-4" />
                   </div>
                   <input
                     type="text"
@@ -111,19 +114,19 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                     placeholder="e.g. Acme Corp"
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-slate-500 text-sm"
+                    className="block w-full pl-9 pr-3 h-10 bg-[#FFFBF3] border border-[#E8DFCF] rounded-lg focus:outline-hidden focus:border-[#3BA0E6] text-[#12263A] placeholder-[#3E5368]/50 text-xs font-medium"
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-[11px] font-semibold text-[#3E5368] uppercase tracking-wider mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
-                  <Mail className="w-5 h-5" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#3E5368]/60">
+                  <Mail className="w-4 h-4" />
                 </div>
                 <input
                   type="email"
@@ -131,19 +134,19 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                   placeholder="name@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-slate-500 text-sm"
+                  className="block w-full pl-9 pr-3 h-10 bg-[#FFFBF3] border border-[#E8DFCF] rounded-lg focus:outline-hidden focus:border-[#3BA0E6] text-[#12263A] placeholder-[#3E5368]/50 text-xs font-medium"
                 />
               </div>
             </div>
 
             {!magicLink && (
               <div>
-                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                <label className="block text-[11px] font-semibold text-[#3E5368] uppercase tracking-wider mb-1.5">
                   Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
-                    <Lock className="w-5 h-5" />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#3E5368]/60">
+                    <Lock className="w-4 h-4" />
                   </div>
                   <input
                     type="password"
@@ -151,7 +154,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-slate-500 text-sm"
+                    className="block w-full pl-9 pr-3 h-10 bg-[#FFFBF3] border border-[#E8DFCF] rounded-lg focus:outline-hidden focus:border-[#3BA0E6] text-[#12263A] placeholder-[#3E5368]/50 text-xs font-medium"
                   />
                 </div>
               </div>
@@ -160,23 +163,23 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm cursor-pointer shadow-md"
+              className="w-full flex items-center justify-center gap-2 h-10 bg-[#E0771A] hover:bg-[#B85D0F] disabled:opacity-50 text-white font-semibold rounded-lg transition duration-150 text-xs cursor-pointer shadow-2xs mt-2"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : magicLink ? (
                 <>
-                  <Sparkles className="w-5 h-5" />
+                  <Sparkles className="w-4 h-4" />
                   Send Magic Link
                 </>
               ) : isSignUp ? (
                 <>
-                  <UserPlus className="w-5 h-5" />
+                  <UserPlus className="w-4 h-4" />
                   Register Business
                 </>
               ) : (
                 <>
-                  <LogIn className="w-5 h-5" />
+                  <LogIn className="w-4 h-4" />
                   Sign In
                 </>
               )}
@@ -184,11 +187,11 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           </form>
 
           {/* Toggle Options */}
-          <div className="mt-6 pt-6 border-t border-slate-700/60 flex flex-col gap-3 text-center text-xs">
+          <div className="mt-5 pt-4 border-t border-[#E8DFCF] flex flex-col gap-2 text-center text-xs">
             {!magicLink && (
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
-                className="text-slate-400 hover:text-blue-400 transition"
+                className="text-[#1F86CC] hover:underline font-semibold cursor-pointer"
               >
                 {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Register"}
               </button>
@@ -199,7 +202,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
                 setMagicLink(!magicLink);
                 setMessage(null);
               }}
-              className="text-slate-500 hover:text-slate-400 font-medium transition"
+              className="text-[#3E5368] hover:text-[#12263A] font-medium transition cursor-pointer"
             >
               {magicLink ? 'Back to password login' : 'Or log in with a Passwordless Magic Link'}
             </button>

@@ -52,20 +52,20 @@ export default function AccountLedgerModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-black/60 backdrop-blur-xs">
       <div className="w-full max-w-5xl rounded-xl bg-white shadow-2xl overflow-hidden flex flex-col max-h-[95vh] border border-slate-100">
         {/* Header */}
-        <div className="flex h-16 items-center justify-between border-b border-slate-200 bg-slate-900 px-6 text-white shrink-0">
+        <div className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600/30 text-blue-400 font-bold border border-blue-500/30">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-700 font-bold border border-blue-200">
               <BookOpen size={18} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-slate-800 text-blue-400 font-bold">
+                <span className="font-mono text-xs px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">
                   {account.code}
                 </span>
-                <h2 className="text-base font-bold text-white tracking-tight">{account.name}</h2>
+                <h2 className="text-base font-bold text-slate-900 tracking-tight">{account.name}</h2>
               </div>
-              <p className="text-[11px] text-slate-400">
-                General Ledger Statement | Category: <span className="uppercase text-slate-300 font-semibold">{account.type}</span> ({account.subtype})
+              <p className="text-[11px] text-slate-500">
+                General Ledger Statement | Category: <span className="uppercase text-slate-700 font-semibold">{account.type}</span> ({account.subtype})
               </p>
             </div>
           </div>
@@ -73,17 +73,17 @@ export default function AccountLedgerModal({
           <div className="flex items-center gap-2">
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-bold text-slate-200 hover:bg-slate-700 transition cursor-pointer"
+              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
             >
               <Download size={13} /> Export CSV
             </button>
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-bold text-slate-200 hover:bg-slate-700 transition cursor-pointer"
+              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
             >
               <Printer size={13} /> Print
             </button>
-            <button onClick={onClose} className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition">
+            <button onClick={onClose} className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition">
               <X size={18} />
             </button>
           </div>

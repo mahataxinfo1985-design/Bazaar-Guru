@@ -98,6 +98,7 @@ import CreatePurchaseBillView from './features/purchases/CreatePurchaseBillView'
 import PartiesView from './features/parties/PartiesView';
 import InventoryView from './features/inventory/InventoryView';
 import AccountingView from './features/accounting/AccountingView';
+import LandingPage from './components/LandingPage';
 import { BankingView } from './features/banking/BankingView';
 import ReportsView from './features/reports/ReportsView';
 import ExpensesView from './features/expenses/ExpensesView';
@@ -1659,7 +1660,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 text-slate-900 antialiased overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#FFF8EC] text-[#12263A] antialiased overflow-hidden font-sans">
       {/* Sidebar Navigation */}
       <Sidebar
         currentTab={currentTab}
@@ -1667,37 +1668,31 @@ export default function App() {
         isOpen={sidebarOpen}
         setIsOpen={setSidebarOpen}
         businessName={profile.name}
+        businessGstin={profile.gstin}
         onLogout={async () => {
           await supabase.auth.signOut();
           setUser(null);
         }}
         onLoginClick={() => setIsAuthModalOpen(true)}
         isAuthenticated={!!user}
+        onOpenLanding={() => setCurrentTab('landing')}
       />
 
       {/* Main App Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Header Bar */}
-        <header className="h-16 bg-white border-b border-slate-200 px-4 md:px-6 flex items-center justify-between shrink-0 shadow-xs z-10">
+        <header className="h-16 bg-white border-b border-[#E8DFCF] px-4 md:px-6 flex items-center justify-between shrink-0 z-10 shadow-xs">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg md:hidden"
+              className="p-2 text-[#3E5368] hover:bg-[#EAF5FD] rounded-lg md:hidden cursor-pointer"
             >
               <Menu size={20} />
             </button>
             <div>
-              <h2 className="text-base font-bold text-slate-800 leading-tight">
-                {profile.name || 'Bazaar-Guru GST Workspace'}
+              <h2 className="text-base font-semibold text-[#12263A] leading-tight">
+                {profile.name || 'Bazaar-Guru Workspace'}
               </h2>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  FY 2024-25 | GSTIN: {profile.gstin || 'Unregistered'}
-                </span>
-                <span className="inline-flex items-center px-1.5 py-0.2 text-[9px] font-bold rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  Double-Entry Active
-                </span>
-              </div>
             </div>
           </div>
 
@@ -1706,12 +1701,12 @@ export default function App() {
             {/* Global Search Omnibar Trigger */}
             <button
               onClick={() => setGlobalSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs font-medium transition cursor-pointer border border-slate-200"
+              className="flex items-center gap-2 px-3 py-1.5 bg-[#FFFBF3] hover:bg-[#EAF5FD] text-[#3E5368] rounded-lg text-[13px] font-medium transition cursor-pointer border border-[#E8DFCF]"
               title="Search records (Ctrl+K)"
             >
-              <Search size={14} className="text-slate-400" />
-              <span className="hidden lg:inline text-slate-500">Search anything...</span>
-              <kbd className="hidden lg:inline-block px-1 py-0.2 text-[9px] font-mono text-slate-500 bg-white rounded border border-slate-300">
+              <Search size={14} className="text-[#3E5368]" />
+              <span className="hidden lg:inline">Search records...</span>
+              <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[11px] font-mono text-[#3E5368] bg-white rounded border border-[#E8DFCF]">
                 Ctrl+K
               </kbd>
             </button>
@@ -1729,28 +1724,36 @@ export default function App() {
               onOpenHub={() => setCurrentTab('sync-backup')}
             />
 
-            {/* Quick Action: New Sale */}
-            <button
-              onClick={() => setCurrentTab('sales-create')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-sm transition cursor-pointer"
-            >
-              <Plus size={14} />
-              <span className="hidden sm:inline">New Sale</span>
-            </button>
-
-            {/* Quick Action: Payment Voucher */}
+            {/* Quick Action: Record Payment (Secondary) */}
             <button
               onClick={() => setPaymentVoucherModal({ isOpen: true, defaultType: 'payment_in' })}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-sm transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-white border border-[#14689F] hover:bg-[#EAF5FD] text-[#14689F] rounded-lg text-[13px] font-semibold transition cursor-pointer min-h-[38px]"
+              title="Record customer receipt or payment voucher"
             >
-              <CreditCard size={14} />
-              <span className="hidden sm:inline">Record Payment</span>
+              <CreditCard size={15} />
+              <span className="hidden md:inline">Record Payment</span>
+            </button>
+
+            {/* Single Primary Action: New Sale (Orange) */}
+            <button
+              onClick={() => setCurrentTab('sales-create')}
+              className="flex items-center gap-1.5 px-4 py-2 bg-[#E0771A] hover:bg-[#B85D0F] text-white rounded-lg text-[13px] font-semibold transition cursor-pointer shadow-xs min-h-[38px]"
+              title="Create new sales invoice"
+            >
+              <Plus size={16} />
+              <span className="hidden sm:inline">New Sale</span>
             </button>
           </div>
         </header>
 
         {/* View Switcher Container */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-50">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-[#FFF8EC]">
+          {currentTab === 'landing' && (
+            <LandingPage 
+              onEnterApp={() => setCurrentTab('dashboard')} 
+              onLoginClick={() => setIsAuthModalOpen(true)} 
+            />
+          )}
           {currentTab === 'dashboard' && (
             <DashboardView
               invoices={invoices}

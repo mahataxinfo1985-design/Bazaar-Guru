@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   BookOpen, DollarSign, ArrowUpRight, ArrowDownRight, Layers, FileSpreadsheet,
-  Plus, Search, Filter, ShieldCheck, Lock, Unlock, Eye, Calendar, RefreshCw, AlertCircle, CheckCircle2
+  Plus, Search, Filter, ShieldCheck, Lock, Unlock, Eye, Calendar, RefreshCw, AlertCircle, CheckCircle2, X
 } from 'lucide-react';
 import { Account, JournalEntry, PaymentVoucher, AccountingPeriod, Party, Invoice, Expense } from '../../types';
 import { getAccountingOverviewMetrics, getComputedAccountBalances } from '../../services/accounting/accountingService';
@@ -98,19 +98,19 @@ export default function AccountingView({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-5 animate-in fade-in duration-200">
       {/* Header with Quick Actions */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-200 pb-4">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+            <h2 className="text-xl font-bold tracking-tight text-[#12263A]">
               Double-Entry Accounting & General Ledger
             </h2>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200">
-              Phase 2 Engine
+            <span className="px-2 py-0.5 rounded-sm text-[10px] font-semibold bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30">
+              Verified Engine
             </span>
           </div>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-xs text-[#3E5368] mt-0.5">
             Real-time multi-business Chart of Accounts, balanced journal vouchers, and audit-grade ledgers.
           </p>
         </div>
@@ -118,15 +118,15 @@ export default function AccountingView({
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => setAccountModal({ isOpen: true, accountToEdit: null })}
-            className="flex items-center gap-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 px-3 py-2 text-xs font-bold text-white shadow-2xs transition cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-[#E8DFCF] bg-white hover:bg-[#FFFBF3] px-3.5 py-2 text-xs font-semibold text-[#12263A] shadow-2xs transition cursor-pointer"
           >
-            <Plus size={14} />
+            <Plus size={14} className="text-[#1F86CC]" />
             <span>New Account</span>
           </button>
 
           <button
             onClick={() => setIsJournalModalOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 px-3 py-2 text-xs font-bold text-white shadow-2xs transition cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] px-4 py-2 text-xs font-semibold text-white shadow-2xs transition cursor-pointer"
           >
             <Plus size={14} />
             <span>Journal Voucher</span>
@@ -134,45 +134,45 @@ export default function AccountingView({
 
           <button
             onClick={handleRunMigration}
-            className="flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700 shadow-2xs transition cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-[#E8DFCF] bg-white hover:bg-[#FFFBF3] px-3.5 py-2 text-xs font-semibold text-[#12263A] shadow-2xs transition cursor-pointer"
             title="Scan and create balanced journals for any unposted legacy transactions"
           >
-            <RefreshCw size={13} />
+            <RefreshCw size={13} className="text-[#3E5368]" />
             <span>Reconcile & Migrate</span>
           </button>
         </div>
       </div>
 
-      {/* 1. High-Level Accounting Metrics Strip (Single Source of Truth) */}
+      {/* 1. High-Level Accounting Metrics Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Assets</span>
-          <p className="text-base font-bold font-mono text-slate-900 mt-0.5">{formatCurrency(overview.totalAssets)}</p>
+        <div className="bg-white p-3.5 rounded-xl border border-[#E8DFCF] shadow-2xs">
+          <span className="text-[10px] font-semibold text-[#3E5368] block">Total Assets</span>
+          <p className="text-base font-bold tabular-nums text-[#12263A] mt-0.5">{formatCurrency(overview.totalAssets)}</p>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Liabilities</span>
-          <p className="text-base font-bold font-mono text-amber-700 mt-0.5">{formatCurrency(overview.totalLiabilities)}</p>
+        <div className="bg-white p-3.5 rounded-xl border border-[#E8DFCF] shadow-2xs">
+          <span className="text-[10px] font-semibold text-[#3E5368] block">Total Liabilities</span>
+          <p className="text-base font-bold tabular-nums text-[#B7791F] mt-0.5">{formatCurrency(overview.totalLiabilities)}</p>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Equity</span>
-          <p className="text-base font-bold font-mono text-purple-700 mt-0.5">{formatCurrency(overview.totalEquity)}</p>
+        <div className="bg-white p-3.5 rounded-xl border border-[#E8DFCF] shadow-2xs">
+          <span className="text-[10px] font-semibold text-[#3E5368] block">Total Equity</span>
+          <p className="text-base font-bold tabular-nums text-[#1F86CC] mt-0.5">{formatCurrency(overview.totalEquity)}</p>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Income</span>
-          <p className="text-base font-bold font-mono text-emerald-700 mt-0.5">{formatCurrency(overview.totalIncome)}</p>
+        <div className="bg-white p-3.5 rounded-xl border border-[#E8DFCF] shadow-2xs">
+          <span className="text-[10px] font-semibold text-[#3E5368] block">Total Income</span>
+          <p className="text-base font-bold tabular-nums text-[#1E8E5A] mt-0.5">{formatCurrency(overview.totalIncome)}</p>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Expenses</span>
-          <p className="text-base font-bold font-mono text-rose-700 mt-0.5">{formatCurrency(overview.totalExpenses)}</p>
+        <div className="bg-white p-3.5 rounded-xl border border-[#E8DFCF] shadow-2xs">
+          <span className="text-[10px] font-semibold text-[#3E5368] block">Total Expenses</span>
+          <p className="text-base font-bold tabular-nums text-[#C23B3B] mt-0.5">{formatCurrency(overview.totalExpenses)}</p>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Net Profit</span>
-          <p className={`text-base font-bold font-mono mt-0.5 ${overview.netProfit >= 0 ? 'text-emerald-700' : 'text-rose-700'}`}>
+        <div className="bg-white p-3.5 rounded-xl border border-[#E8DFCF] shadow-2xs">
+          <span className="text-[10px] font-semibold text-[#3E5368] block">Net Profit</span>
+          <p className={`text-base font-bold tabular-nums mt-0.5 ${overview.netProfit >= 0 ? 'text-[#1E8E5A]' : 'text-[#C23B3B]'}`}>
             {formatCurrency(overview.netProfit)}
           </p>
         </div>
@@ -181,18 +181,18 @@ export default function AccountingView({
       {/* Trial Balance Health Banner */}
       <div className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs ${
         overview.isTrialBalanceBalanced 
-          ? 'bg-emerald-50 text-emerald-900 border-emerald-200' 
-          : 'bg-red-50 text-red-900 border-red-200'
+          ? 'bg-[#E6F6EE] text-[#1E8E5A] border-[#1E8E5A]/20' 
+          : 'bg-[#FDECEC] text-[#C23B3B] border-[#C23B3B]/20'
       }`}>
         <div className="flex items-center gap-2">
-          <span className={`h-2.5 w-2.5 rounded-full ${overview.isTrialBalanceBalanced ? 'bg-emerald-600' : 'bg-red-600'}`}></span>
-          <span className="font-bold">
+          <span className={`h-2.5 w-2.5 rounded-full ${overview.isTrialBalanceBalanced ? 'bg-[#1E8E5A]' : 'bg-[#C23B3B]'}`}></span>
+          <span className="font-semibold">
             {overview.isTrialBalanceBalanced 
               ? 'Double-Entry Invariant Satisfied: All Journals Balanced (Debits == Credits)' 
               : `Accounting Discrepancy Detected: Out of balance by ₹${overview.trialBalanceDifference.toFixed(2)}`}
           </span>
         </div>
-        <div className="flex items-center gap-4 font-mono font-bold text-xs">
+        <div className="flex items-center gap-4 tabular-nums font-semibold text-xs">
           <span>Receivables (A/R): {formatCurrency(overview.currentReceivables)}</span>
           <span>Payables (A/P): {formatCurrency(overview.currentPayables)}</span>
           <span>Cash/Bank: {formatCurrency(overview.cashAndBankBalance)}</span>
@@ -200,39 +200,28 @@ export default function AccountingView({
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200">
-        <button
-          onClick={() => setActiveTab('coa')}
-          className={`px-4 py-2.5 text-xs font-bold uppercase border-b-2 transition cursor-pointer ${
-            activeTab === 'coa' ? 'border-blue-700 text-blue-700' : 'border-transparent text-slate-400 hover:text-slate-700'
-          }`}
-        >
-          Chart of Accounts ({accounts.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('journals')}
-          className={`px-4 py-2.5 text-xs font-bold uppercase border-b-2 transition cursor-pointer ${
-            activeTab === 'journals' ? 'border-blue-700 text-blue-700' : 'border-transparent text-slate-400 hover:text-slate-700'
-          }`}
-        >
-          Journal Entries ({journalEntries.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('cashbank')}
-          className={`px-4 py-2.5 text-xs font-bold uppercase border-b-2 transition cursor-pointer ${
-            activeTab === 'cashbank' ? 'border-blue-700 text-blue-700' : 'border-transparent text-slate-400 hover:text-slate-700'
-          }`}
-        >
-          Cash & Bank Registers ({paymentVouchers.length} Vouchers)
-        </button>
-        <button
-          onClick={() => setActiveTab('periods')}
-          className={`px-4 py-2.5 text-xs font-bold uppercase border-b-2 transition cursor-pointer ${
-            activeTab === 'periods' ? 'border-blue-700 text-blue-700' : 'border-transparent text-slate-400 hover:text-slate-700'
-          }`}
-        >
-          Financial Periods ({accountingPeriods.length})
-        </button>
+      <div className="flex items-center gap-1.5 overflow-x-auto border-b border-[#E8DFCF] pb-2 text-xs font-semibold scrollbar-none">
+        {[
+          { id: 'coa', label: `Chart of Accounts (${accounts.length})` },
+          { id: 'journals', label: `Journal Entries (${journalEntries.length})` },
+          { id: 'cashbank', label: `Cash & Bank Registers (${paymentVouchers.length})` },
+          { id: 'periods', label: `Financial Periods (${accountingPeriods.length})` },
+        ].map(tab => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`px-3.5 py-2 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
+                isActive
+                  ? 'bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30 shadow-2xs font-semibold'
+                  : 'text-[#3E5368] hover:bg-[#FFFBF3] hover:text-[#12263A]'
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* ======================================================== */}
@@ -241,23 +230,23 @@ export default function AccountingView({
       {activeTab === 'coa' && (
         <div className="space-y-4">
           {/* Filters Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 bg-white p-2.5 rounded-xl border border-[#E8DFCF] shadow-2xs">
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <div className="relative flex-1 sm:w-64">
-                <Search size={14} className="absolute left-3 top-2.5 text-slate-400" />
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#3E5368]" />
                 <input
                   type="text"
                   placeholder="Search code or account name..."
                   value={coaSearchQuery}
                   onChange={(e) => setCoaSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-blue-500"
+                  className="w-full pl-9 pr-3 h-10 text-xs rounded-lg border border-[#E8DFCF] bg-[#FFFBF3] text-[#12263A] placeholder-[#3E5368]/60 focus:bg-white focus:outline-hidden focus:border-[#3BA0E6]"
                 />
               </div>
 
               <select
                 value={coaCategoryFilter}
                 onChange={(e) => setCoaCategoryFilter(e.target.value)}
-                className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-hidden"
+                className="h-10 px-3 text-xs rounded-lg border border-[#E8DFCF] bg-[#FFFBF3] text-[#12263A] focus:outline-hidden focus:border-[#3BA0E6]"
               >
                 <option value="all">All Categories</option>
                 <option value="asset">1. Assets</option>
@@ -268,16 +257,16 @@ export default function AccountingView({
               </select>
             </div>
 
-            <span className="text-xs text-slate-500 font-semibold self-end sm:self-center">
+            <span className="text-xs text-[#3E5368] font-medium self-end sm:self-center">
               Showing {filteredAccounts.length} of {accounts.length} accounts
             </span>
           </div>
 
           {/* Accounts Table */}
-          <div className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden">
+          <div className="rounded-xl border border-[#E8DFCF] bg-white shadow-2xs overflow-hidden">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase font-bold tracking-wider">
+                <tr className="bg-[#FFFBF3] border-b border-[#E8DFCF] text-[#3E5368] text-[10px] font-semibold tracking-wider">
                   <th className="p-3.5">Code</th>
                   <th className="p-3.5">Account Name</th>
                   <th className="p-3.5">Category</th>
@@ -288,50 +277,50 @@ export default function AccountingView({
                   <th className="p-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8DFCF]">
                 {filteredAccounts.map((acc) => (
-                  <tr key={acc.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="p-3.5 font-mono font-bold text-slate-800">{acc.code}</td>
+                  <tr key={acc.id} className="hover:bg-[#FFFBF3] transition-colors">
+                    <td className="p-3.5 font-semibold text-[#12263A]">{acc.code}</td>
                     <td className="p-3.5">
                       <div className="flex items-center gap-1.5">
                         {acc.level && acc.level > 1 && (
-                          <span className="text-slate-300 font-mono">{'— '.repeat(acc.level - 1)}</span>
+                          <span className="text-[#3E5368]/40">{'— '.repeat(acc.level - 1)}</span>
                         )}
-                        <span className={`font-bold ${acc.level === 1 ? 'text-slate-950 font-extrabold' : 'text-slate-800'}`}>
+                        <span className={`font-semibold ${acc.level === 1 ? 'text-[#12263A] font-bold' : 'text-[#12263A]'}`}>
                           {acc.name}
                         </span>
                         {acc.isSystem && (
-                          <span className="text-[9px] px-1 py-0.2 rounded bg-slate-100 text-slate-500 font-bold uppercase">
+                          <span className="text-[9px] px-1 py-0.5 rounded-sm bg-[#EEF2F6] text-[#3E5368] font-semibold uppercase">
                             Sys
                           </span>
                         )}
                       </div>
                     </td>
                     <td className="p-3.5">
-                      <span className={`inline-flex px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
+                      <span className={`inline-flex px-2 py-0.5 rounded-sm text-[9px] font-semibold uppercase ${
                         acc.type === 'asset'
-                          ? 'bg-blue-50 text-blue-700'
+                          ? 'bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30'
                           : acc.type === 'liability'
-                          ? 'bg-amber-50 text-amber-700'
+                          ? 'bg-[#FFF3DC] text-[#B7791F] border border-[#B7791F]/20'
                           : acc.type === 'income'
-                          ? 'bg-emerald-50 text-emerald-700'
+                          ? 'bg-[#E6F6EE] text-[#1E8E5A] border border-[#1E8E5A]/20'
                           : acc.type === 'expense'
-                          ? 'bg-rose-50 text-rose-700'
-                          : 'bg-purple-50 text-purple-700'
+                          ? 'bg-[#FDECEC] text-[#C23B3B] border border-[#C23B3B]/20'
+                          : 'bg-[#FFF8EC] text-[#E0771A] border border-[#E0771A]/20'
                       }`}>
                         {acc.type}
                       </span>
                     </td>
-                    <td className="p-3.5 text-slate-500 capitalize">{acc.subtype.replace(/_/g, ' ')}</td>
-                    <td className="p-3.5 text-right font-mono text-slate-600">
+                    <td className="p-3.5 text-[#3E5368] capitalize">{acc.subtype.replace(/_/g, ' ')}</td>
+                    <td className="p-3.5 text-right tabular-nums text-[#3E5368]">
                       {acc.openingBalance ? `₹${acc.openingBalance.toLocaleString('en-IN')}` : '-'}
                     </td>
-                    <td className="p-3.5 text-right font-mono font-bold text-slate-900">
+                    <td className="p-3.5 text-right tabular-nums font-bold text-[#12263A]">
                       {formatCurrency(acc.currentBalance)}
                     </td>
                     <td className="p-3.5 text-center">
-                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${
-                        acc.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-400'
+                      <span className={`px-2 py-0.5 rounded-sm text-[9px] font-semibold uppercase ${
+                        acc.isActive ? 'bg-[#E6F6EE] text-[#1E8E5A] border border-[#1E8E5A]/20' : 'bg-[#EEF2F6] text-[#3E5368]'
                       }`}>
                         {acc.isActive ? 'Active' : 'Inactive'}
                       </span>
@@ -339,14 +328,14 @@ export default function AccountingView({
                     <td className="p-3.5 text-right space-x-2">
                       <button
                         onClick={() => setSelectedLedgerAccountId(acc.id)}
-                        className="text-xs font-bold text-blue-600 hover:text-blue-800 transition cursor-pointer"
+                        className="text-xs font-semibold text-[#1F86CC] hover:underline cursor-pointer"
                         title="View Account Ledger"
                       >
                         Ledger
                       </button>
                       <button
                         onClick={() => setAccountModal({ isOpen: true, accountToEdit: acc })}
-                        className="text-xs font-bold text-slate-600 hover:text-slate-900 transition cursor-pointer"
+                        className="text-xs font-semibold text-[#3E5368] hover:text-[#12263A] cursor-pointer"
                         title="Edit Account"
                       >
                         Edit
@@ -366,12 +355,12 @@ export default function AccountingView({
       {activeTab === 'journals' && (
         <div className="space-y-4">
           {/* Filters Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 bg-white p-2.5 rounded-xl border border-[#E8DFCF] shadow-2xs">
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <select
                 value={journalSourceFilter}
                 onChange={(e) => setJournalSourceFilter(e.target.value)}
-                className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-hidden"
+                className="h-10 px-3 text-xs rounded-lg border border-[#E8DFCF] bg-[#FFFBF3] text-[#12263A] focus:outline-hidden focus:border-[#3BA0E6]"
               >
                 <option value="all">All Journal Sources</option>
                 <option value="sales_invoice">Sales Invoices</option>
@@ -389,28 +378,28 @@ export default function AccountingView({
                 type="date"
                 value={journalDateFilter}
                 onChange={(e) => setJournalDateFilter(e.target.value)}
-                className="px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 focus:outline-hidden font-mono"
+                className="h-10 px-3 text-xs rounded-lg border border-[#E8DFCF] bg-[#FFFBF3] text-[#12263A] focus:outline-hidden focus:border-[#3BA0E6]"
               />
               {journalDateFilter && (
                 <button
                   onClick={() => setJournalDateFilter('')}
-                  className="text-xs text-blue-600 font-bold hover:text-blue-800 cursor-pointer"
+                  className="text-xs text-[#1F86CC] font-semibold hover:underline cursor-pointer"
                 >
                   Clear Date
                 </button>
               )}
             </div>
 
-            <span className="text-xs text-slate-500 font-semibold self-end sm:self-center">
+            <span className="text-xs text-[#3E5368] font-medium self-end sm:self-center">
               {filteredJournals.length} Journal Entries Recorded
             </span>
           </div>
 
           {/* Journal Entries Table */}
-          <div className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden">
+          <div className="rounded-xl border border-[#E8DFCF] bg-white shadow-2xs overflow-hidden">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase font-bold tracking-wider">
+                <tr className="bg-[#FFFBF3] border-b border-[#E8DFCF] text-[#3E5368] text-[10px] font-semibold tracking-wider">
                   <th className="p-3.5">Date</th>
                   <th className="p-3.5">Voucher #</th>
                   <th className="p-3.5">Source Type</th>
@@ -421,41 +410,41 @@ export default function AccountingView({
                   <th className="p-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8DFCF]">
                 {filteredJournals.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="p-8 text-center text-slate-400">
+                    <td colSpan={8} className="p-8 text-center text-[#3E5368]">
                       No matching journal entries found.
                     </td>
                   </tr>
                 ) : (
                   filteredJournals.map((je) => (
-                    <tr key={je.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="p-3.5 font-mono text-slate-600">{je.date}</td>
-                      <td className="p-3.5 font-mono font-bold text-blue-700">{je.entryNumber}</td>
+                    <tr key={je.id} className="hover:bg-[#FFFBF3] transition-colors">
+                      <td className="p-3.5 text-[#3E5368]">{je.date}</td>
+                      <td className="p-3.5 font-semibold text-[#1F86CC]">{je.entryNumber}</td>
                       <td className="p-3.5">
-                        <span className="inline-flex px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-slate-100 text-slate-700">
+                        <span className="inline-flex px-2 py-0.5 rounded-sm text-[9px] font-semibold uppercase bg-[#EEF2F6] text-[#3E5368]">
                           {je.sourceType.replace(/_/g, ' ')}
                         </span>
                       </td>
-                      <td className="p-3.5 text-slate-800 max-w-xs truncate" title={je.narration}>
+                      <td className="p-3.5 text-[#12263A] max-w-xs truncate" title={je.narration}>
                         {je.narration}
                       </td>
-                      <td className="p-3.5 text-right font-mono font-bold text-slate-900">
+                      <td className="p-3.5 text-right font-bold tabular-nums text-[#12263A]">
                         {formatCurrency(je.totalDebit)}
                       </td>
-                      <td className="p-3.5 text-right font-mono font-bold text-slate-900">
+                      <td className="p-3.5 text-right font-bold tabular-nums text-[#12263A]">
                         {formatCurrency(je.totalCredit)}
                       </td>
                       <td className="p-3.5 text-center">
-                        <span className="inline-flex px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-emerald-50 text-emerald-700 border border-emerald-100">
+                        <span className="inline-flex px-2 py-0.5 rounded-sm text-[9px] font-semibold uppercase bg-[#E6F6EE] text-[#1E8E5A] border border-[#1E8E5A]/20">
                           {je.status}
                         </span>
                       </td>
                       <td className="p-3.5 text-right">
                         <button
                           onClick={() => setViewingJournalEntry(je)}
-                          className="text-xs font-bold text-blue-600 hover:text-blue-800 transition cursor-pointer"
+                          className="text-xs font-semibold text-[#1F86CC] hover:underline cursor-pointer"
                         >
                           View Lines ({je.lines?.length || 0})
                         </button>
@@ -473,40 +462,40 @@ export default function AccountingView({
       {/* TAB 3: CASH & BANK REGISTERS */}
       {/* ======================================================== */}
       {activeTab === 'cashbank' && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs">
-              <span className="text-xs uppercase font-bold text-slate-400 tracking-wider">Cash in Hand (1010)</span>
-              <h3 className="text-2xl font-bold font-mono text-slate-900 mt-1">
+        <div className="space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs">
+              <span className="text-[11px] font-semibold text-[#3E5368] block">Cash in Hand (1010)</span>
+              <h3 className="text-xl font-bold tabular-nums text-[#12263A] mt-1">
                 {formatCurrency(liveAccounts.find((a) => a.code === '1010')?.currentBalance || 0)}
               </h3>
-              <p className="text-xs text-slate-500 mt-1">Reflects all cash sales, receipts, and petty cash disbursements.</p>
-              <div className="mt-4 pt-3 border-t border-slate-100">
+              <p className="text-[11px] text-[#3E5368]/80 mt-1">Reflects all cash sales, receipts, and petty cash disbursements.</p>
+              <div className="mt-3.5 pt-2.5 border-t border-[#E8DFCF]">
                 <button
                   onClick={() => {
                     const acc = accounts.find((a) => a.code === '1010');
                     if (acc) setSelectedLedgerAccountId(acc.id);
                   }}
-                  className="text-xs font-bold text-blue-600 hover:text-blue-800 cursor-pointer"
+                  className="text-xs font-semibold text-[#1F86CC] hover:underline cursor-pointer"
                 >
                   View Cash Book Ledger →
                 </button>
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-2xs">
-              <span className="text-xs uppercase font-bold text-slate-400 tracking-wider">Bank Accounts (1020)</span>
-              <h3 className="text-2xl font-bold font-mono text-blue-700 mt-1">
+            <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs">
+              <span className="text-[11px] font-semibold text-[#3E5368] block">Bank Accounts (1020)</span>
+              <h3 className="text-xl font-bold tabular-nums text-[#1F86CC] mt-1">
                 {formatCurrency(liveAccounts.find((a) => a.code === '1020')?.currentBalance || 0)}
               </h3>
-              <p className="text-xs text-slate-500 mt-1">Reflects NEFT, RTGS, IMPS, UPI, and bank transfers.</p>
-              <div className="mt-4 pt-3 border-t border-slate-100">
+              <p className="text-[11px] text-[#3E5368]/80 mt-1">Reflects NEFT, RTGS, IMPS, UPI, and bank transfers.</p>
+              <div className="mt-3.5 pt-2.5 border-t border-[#E8DFCF]">
                 <button
                   onClick={() => {
                     const acc = accounts.find((a) => a.code === '1020');
                     if (acc) setSelectedLedgerAccountId(acc.id);
                   }}
-                  className="text-xs font-bold text-blue-600 hover:text-blue-800 cursor-pointer"
+                  className="text-xs font-semibold text-[#1F86CC] hover:underline cursor-pointer"
                 >
                   View Bank Book Ledger →
                 </button>
@@ -515,19 +504,19 @@ export default function AccountingView({
           </div>
 
           {/* Vouchers Table */}
-          <div className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden">
-            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-              <h3 className="font-bold text-xs uppercase tracking-wider text-slate-700">Payment Vouchers (In & Out)</h3>
+          <div className="rounded-xl border border-[#E8DFCF] bg-white shadow-2xs overflow-hidden">
+            <div className="p-3.5 border-b border-[#E8DFCF] flex justify-between items-center bg-[#FFFBF3]">
+              <h3 className="font-semibold text-xs text-[#12263A]">Payment Vouchers (In & Out)</h3>
               <div className="flex gap-2">
                 <button
                   onClick={() => onOpenPaymentModal('payment_in')}
-                  className="flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 hover:bg-emerald-100 cursor-pointer"
+                  className="flex items-center gap-1 text-xs font-semibold text-[#1E8E5A] bg-[#E6F6EE] px-2.5 py-1 rounded-md border border-[#1E8E5A]/20 hover:bg-[#1E8E5A]/15 cursor-pointer"
                 >
                   <DollarSign size={13} /> + Payment In
                 </button>
                 <button
                   onClick={() => onOpenPaymentModal('payment_out')}
-                  className="flex items-center gap-1 text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded border border-blue-200 hover:bg-blue-100 cursor-pointer"
+                  className="flex items-center gap-1 text-xs font-semibold text-[#1F86CC] bg-[#EAF5FD] px-2.5 py-1 rounded-md border border-[#3BA0E6]/30 hover:bg-[#D4EBFA] cursor-pointer"
                 >
                   <DollarSign size={13} /> + Payment Out
                 </button>
@@ -536,7 +525,7 @@ export default function AccountingView({
 
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase font-bold tracking-wider">
+                <tr className="bg-[#FFFBF3] border-b border-[#E8DFCF] text-[#3E5368] text-[10px] font-semibold tracking-wider">
                   <th className="p-3.5">Voucher #</th>
                   <th className="p-3.5">Type</th>
                   <th className="p-3.5">Date</th>
@@ -546,33 +535,33 @@ export default function AccountingView({
                   <th className="p-3.5">Reference #</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8DFCF]">
                 {paymentVouchers.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-slate-400">
+                    <td colSpan={7} className="p-8 text-center text-[#3E5368]">
                       No payment vouchers recorded yet.
                     </td>
                   </tr>
                 ) : (
                   paymentVouchers.map((v) => (
-                    <tr key={v.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="p-3.5 font-mono font-bold text-slate-900">{v.voucherNumber}</td>
+                    <tr key={v.id} className="hover:bg-[#FFFBF3] transition-colors">
+                      <td className="p-3.5 font-semibold text-[#12263A]">{v.voucherNumber}</td>
                       <td className="p-3.5">
-                        <span className={`inline-flex px-2 py-0.5 rounded text-[9px] font-bold uppercase ${
+                        <span className={`inline-flex px-2 py-0.5 rounded-sm text-[9px] font-semibold uppercase ${
                           v.type === 'payment_in'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
-                            : 'bg-blue-50 text-blue-700 border border-blue-100'
+                            ? 'bg-[#E6F6EE] text-[#1E8E5A] border border-[#1E8E5A]/20'
+                            : 'bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30'
                         }`}>
                           {v.type === 'payment_in' ? 'Payment In' : 'Payment Out'}
                         </span>
                       </td>
-                      <td className="p-3.5 font-mono text-slate-600">{v.date}</td>
-                      <td className="p-3.5 font-bold text-slate-800">{v.partyName || 'Party'}</td>
-                      <td className="p-3.5 text-slate-600">{v.paymentMode}</td>
-                      <td className="p-3.5 text-right font-mono font-bold text-slate-950">
+                      <td className="p-3.5 text-[#3E5368]">{v.date}</td>
+                      <td className="p-3.5 font-medium text-[#12263A]">{v.partyName || 'Party'}</td>
+                      <td className="p-3.5 text-[#3E5368]">{v.paymentMode}</td>
+                      <td className="p-3.5 text-right tabular-nums font-bold text-[#12263A]">
                         {formatCurrency(v.amount)}
                       </td>
-                      <td className="p-3.5 font-mono text-slate-500">{v.referenceNumber || '-'}</td>
+                      <td className="p-3.5 text-[#3E5368]">{v.referenceNumber || '-'}</td>
                     </tr>
                   ))
                 )}
@@ -587,19 +576,19 @@ export default function AccountingView({
       {/* ======================================================== */}
       {activeTab === 'periods' && (
         <div className="space-y-4">
-          <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+          <div className="bg-white p-4 rounded-xl border border-[#E8DFCF] flex items-center justify-between shadow-2xs">
             <div>
-              <h3 className="font-bold text-sm text-slate-900">Financial Years (Indian April–March Period)</h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <h3 className="font-bold text-sm text-[#12263A]">Financial Years (Indian April–March Period)</h3>
+              <p className="text-xs text-[#3E5368] mt-0.5">
                 Locking an accounting period prevents any accidental backdated journal postings from altering audited balances.
               </p>
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden">
+          <div className="rounded-xl border border-[#E8DFCF] bg-white shadow-2xs overflow-hidden">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase font-bold tracking-wider">
+                <tr className="bg-[#FFFBF3] border-b border-[#E8DFCF] text-[#3E5368] text-[10px] font-semibold tracking-wider">
                   <th className="p-3.5">Period Name</th>
                   <th className="p-3.5">Start Date</th>
                   <th className="p-3.5">End Date</th>
@@ -607,19 +596,19 @@ export default function AccountingView({
                   <th className="p-3.5 text-right">Lock / Unlock Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E8DFCF]">
                 {accountingPeriods.map((period) => (
-                  <tr key={period.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="p-3.5 font-bold text-slate-900">{period.name}</td>
-                    <td className="p-3.5 font-mono text-slate-600">{period.startDate}</td>
-                    <td className="p-3.5 font-mono text-slate-600">{period.endDate}</td>
+                  <tr key={period.id} className="hover:bg-[#FFFBF3] transition-colors">
+                    <td className="p-3.5 font-semibold text-[#12263A]">{period.name}</td>
+                    <td className="p-3.5 text-[#3E5368]">{period.startDate}</td>
+                    <td className="p-3.5 text-[#3E5368]">{period.endDate}</td>
                     <td className="p-3.5 text-center">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase ${
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-sm text-[9px] font-semibold uppercase ${
                         period.status === 'open'
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          ? 'bg-[#E6F6EE] text-[#1E8E5A] border border-[#1E8E5A]/20'
                           : period.status === 'locked'
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                          : 'bg-slate-100 text-slate-700 border border-slate-200'
+                          ? 'bg-[#FFF3DC] text-[#B7791F] border border-[#B7791F]/20'
+                          : 'bg-[#EEF2F6] text-[#3E5368] border border-[#E8DFCF]'
                       }`}>
                         {period.status === 'open' ? <Unlock size={10} /> : <Lock size={10} />}
                         <span>{period.status}</span>
@@ -634,7 +623,7 @@ export default function AccountingView({
                               onUpdatePeriods(updated);
                             }
                           }}
-                          className="px-3 py-1 rounded bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold text-xs transition cursor-pointer border border-amber-200"
+                          className="px-3 py-1 rounded-md bg-[#FFF3DC] hover:bg-[#FFF3DC]/80 text-[#B7791F] font-semibold text-xs transition cursor-pointer border border-[#B7791F]/30"
                         >
                           Lock Period
                         </button>
@@ -647,7 +636,7 @@ export default function AccountingView({
                               onUpdatePeriods(updated);
                             }
                           }}
-                          className="px-3 py-1 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs transition cursor-pointer border border-emerald-200"
+                          className="px-3 py-1 rounded-md bg-[#E6F6EE] hover:bg-[#E6F6EE]/80 text-[#1E8E5A] font-semibold text-xs transition cursor-pointer border border-[#1E8E5A]/30"
                         >
                           Reopen Period
                         </button>
@@ -661,9 +650,7 @@ export default function AccountingView({
         </div>
       )}
 
-      {/* ======================================================== */}
       {/* MODAL 1: Account Add / Edit Modal */}
-      {/* ======================================================== */}
       <AccountModal
         isOpen={accountModal.isOpen}
         onClose={() => setAccountModal({ isOpen: false, accountToEdit: null })}
@@ -677,9 +664,7 @@ export default function AccountingView({
         journalEntries={journalEntries}
       />
 
-      {/* ======================================================== */}
       {/* MODAL 2: Manual Journal Voucher Creation Modal */}
-      {/* ======================================================== */}
       <JournalVoucherModal
         isOpen={isJournalModalOpen}
         onClose={() => setIsJournalModalOpen(false)}
@@ -688,9 +673,7 @@ export default function AccountingView({
         parties={parties}
       />
 
-      {/* ======================================================== */}
       {/* MODAL 3: Account Ledger Statement Modal */}
-      {/* ======================================================== */}
       {selectedLedgerAccountId && (
         <AccountLedgerModal
           isOpen={!!selectedLedgerAccountId}
@@ -701,42 +684,40 @@ export default function AccountingView({
         />
       )}
 
-      {/* ======================================================== */}
       {/* MODAL 4: Journal Entry Detail Viewer */}
-      {/* ======================================================== */}
       {viewingJournalEntry && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="w-full max-w-2xl rounded-xl bg-white shadow-2xl border border-slate-100 overflow-hidden flex flex-col">
-            <div className="flex h-14 items-center justify-between border-b border-slate-200 bg-slate-900 px-6 text-white">
-              <span className="font-bold text-sm uppercase tracking-wide">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="w-full max-w-2xl rounded-xl bg-white shadow-xl border border-[#E8DFCF] overflow-hidden flex flex-col">
+            <div className="flex h-14 items-center justify-between border-b border-[#E8DFCF] bg-[#FFFBF3] px-6 text-[#12263A]">
+              <span className="font-bold text-sm">
                 Journal Entry #{viewingJournalEntry.entryNumber}
               </span>
               <button
                 onClick={() => setViewingJournalEntry(null)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition"
+                className="rounded-lg p-1 text-[#3E5368] hover:bg-[#EAF5FD] hover:text-[#12263A] transition cursor-pointer"
               >
-                ✕
+                <X size={18} />
               </button>
             </div>
             <div className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
+              <div className="grid grid-cols-2 gap-3 bg-[#FFFBF3] p-3 rounded-lg border border-[#E8DFCF] text-xs">
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Date</span>
-                  <span className="font-mono font-bold text-slate-800">{viewingJournalEntry.date}</span>
+                  <span className="text-[10px] text-[#3E5368] uppercase font-semibold block">Date</span>
+                  <span className="font-semibold text-[#12263A]">{viewingJournalEntry.date}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Source</span>
-                  <span className="font-bold uppercase text-slate-800">{viewingJournalEntry.sourceType}</span>
+                  <span className="text-[10px] text-[#3E5368] uppercase font-semibold block">Source</span>
+                  <span className="font-semibold uppercase text-[#12263A]">{viewingJournalEntry.sourceType}</span>
                 </div>
                 <div className="col-span-2">
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Narration</span>
-                  <span className="text-slate-700">{viewingJournalEntry.narration}</span>
+                  <span className="text-[10px] text-[#3E5368] uppercase font-semibold block">Narration</span>
+                  <span className="text-[#3E5368]">{viewingJournalEntry.narration}</span>
                 </div>
               </div>
 
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[10px] uppercase font-bold tracking-wider">
+                  <tr className="bg-[#FFFBF3] border-b border-[#E8DFCF] text-[#3E5368] text-[10px] font-semibold tracking-wider">
                     <th className="p-2.5">Account</th>
                     <th className="p-2.5">Party</th>
                     <th className="p-2.5">Particulars</th>
@@ -744,28 +725,28 @@ export default function AccountingView({
                     <th className="p-2.5 text-right">Credit (₹)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-[#E8DFCF]">
                   {viewingJournalEntry.lines.map((l) => (
                     <tr key={l.id}>
-                      <td className="p-2.5 font-bold text-slate-800">
+                      <td className="p-2.5 font-semibold text-[#12263A]">
                         {l.accountCode} - {l.accountName}
                       </td>
-                      <td className="p-2.5 text-slate-600">{l.partyName || '-'}</td>
-                      <td className="p-2.5 text-slate-500">{l.description || '-'}</td>
-                      <td className="p-2.5 text-right font-mono font-bold text-slate-900">
+                      <td className="p-2.5 text-[#3E5368]">{l.partyName || '-'}</td>
+                      <td className="p-2.5 text-[#3E5368]">{l.description || '-'}</td>
+                      <td className="p-2.5 text-right tabular-nums font-semibold text-[#12263A]">
                         {l.debit > 0 ? formatCurrency(l.debit) : '-'}
                       </td>
-                      <td className="p-2.5 text-right font-mono font-bold text-slate-900">
+                      <td className="p-2.5 text-right tabular-nums font-semibold text-[#12263A]">
                         {l.credit > 0 ? formatCurrency(l.credit) : '-'}
                       </td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
-                  <tr className="bg-slate-100 font-mono font-bold text-xs border-t-2 border-slate-200">
-                    <td colSpan={3} className="p-2.5 text-right uppercase text-[10px] text-slate-600">Total:</td>
-                    <td className="p-2.5 text-right text-blue-700">{formatCurrency(viewingJournalEntry.totalDebit)}</td>
-                    <td className="p-2.5 text-right text-blue-700">{formatCurrency(viewingJournalEntry.totalCredit)}</td>
+                  <tr className="bg-[#FFFBF3] font-semibold text-xs border-t-2 border-[#E8DFCF]">
+                    <td colSpan={3} className="p-2.5 text-right uppercase text-[10px] text-[#3E5368]">Total:</td>
+                    <td className="p-2.5 text-right text-[#1F86CC] tabular-nums">{formatCurrency(viewingJournalEntry.totalDebit)}</td>
+                    <td className="p-2.5 text-right text-[#1F86CC] tabular-nums">{formatCurrency(viewingJournalEntry.totalCredit)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -774,45 +755,43 @@ export default function AccountingView({
         </div>
       )}
 
-      {/* ======================================================== */}
       {/* MODAL 5: Migration Summary Dialog */}
-      {/* ======================================================== */}
       {migrationResult && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl border border-slate-100 overflow-hidden flex flex-col">
-            <div className="flex h-14 items-center justify-between border-b border-slate-200 bg-slate-900 px-6 text-white">
-              <span className="font-bold text-sm uppercase tracking-wide">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="w-full max-w-lg rounded-xl bg-white shadow-xl border border-[#E8DFCF] overflow-hidden flex flex-col">
+            <div className="flex h-14 items-center justify-between border-b border-[#E8DFCF] bg-[#FFFBF3] px-6 text-[#12263A]">
+              <span className="font-bold text-sm">
                 Historical Data Migration Audit Summary
               </span>
               <button
                 onClick={() => setMigrationResult(null)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition"
+                className="rounded-lg p-1 text-[#3E5368] hover:bg-[#EAF5FD] hover:text-[#12263A] transition cursor-pointer"
               >
-                ✕
+                <X size={18} />
               </button>
             </div>
             <div className="p-6 space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+              <div className="grid grid-cols-2 gap-3 bg-[#FFFBF3] p-4 rounded-xl border border-[#E8DFCF]">
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Invoices Inspected</span>
-                  <span className="text-base font-bold font-mono text-slate-800">{migrationResult.inspectedInvoices}</span>
+                  <span className="text-[10px] text-[#3E5368] uppercase font-semibold block">Invoices Inspected</span>
+                  <span className="text-base font-bold tabular-nums text-[#12263A]">{migrationResult.inspectedInvoices}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Expenses Inspected</span>
-                  <span className="text-base font-bold font-mono text-slate-800">{migrationResult.inspectedExpenses}</span>
+                  <span className="text-[10px] text-[#3E5368] uppercase font-semibold block">Expenses Inspected</span>
+                  <span className="text-base font-bold tabular-nums text-[#12263A]">{migrationResult.inspectedExpenses}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Journals Generated</span>
-                  <span className="text-base font-bold font-mono text-emerald-700">+{migrationResult.migratedJournals}</span>
+                  <span className="text-[10px] text-[#3E5368] uppercase font-semibold block">Journals Generated</span>
+                  <span className="text-base font-bold tabular-nums text-[#1E8E5A]">+{migrationResult.migratedJournals}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Already Accounted / Skipped</span>
-                  <span className="text-base font-bold font-mono text-slate-600">{migrationResult.skippedCount}</span>
+                  <span className="text-[10px] text-[#3E5368] uppercase font-semibold block">Already Accounted / Skipped</span>
+                  <span className="text-base font-bold tabular-nums text-[#3E5368]">{migrationResult.skippedCount}</span>
                 </div>
               </div>
 
               {migrationResult.discrepancies.length > 0 && (
-                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 space-y-1">
+                <div className="p-3 bg-[#FFF3DC] border border-[#B7791F]/30 rounded-lg text-[#B7791F] space-y-1">
                   <span className="font-bold block">Discrepancies Noted ({migrationResult.discrepancies.length}):</span>
                   {migrationResult.discrepancies.map((d, i) => (
                     <p key={i} className="text-[11px]">• {d}</p>
@@ -821,7 +800,7 @@ export default function AccountingView({
               )}
 
               {migrationResult.errors.length > 0 && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-800 space-y-1">
+                <div className="p-3 bg-[#FDECEC] border border-[#C23B3B]/30 rounded-lg text-[#C23B3B] space-y-1">
                   <span className="font-bold block">Migration Errors ({migrationResult.errors.length}):</span>
                   {migrationResult.errors.map((e, i) => (
                     <p key={i} className="text-[11px]">• {e}</p>
@@ -830,8 +809,8 @@ export default function AccountingView({
               )}
 
               {migrationResult.discrepancies.length === 0 && migrationResult.errors.length === 0 && (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 flex items-center gap-2">
-                  <CheckCircle2 size={16} className="text-emerald-600" />
+                <div className="p-3 bg-[#E6F6EE] border border-[#1E8E5A]/30 rounded-lg text-[#1E8E5A] flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-[#1E8E5A]" />
                   <span>All historical records successfully verified and accounted into double-entry ledgers.</span>
                 </div>
               )}
@@ -839,7 +818,7 @@ export default function AccountingView({
               <div className="flex justify-end pt-2">
                 <button
                   onClick={() => setMigrationResult(null)}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-xs cursor-pointer shadow-sm"
+                  className="px-4 py-2 bg-[#E0771A] hover:bg-[#B85D0F] text-white rounded-lg font-semibold text-xs cursor-pointer shadow-2xs"
                 >
                   Close & Refresh Ledgers
                 </button>

@@ -112,7 +112,7 @@ export const PaymentVoucherPrintModal: React.FC<PaymentVoucherPrintModalProps> =
           </div>
 
           {/* Amount In Words & Numeric */}
-          <div className="p-4 rounded-xl bg-slate-900 text-white flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-between">
             <div>
               <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold block">
                 Total Amount Settled
@@ -121,10 +121,10 @@ export const PaymentVoucherPrintModal: React.FC<PaymentVoucherPrintModalProps> =
             </div>
             {voucher.advanceAmount && voucher.advanceAmount > 0 ? (
               <div className="text-right">
-                <span className="text-[10px] text-amber-300 uppercase tracking-wider font-semibold block">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold block">
                   Advance / Unallocated
                 </span>
-                <span className="text-base font-bold text-amber-200">{formatCurrency(voucher.advanceAmount)}</span>
+                <span className="text-base font-bold text-amber-600">{formatCurrency(voucher.advanceAmount)}</span>
               </div>
             ) : null}
           </div>

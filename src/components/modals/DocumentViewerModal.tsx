@@ -78,7 +78,7 @@ export default function DocumentViewerModal({
             <select
               value={theme}
               onChange={(e) => setTheme(e.target.value as any)}
-              className="rounded border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-white focus:outline-hidden"
+              className="rounded border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-900 focus:outline-hidden"
             >
               <option value="classic">Classic Corporate</option>
               <option value="modern">Modern Blue</option>

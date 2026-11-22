@@ -199,38 +199,38 @@ export default function ProductModal({
   const categoryOptions = ['General', 'Groceries', 'Electronics', 'Apparel', 'Hardware', 'Pharmaceuticals', 'Raw Materials', 'Finished Goods', 'Services'];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-      <div className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs overflow-y-auto">
+      <div className="w-full max-w-2xl rounded-xl bg-white shadow-xl border border-[#E8DFCF] overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-150">
         
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4 bg-slate-50">
+        <div className="flex items-center justify-between border-b border-[#E8DFCF] px-6 py-4 bg-[#FFFBF3]">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30">
               <Package size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 text-base">
+              <h3 className="font-bold text-[#12263A] text-base">
                 {editingProduct ? 'Edit Product Master' : 'New Product / Service Master'}
               </h3>
-              <p className="text-xs text-slate-500">Configure catalog details, pricing, tax rates and inventory tracking</p>
+              <p className="text-xs text-[#3E5368]">Configure catalog details, pricing, tax rates and inventory tracking</p>
             </div>
           </div>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-700 transition">
+          <button onClick={onClose} className="rounded-lg p-1.5 text-[#3E5368] hover:bg-[#EAF5FD] hover:text-[#12263A] transition cursor-pointer">
             <X size={18} />
           </button>
         </div>
 
         {/* Tab Nav */}
-        <div className="flex border-b border-slate-200 bg-white px-6">
+        <div className="flex border-b border-[#E8DFCF] bg-white px-6">
           {(['basic', 'pricing', 'tax', 'inventory'] as const).map(tab => (
             <button
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition ${
+              className={`px-4 py-2.5 text-xs font-semibold tracking-wider border-b-2 transition cursor-pointer ${
                 activeTab === tab
-                  ? 'border-blue-700 text-blue-700'
-                  : 'border-transparent text-slate-400 hover:text-slate-700'
+                  ? 'border-[#1F86CC] text-[#1F86CC]'
+                  : 'border-transparent text-[#3E5368] hover:text-[#12263A]'
               }`}
             >
               {tab === 'basic' && '1. Basic Info'}
@@ -589,18 +589,18 @@ export default function ProductModal({
           )}
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+          <div className="flex items-center justify-between pt-4 border-t border-[#E8DFCF]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+              className="px-4 py-2 text-xs font-semibold text-[#3E5368] hover:bg-[#FFFBF3] rounded-lg border border-[#E8DFCF] transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-1.5 px-6 py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold shadow-md transition disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-1.5 px-6 py-2.5 bg-[#E0771A] hover:bg-[#B85D0F] text-white rounded-lg text-xs font-semibold shadow-2xs transition disabled:opacity-50 cursor-pointer"
             >
               <Check size={16} />
               {isSubmitting ? 'Saving...' : editingProduct ? 'Update Product' : 'Save Product Master'}

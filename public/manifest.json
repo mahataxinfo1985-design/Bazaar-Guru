@@ -1,22 +1,27 @@
 {
   "short_name": "Bazaar-Guru",
-  "name": "Bazaar-Guru GST Billing",
-  "description": "GST-compliant Sales & Purchase invoice management system for Indian small businesses",
+  "name": "Bazaar-Guru GST Billing & Accounting",
+  "description": "GST-compliant Sales, Purchase, Inventory & Double-Entry Accounting for Indian Businesses",
   "icons": [
     {
-      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' width='192' height='192'><rect width='512' height='512' rx='128' fill='%231E40AF'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='220' font-weight='bold' fill='white'>BG</text></svg>",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
+      "src": "/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
     },
     {
-      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' width='512' height='512'><rect width='512' height='512' rx='128' fill='%231E40AF'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='220' font-weight='bold' fill='white'>BG</text></svg>",
-      "sizes": "512x512",
-      "type": "image/svg+xml"
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/app-icon.png",
+      "sizes": "235x235",
+      "type": "image/png"
     }
   ],
   "start_url": "/",
-  "background_color": "#F3F4F6",
-  "theme_color": "#1E40AF",
+  "background_color": "#FFF8EC",
+  "theme_color": "#14689F",
   "display": "standalone",
   "orientation": "portrait"
 }

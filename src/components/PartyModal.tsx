@@ -79,18 +79,20 @@ export default function PartyModal({ isOpen, onClose, onSave, type }: PartyModal
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-      <div className="w-full max-w-xl rounded-xl bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 border border-slate-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+      <div className="w-full max-w-xl rounded-xl bg-white shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 border border-[#E8DFCF]">
         {/* Header */}
-        <div className="flex items-center justify-between bg-slate-900 px-6 py-4 text-white">
+        <div className="flex items-center justify-between bg-[#FFFBF3] px-6 py-4 border-b border-[#E8DFCF]">
           <div className="flex items-center gap-2.5">
-            <Users size={20} className="text-blue-400" />
-            <h2 className="text-lg font-bold">Add New {type === 'customer' ? 'Customer' : 'Supplier'}</h2>
+            <div className="p-2 rounded-lg bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30">
+              <Users size={18} />
+            </div>
+            <h2 className="text-base font-bold text-[#12263A]">Add New {type === 'customer' ? 'Customer' : 'Supplier'}</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+            className="rounded-lg p-1.5 text-[#3E5368] hover:bg-[#EAF5FD] hover:text-[#12263A] transition-colors cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -321,17 +323,17 @@ export default function PartyModal({ isOpen, onClose, onSave, type }: PartyModal
             )}
           </div>
 
-          <div className="flex gap-3 pt-4 border-t border-slate-100">
+          <div className="flex gap-2.5 pt-3.5 border-t border-[#E8DFCF]">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-slate-300 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition"
+              className="flex-1 rounded-lg border border-[#E8DFCF] py-2.5 text-xs font-semibold text-[#3E5368] hover:bg-[#FFFBF3] transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 rounded-lg bg-blue-600 py-2.5 text-xs font-bold text-white hover:bg-blue-700 transition"
+              className="flex-1 rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] py-2.5 text-xs font-semibold text-white shadow-2xs transition cursor-pointer"
             >
               Save {type === 'customer' ? 'Customer' : 'Supplier'}
             </button>

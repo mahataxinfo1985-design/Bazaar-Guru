@@ -1,68 +1,177 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  --color-accent-blue: #1E40AF;
-  --color-primary: #1E40AF;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  --color-bg-page: #FFF8EC;
+  --color-bg-surface: #FFFFFF;
+  --color-bg-surface-tint: #FFFBF3;
+  
+  --color-blue-50: #EAF5FD;
+  --color-blue-100: #D4EBFA;
+  --color-blue-500: #3BA0E6;
+  --color-blue-600: #1F86CC;
+  --color-blue-700: #14689F;
+  
+  --color-orange-500: #F28C28;
+  --color-orange-600: #E0771A;
+  --color-orange-700: #B85D0F;
+  
+  --color-text-primary: #12263A;
+  --color-text-secondary: #3E5368;
+  
+  --color-border-main: #E8DFCF;
+  
+  --color-status-paid: #1E8E5A;
+  --color-status-paid-bg: #E6F6EE;
+  --color-status-partial: #B7791F;
+  --color-status-partial-bg: #FFF3DC;
+  --color-status-overdue: #C23B3B;
+  --color-status-overdue-bg: #FDECEC;
+  --color-status-draft: #3E5368;
+  --color-status-draft-bg: #EEF2F6;
 }
 
-/* Fallback & Explict utility CSS for High Density theme */
-.accent-blue {
-  color: #1E40AF !important;
+:root {
+  --bg-page: #FFF8EC;
+  --bg-surface: #FFFFFF;
+  --bg-surface-tint: #FFFBF3;
+  --blue-50: #EAF5FD;
+  --blue-100: #D4EBFA;
+  --blue-500: #3BA0E6;
+  --blue-600: #1F86CC;
+  --blue-700: #14689F;
+  --orange-500: #F28C28;
+  --orange-600: #E0771A;
+  --orange-700: #B85D0F;
+  --text-primary: #12263A;
+  --text-secondary: #3E5368;
+  --border: #E8DFCF;
 }
 
-.bg-accent-blue {
-  background-color: #1E40AF !important;
+/* Global scrollbar hiding while maintaining smooth scrolling across wheel, touch, keyboard */
+*, *::before, *::after {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
-.status-paid {
-  background-color: #DCFCE7 !important;
-  color: #166534 !important;
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
-.status-partial {
-  background-color: #FFEDD5 !important;
-  color: #9A3412 !important;
-}
-
-.status-overdue {
-  background-color: #FEE2E2 !important;
-  color: #991B1B !important;
-}
-
-.sidebar-active {
-  background-color: #EFF6FF !important;
-  border-right: 4px solid #1E40AF !important;
-  color: #1E40AF !important;
-}
-
-/* High density layouts */
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: #F3F4F6;
-  color: #1E293B;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #FFF8EC;
+  color: #12263A;
   overflow-x: hidden;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+/* Tabular numbers for amounts and financial ledgers using Inter */
+.tabular-nums, .font-mono, td.text-right, span.font-mono, p.font-mono {
+  font-family: 'Inter', sans-serif !important;
+  font-variant-numeric: tabular-nums;
 }
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
+
+/* Primary, Secondary, Destructive button foundations */
+.btn-primary {
+  background-color: #E0771A;
+  color: #FFFFFF;
+  font-weight: 600;
+  border-radius: 8px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  border: none;
 }
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+.btn-primary:hover {
+  background-color: #B85D0F;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #14689F;
+  border: 1px solid #14689F;
+  font-weight: 600;
+  border-radius: 8px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
+.btn-secondary:hover {
+  background-color: #EAF5FD;
+}
+
+.btn-destructive {
+  background-color: #FFFFFF;
+  color: #C23B3B;
+  border: 1px solid #C23B3B;
+  font-weight: 600;
+  border-radius: 8px;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-destructive:hover {
+  background-color: #FDECEC;
+}
+
+/* Compact status labels (radius 6px, text + tint) */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.badge-paid {
+  background-color: #E6F6EE;
+  color: #1E8E5A;
+}
+.badge-partial {
+  background-color: #FFF3DC;
+  color: #B7791F;
+}
+.badge-overdue, .badge-unpaid {
+  background-color: #FDECEC;
+  color: #C23B3B;
+}
+.badge-draft {
+  background-color: #EEF2F6;
+  color: #3E5368;
+}
+
+.sidebar-active {
+  background-color: #EAF5FD !important;
+  border-left: 4px solid #1F86CC !important;
+  color: #14689F !important;
+  font-weight: 600 !important;
+}
+
 /* Override Tailwind v4 oklch colors with RGB/Hex values inside print-area to prevent html2canvas failures */
 .print-area {
   --color-slate-50: #f8fafc !important;
@@ -88,19 +197,16 @@ body {
   --color-emerald-600: #059669 !important;
 }
 
-/* Print styles */
+/* Print styles (Preserved intact for invoice/PDF output fidelity) */
 @media print {
-  /* Hide the main app layout elements (sidebar & main register area) completely from print layout flow */
   body > #root > div > :not(.print-modal-backdrop) {
     display: none !important;
   }
 
-  /* Hide screen-only modal elements like toolbar and footer buttons */
   .no-print {
     display: none !important;
   }
 
-  /* Reset layout constraints on root and body elements during printing */
   html, body, #root, body > #root > div {
     display: block !important;
     height: auto !important;
@@ -111,7 +217,6 @@ body {
     padding: 0 !important;
   }
 
-  /* Allow modal containers and print preview containers to flow naturally on print page canvas */
   .print-modal-backdrop {
     position: static !important;
     display: block !important;
@@ -157,7 +262,6 @@ body {
     overflow: visible !important;
   }
 
-  /* Reset layout, transform-scaling, and margins on the tax invoice template for perfect A4 page bounds */
   #invoice-preview-content {
     position: static !important;
     margin: 0 auto !important;
@@ -166,20 +270,18 @@ body {
     border: none !important;
     background: white !important;
     color: black !important;
-    transform: none !important; /* Ensure scale transform is reset for printing */
+    transform: none !important;
     width: 100% !important;
     max-width: 100% !important;
     height: auto !important;
     overflow: visible !important;
   }
 
-  /* Force background colors to print */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* Ensure page pagination rules */
   tr, blockquote, pre {
     page-break-inside: avoid !important;
   }

@@ -160,14 +160,14 @@ export default function AccountModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
       <div className="w-full max-w-lg rounded-xl bg-white shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[92vh]">
         {/* Header */}
-        <div className="flex h-14 items-center justify-between border-b border-slate-200 bg-slate-900 px-6 text-white shrink-0">
+        <div className="flex h-14 items-center justify-between border-b border-slate-200 bg-white px-6 shrink-0">
           <div className="flex items-center gap-2">
-            <BookOpen size={16} className="text-blue-400" />
-            <span className="text-sm font-bold tracking-wide uppercase">
+            <BookOpen size={16} className="text-blue-700" />
+            <span className="text-sm font-bold tracking-wide uppercase text-slate-900">
               {accountToEdit ? 'Edit Account Master' : 'Create New Account in Chart of Accounts'}
             </span>
           </div>
-          <button onClick={onClose} className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition">
+          <button onClick={onClose} className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition">
             <X size={18} />
           </button>
         </div>
@@ -365,14 +365,14 @@ export default function AccountModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition cursor-pointer"
+              className="rounded-lg border border-[#E8DFCF] bg-white px-4 py-2 text-xs font-semibold text-[#3E5368] hover:bg-[#FFFBF3] transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleSubmit}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition cursor-pointer shadow-sm"
+              className="rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] px-5 py-2 text-xs font-semibold text-white transition cursor-pointer shadow-2xs"
             >
               Save Account
             </button>
