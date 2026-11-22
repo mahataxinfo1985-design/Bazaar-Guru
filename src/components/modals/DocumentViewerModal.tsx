@@ -61,7 +61,7 @@ export default function DocumentViewerModal({
       `*Recipient:* ${partyObj.name}\n` +
       `*Grand Total:* ₹${invoice.grandTotal.toLocaleString('en-IN')}\n` +
       `*Payment Status:* *${invoice.paymentStatus}*\n\n` +
-      `_GST-compliant digital invoice generated via InvoicePro._`;
+      `_GST-compliant digital invoice generated via Bazaar-Guru._`;
 
     const encoded = encodeURIComponent(text);
     const phone = partyObj.phone?.replace(/[+\s-]/g, '') || '';

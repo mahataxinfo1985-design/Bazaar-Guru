@@ -1,4 +1,4 @@
-const CACHE_NAME = 'invoicepro-shell-v2';
+const CACHE_NAME = 'bazaarguru-shell-v1';
 const APP_SHELL = [
   '/',
   '/index.html',

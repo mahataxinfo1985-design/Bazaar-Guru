@@ -59,10 +59,10 @@ export default function Sidebar({
         <div className="flex h-16 items-center justify-between px-6 border-b border-gray-100">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-blue text-white font-bold text-xl">
-              I
+              B
             </div>
             <div>
-              <h1 className="font-bold text-lg tracking-tight text-slate-900">InvoicePro</h1>
+              <h1 className="font-bold text-lg tracking-tight text-slate-900">Bazaar-Guru</h1>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">GST Workspace</p>
             </div>
           </div>

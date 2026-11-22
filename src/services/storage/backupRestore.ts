@@ -89,7 +89,7 @@ export async function collectCompleteBusinessData(): Promise<BusinessBackupV3['d
 export async function exportBusinessBackup(businessNameCustom?: string): Promise<string> {
   const data = await collectCompleteBusinessData();
   const profile = data.profile;
-  const businessName = businessNameCustom || profile.name || 'InvoicePro_Business';
+  const businessName = businessNameCustom || profile.name || 'BazaarGuru_Business';
   const gstin = profile.gstin || 'UNREGISTERED';
 
   const counts = {
@@ -116,7 +116,7 @@ export async function exportBusinessBackup(businessNameCustom?: string): Promise
 
   const metadata: BackupMetadata = {
     version: '3.0',
-    generator: 'InvoicePro_Backup_Engine',
+    generator: 'BazaarGuru_Backup_Engine',
     businessId: (profile as any).businessId || profile.id || 'primary_business',
     businessName,
     gstin,
@@ -216,7 +216,7 @@ export async function validateBackupFile(jsonString: string): Promise<{
 
     const mockMeta: BackupMetadata = {
       version: '3.0',
-      generator: 'InvoicePro_Backup_Engine',
+      generator: 'BazaarGuru_Backup_Engine',
       businessId: 'primary_business',
       businessName: parsed.business?.name || 'Legacy Backup',
       gstin: parsed.business?.gstin || 'UNREGISTERED',

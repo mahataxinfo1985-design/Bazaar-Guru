@@ -385,7 +385,7 @@ export const BankAccountModal: React.FC<BankAccountModalProps> = ({
 
               <div className="p-3 bg-slate-50 rounded-xl flex items-center gap-2 text-xs text-slate-500">
                 <Shield className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Security Notice: Invoice Pro never stores banking credentials, passwords, PINs, or OTPs.</span>
+                <span>Security Notice: Bazaar-Guru never stores banking credentials, passwords, PINs, or OTPs.</span>
               </div>
             </>
           ) : (

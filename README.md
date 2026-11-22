@@ -1,4 +1,4 @@
-# InvoicePro
+# Bazaar-Guru
 
 A comprehensive business accounting and management application inspired by Vyapar Business App.
 

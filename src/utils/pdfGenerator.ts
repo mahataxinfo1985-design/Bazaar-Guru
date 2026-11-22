@@ -542,7 +542,7 @@ function generateThermalPDF(doc: jsPDF, invoice: Invoice, business: BusinessProf
   doc.setFontSize(7);
   doc.text("Thank you for your business!", margin + width / 2, y, { align: 'center' });
   y += 3.5;
-  doc.text("Powered by InvoicePro GST", margin + width / 2, y, { align: 'center' });
+  doc.text("Powered by Bazaar-Guru GST", margin + width / 2, y, { align: 'center' });
 
   doc.save(`Receipt_${invoice.invoiceNumber}.pdf`);
 }

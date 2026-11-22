@@ -209,7 +209,7 @@ export function generatePaymentReminderText(
   totalDueArg?: number,
   overdueInvoicesArg?: PartyAgeingInvoice[]
 ): string {
-  let businessName = 'InvoicePro Enterprise';
+  let businessName = 'Bazaar-Guru Enterprise';
   let partyName = 'Valued Customer';
   let totalDue = 0;
   let overdueInvoices: PartyAgeingInvoice[] = [];

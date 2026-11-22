@@ -173,7 +173,7 @@ export interface OfflineAttachment {
 
 export interface BackupMetadata {
   version: '3.0';
-  generator: 'InvoicePro_Backup_Engine';
+  generator: 'BazaarGuru_Backup_Engine' | 'InvoicePro_Backup_Engine';
   businessId: string;
   businessName: string;
   gstin: string;

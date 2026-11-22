@@ -20,7 +20,7 @@ export const DEFAULT_BANK_ACCOUNTS: BankAccount[] = [
     businessId: 'default',
     accountName: 'Primary Current Account',
     bankName: 'HDFC Bank',
-    accountHolderName: 'InvoicePro Commercial',
+    accountHolderName: 'Bazaar-Guru Commercial',
     accountNumber: '50200012345678',
     ifscCode: 'HDFC0001234',
     branchName: 'MG Road Branch',

@@ -1688,7 +1688,7 @@ export default function App() {
             </button>
             <div>
               <h2 className="text-base font-bold text-slate-800 leading-tight">
-                {profile.name || 'InvoicePro GST Workspace'}
+                {profile.name || 'Bazaar-Guru GST Workspace'}
               </h2>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">

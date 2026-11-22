@@ -78,7 +78,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           <div className="inline-flex p-3 bg-white/10 rounded-xl mb-3">
             <Building2 className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">InvoicePro</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Bazaar-Guru</h1>
           <p className="text-blue-100 mt-1 text-sm font-medium">Professional GST Invoicing & Expense Suite</p>
         </div>
 

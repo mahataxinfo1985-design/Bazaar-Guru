@@ -16,7 +16,7 @@ export const PaymentVoucherPrintModal: React.FC<PaymentVoucherPrintModalProps> =
   isOpen,
   onClose,
   voucher,
-  businessName = 'INVOICE PRO ENTERPRISE',
+  businessName = 'BAZAAR-GURU ENTERPRISE',
   businessGstin = '07AAAAA0000A1Z5',
   businessAddress = '101 Corporate Towers, Financial District, New Delhi, 110001'
 }) => {

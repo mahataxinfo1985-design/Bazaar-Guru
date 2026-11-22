@@ -1155,7 +1155,7 @@ export const BankingView: React.FC<BankingViewProps> = ({
                                   partyName: party.partyName,
                                   amountDue: party.totalOutstanding,
                                   oldestInvoiceDate: party.oldestInvoiceDate,
-                                  businessName: 'Invoice Pro Enterprise'
+                                  businessName: 'Bazaar-Guru Enterprise'
                                 });
                                 const cleanPhone = party.phone?.replace(/[^0-9]/g, '');
                                 window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
