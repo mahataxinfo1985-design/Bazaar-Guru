@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { 
   Landmark, FileSpreadsheet, Package, Users, BarChart3, ArrowUpRight, 
   ArrowDownRight, Scale, Activity, BookOpen, Layers, CheckCircle2, 
-  AlertCircle, IndianRupee, Calendar, TrendingUp, Download 
+  AlertCircle, IndianRupee, Calendar, TrendingUp, Download, ChevronDown 
 } from 'lucide-react';
 import { Invoice, Party, Item, Expense } from '../../types';
 import { Account, JournalEntry } from '../../types/accounting';
@@ -163,48 +163,45 @@ export default function ReportsView({
           </p>
         </div>
 
-        {/* Global Date Filters & Presets */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Preset Chips */}
-          <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-[#E8DFCF] shadow-2xs">
-            {[
-              { id: 'all', label: 'All Time' },
-              { id: 'today', label: 'Today' },
-              { id: 'this_month', label: 'This Month' },
-              { id: 'this_quarter', label: 'This Quarter' },
-              { id: 'this_fy', label: 'This FY' },
-              { id: 'last_fy', label: 'Last FY' },
-            ].map((preset) => (
-              <button
-                key={preset.id}
-                onClick={() => applyPreset(preset.id as any)}
-                className={`px-2.5 py-1 text-xs rounded-md font-semibold transition-all cursor-pointer ${
-                  activePreset === preset.id
-                    ? 'bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30'
-                    : 'text-[#3E5368] hover:bg-[#FFFBF3]'
-                }`}
+        {/* Compact Structured Controls: Period Dropdown & Date Range */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Button 1: Period Preset Dropdown */}
+          <div className="relative inline-flex items-center">
+            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-[#E8DFCF] shadow-2xs hover:border-[#3BA0E6] transition-colors">
+              <Calendar size={14} className="text-[#1F86CC] shrink-0" />
+              <span className="text-xs font-semibold text-[#12263A] whitespace-nowrap">Period:</span>
+              <select
+                value={activePreset}
+                onChange={(e) => applyPreset(e.target.value as any)}
+                className="bg-transparent text-xs font-bold text-[#14689F] focus:outline-none cursor-pointer pr-1"
               >
-                {preset.label}
-              </button>
-            ))}
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="this_month">This Month</option>
+                <option value="this_quarter">This Quarter</option>
+                <option value="this_fy">This Financial Year</option>
+                <option value="last_fy">Last Financial Year</option>
+                <option value="custom">Custom Range</option>
+              </select>
+            </div>
           </div>
 
-          {/* Date Picker inputs */}
-          <div className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-[#E8DFCF]">
+          {/* Button 2: Custom Date Range Selector */}
+          <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-[#E8DFCF] shadow-2xs hover:border-[#3BA0E6] transition-colors">
+            <span className="text-[11px] font-semibold text-[#3E5368]">From</span>
             <input
               type="date"
               value={dateFrom}
               onChange={(e) => { setDateFrom(e.target.value); setActivePreset('custom'); }}
-              className="text-xs text-[#12263A] bg-transparent outline-none"
-              placeholder="From"
+              className="text-xs font-medium text-[#12263A] bg-transparent outline-none cursor-pointer"
             />
-            <span className="text-xs text-[#3E5368]">to</span>
+            <span className="text-xs text-[#3E5368] font-bold">→</span>
+            <span className="text-[11px] font-semibold text-[#3E5368]">To</span>
             <input
               type="date"
               value={dateTo}
               onChange={(e) => { setDateTo(e.target.value); setActivePreset('custom'); }}
-              className="text-xs text-[#12263A] bg-transparent outline-none"
-              placeholder="To"
+              className="text-xs font-medium text-[#12263A] bg-transparent outline-none cursor-pointer"
             />
           </div>
         </div>

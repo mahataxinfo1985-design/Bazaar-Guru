@@ -198,6 +198,11 @@ body {
 }
 
 /* Print styles (Preserved intact for invoice/PDF output fidelity) */
+@page {
+  size: A4 portrait;
+  margin: 8mm;
+}
+
 @media print {
   body > #root > div > :not(.print-modal-backdrop) {
     display: none !important;
@@ -264,8 +269,8 @@ body {
 
   #invoice-preview-content {
     position: static !important;
-    margin: 0 auto !important;
-    padding: 10mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
     box-shadow: none !important;
     border: none !important;
     background: white !important;

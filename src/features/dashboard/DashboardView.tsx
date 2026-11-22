@@ -15,7 +15,8 @@ import {
   Wallet,
   TrendingUp,
   Boxes,
-  AlertTriangle
+  AlertTriangle,
+  ChevronRight
 } from 'lucide-react';
 import { Invoice, Party, Item, Expense } from '../../types';
 import { Account, JournalEntry } from '../../types/accounting';
@@ -109,58 +110,62 @@ export default function DashboardView({
 
   return (
     <div className="space-y-6">
-      {/* 4-Up Quick Actions Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {/* 4-Up Distinct Quick Actions Navigation Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         <button
           onClick={() => onNavigate('items')}
-          className="flex items-center gap-3 p-3.5 bg-white border border-[#E8DFCF] hover:border-[#1F86CC] rounded-xl text-left transition cursor-pointer shadow-xs"
+          className="group flex items-center gap-3 p-3.5 bg-gradient-to-br from-white to-[#FFFBF3] border border-[#E8DFCF] hover:border-[#E0771A] hover:bg-[#FFF8EC] rounded-xl text-left transition-all duration-150 cursor-pointer shadow-xs hover:shadow-md"
         >
-          <div className="w-10 h-10 rounded-lg bg-[#FFF8EC] text-[#E0771A] flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-[#FFF3DC] border border-[#F28C28]/25 text-[#B85D0F] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <Boxes size={20} />
           </div>
-          <div>
-            <span className="block text-[13px] font-semibold text-[#12263A]">Stock Inventory</span>
-            <span className="block text-[12px] text-[#3E5368]">Godowns & valuation</span>
+          <div className="min-w-0 flex-1">
+            <span className="block text-[13px] font-bold text-[#12263A] group-hover:text-[#E0771A] transition-colors truncate">Stock Inventory</span>
+            <span className="block text-[12px] text-[#3E5368] truncate">Godowns & valuation</span>
           </div>
+          <ChevronRight size={16} className="text-[#E8DFCF] group-hover:text-[#E0771A] group-hover:translate-x-0.5 transition-all shrink-0" />
         </button>
 
         <button
           onClick={() => onNavigate('reports')}
-          className="flex items-center gap-3 p-3.5 bg-white border border-[#E8DFCF] hover:border-[#1F86CC] rounded-xl text-left transition cursor-pointer shadow-xs"
+          className="group flex items-center gap-3 p-3.5 bg-gradient-to-br from-white to-[#F6FCF8] border border-[#E8DFCF] hover:border-[#1E8E5A] hover:bg-[#E6F6EE]/40 rounded-xl text-left transition-all duration-150 cursor-pointer shadow-xs hover:shadow-md"
         >
-          <div className="w-10 h-10 rounded-lg bg-[#E6F6EE] text-[#1E8E5A] flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-[#E6F6EE] border border-[#1E8E5A]/25 text-[#1E8E5A] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <FileSpreadsheet size={20} />
           </div>
-          <div>
-            <span className="block text-[13px] font-semibold text-[#12263A]">Financial Reports</span>
-            <span className="block text-[12px] text-[#3E5368]">P&L & Balance Sheet</span>
+          <div className="min-w-0 flex-1">
+            <span className="block text-[13px] font-bold text-[#12263A] group-hover:text-[#1E8E5A] transition-colors truncate">Financial Reports</span>
+            <span className="block text-[12px] text-[#3E5368] truncate">P&L & Balance Sheet</span>
           </div>
+          <ChevronRight size={16} className="text-[#E8DFCF] group-hover:text-[#1E8E5A] group-hover:translate-x-0.5 transition-all shrink-0" />
         </button>
 
         <button
           onClick={() => onNavigate('accounting')}
-          className="flex items-center gap-3 p-3.5 bg-white border border-[#E8DFCF] hover:border-[#1F86CC] rounded-xl text-left transition cursor-pointer shadow-xs"
+          className="group flex items-center gap-3 p-3.5 bg-gradient-to-br from-white to-[#F4F9FD] border border-[#E8DFCF] hover:border-[#14689F] hover:bg-[#EAF5FD]/40 rounded-xl text-left transition-all duration-150 cursor-pointer shadow-xs hover:shadow-md"
         >
-          <div className="w-10 h-10 rounded-lg bg-[#EAF5FD] text-[#14689F] flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-[#EAF5FD] border border-[#14689F]/25 text-[#14689F] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <Wallet size={20} />
           </div>
-          <div>
-            <span className="block text-[13px] font-semibold text-[#12263A]">Chart of Accounts</span>
-            <span className="block text-[12px] text-[#3E5368]">General ledger & journals</span>
+          <div className="min-w-0 flex-1">
+            <span className="block text-[13px] font-bold text-[#12263A] group-hover:text-[#14689F] transition-colors truncate">Chart of Accounts</span>
+            <span className="block text-[12px] text-[#3E5368] truncate">General ledger & journals</span>
           </div>
+          <ChevronRight size={16} className="text-[#E8DFCF] group-hover:text-[#14689F] group-hover:translate-x-0.5 transition-all shrink-0" />
         </button>
 
         <button
           onClick={() => onNavigate('banking')}
-          className="flex items-center gap-3 p-3.5 bg-white border border-[#E8DFCF] hover:border-[#1F86CC] rounded-xl text-left transition cursor-pointer shadow-xs"
+          className="group flex items-center gap-3 p-3.5 bg-gradient-to-br from-white to-[#F0F8FD] border border-[#E8DFCF] hover:border-[#1F86CC] hover:bg-[#EAF5FD]/60 rounded-xl text-left transition-all duration-150 cursor-pointer shadow-xs hover:shadow-md"
         >
-          <div className="w-10 h-10 rounded-lg bg-[#EAF5FD] text-[#1F86CC] flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-[#D4EBFA] border border-[#3BA0E6]/30 text-[#1F86CC] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
             <Landmark size={20} />
           </div>
-          <div>
-            <span className="block text-[13px] font-semibold text-[#12263A]">Payments & Banking</span>
-            <span className="block text-[12px] text-[#3E5368]">Receipts & reconciliation</span>
+          <div className="min-w-0 flex-1">
+            <span className="block text-[13px] font-bold text-[#12263A] group-hover:text-[#1F86CC] transition-colors truncate">Payments & Banking</span>
+            <span className="block text-[12px] text-[#3E5368] truncate">Receipts & reconciliation</span>
           </div>
+          <ChevronRight size={16} className="text-[#E8DFCF] group-hover:text-[#1F86CC] group-hover:translate-x-0.5 transition-all shrink-0" />
         </button>
       </div>
 

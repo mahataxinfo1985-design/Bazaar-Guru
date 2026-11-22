@@ -1932,7 +1932,7 @@ export default function App() {
             />
           )}
 
-          {currentTab === 'purchase-create' && (
+          {(currentTab === 'purchase-create' || currentTab === 'purchases-create') && (
             <CreatePurchaseBillView
               businessProfile={profile}
               parties={parties}

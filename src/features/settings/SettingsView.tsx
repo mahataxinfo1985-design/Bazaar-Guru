@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Building2, Download, Upload, Database, AlertTriangle, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Building2, Download, Upload, Database, AlertTriangle, Trash2, LogOut, UserCheck, Shield } from 'lucide-react';
 import { BusinessProfile } from '../../types';
 import { INDIAN_STATES } from '../../utils/gstEngine';
 import { exportBusinessBackup, restoreBusinessBackup } from '../../services/storage/backupRestore';
 import { idbClear } from '../../services/storage/idb';
+import { supabase } from '../../lib/supabase';
 
 interface SettingsViewProps {
   businessProfile: BusinessProfile;
@@ -18,6 +19,26 @@ export default function SettingsView({
 }: SettingsViewProps) {
   const [profile, setProfile] = useState<BusinessProfile>(businessProfile);
   const [restoreMessage, setRestoreMessage] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUserEmail(session?.user?.email ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserEmail(session?.user?.email ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    if (confirm('Are you sure you want to sign out from Bazaar-Guru cloud?')) {
+      await supabase.auth.signOut();
+      setUserEmail(null);
+      alert('You have successfully signed out.');
+    }
+  };
 
   // Reset confirmation state
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
@@ -247,8 +268,48 @@ export default function SettingsView({
           </div>
         </div>
 
-        {/* Right 1 Col: Backup & Reset */}
+        {/* Right 1 Col: Account Session, Backup & Reset */}
         <div className="space-y-4">
+          {/* Account & Authentication Card */}
+          <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs space-y-3">
+            <h3 className="font-bold text-[#12263A] text-sm border-b border-[#E8DFCF] pb-2 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Shield size={16} className="text-[#1F86CC]" /> Account & Security
+              </span>
+              {userEmail ? (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#E6F6EE] text-[#1E8E5A]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1E8E5A]" /> Cloud Active
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#EEF2F6] text-[#3E5368]">
+                  Offline
+                </span>
+              )}
+            </h3>
+
+            <div className="text-xs space-y-1 text-[#3E5368]">
+              <p className="font-medium text-[#12263A] truncate">
+                {userEmail ? userEmail : 'Running in Offline Local Mode'}
+              </p>
+              <p className="text-[11px] text-[#3E5368]">
+                {userEmail 
+                  ? 'Your profile, invoices, and ledgers sync with Supabase cloud.' 
+                  : 'Data is stored locally on this machine.'}
+              </p>
+            </div>
+
+            {userEmail ? (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="w-full flex items-center justify-center gap-2 rounded-lg border border-[#C23B3B]/30 bg-white hover:bg-[#FDECEC] py-2 text-xs font-semibold text-[#C23B3B] transition cursor-pointer shadow-2xs"
+              >
+                <LogOut size={14} />
+                <span>Sign Out from Cloud</span>
+              </button>
+            ) : null}
+          </div>
+
           {/* Backup & Restore Card */}
           <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs space-y-3">
             <h3 className="font-bold text-[#12263A] text-sm border-b border-[#E8DFCF] pb-2 flex items-center gap-1.5">

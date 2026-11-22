@@ -60,11 +60,11 @@ export default function Sidebar({
       >
         {/* Sidebar Header with Centered Official Logo */}
         <div className="flex h-16 items-center justify-center px-4 border-b border-[#E8DFCF] bg-white relative">
-          <div className="flex items-center justify-center w-full">
+          <div className="flex items-center justify-center w-full py-1">
             <img 
               src={isCollapsed ? "/app-icon.png" : "/logo.png"} 
               alt="Bazaar-Guru" 
-              className={isCollapsed ? "h-9 w-9 object-contain mx-auto rounded-lg" : "h-9 w-auto max-w-[170px] object-contain mx-auto"} 
+              className={isCollapsed ? "h-10 w-10 object-contain mx-auto rounded-lg" : "h-11 w-auto max-w-[170px] object-contain mx-auto"} 
             />
           </div>
           <button 

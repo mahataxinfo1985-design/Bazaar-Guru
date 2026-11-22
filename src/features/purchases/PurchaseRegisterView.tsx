@@ -102,8 +102,8 @@ export default function PurchaseRegisterView({
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-[#E8DFCF] bg-white shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
+      <div className="rounded-xl border border-[#E8DFCF] bg-white shadow-xs overflow-visible">
+        <div className="overflow-x-auto min-h-[280px]">
           <table className="w-full text-left border-collapse text-[13px]">
             <thead>
               <tr className="bg-[#FFFBF3] border-b border-[#E8DFCF] text-[#3E5368] text-[12px] font-semibold">
@@ -125,10 +125,11 @@ export default function PurchaseRegisterView({
                   </td>
                 </tr>
               ) : (
-                filteredPurchases.map((inv) => {
+                filteredPurchases.map((inv, idx) => {
                   const party = parties.find((p) => p.id === inv.partyId);
                   const isCancelled = inv.status === 'Cancelled';
                   const isMenuOpen = openMenuId === inv.id;
+                  const openUpwards = idx >= Math.max(0, filteredPurchases.length - 2);
 
                   return (
                     <tr
@@ -200,7 +201,7 @@ export default function PurchaseRegisterView({
 
                             {isMenuOpen && (
                               <div 
-                                className="absolute right-0 top-8 w-40 bg-white rounded-lg shadow-lg border border-[#E8DFCF] z-30 py-1 text-left text-[13px]"
+                                className={`absolute right-0 ${openUpwards ? 'bottom-9 mb-1' : 'top-8 mt-1'} w-40 bg-white rounded-xl shadow-xl border border-[#E8DFCF] z-50 py-1.5 text-left text-[13px] animate-in fade-in zoom-in-95 duration-100`}
                                 onMouseLeave={() => setOpenMenuId(null)}
                               >
                                 {!isCancelled && (

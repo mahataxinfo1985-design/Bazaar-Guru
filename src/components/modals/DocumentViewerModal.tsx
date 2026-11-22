@@ -97,126 +97,240 @@ export default function DocumentViewerModal({
         {/* Scrollable Preview Canvas */}
         <div ref={containerRef} className="flex-1 overflow-y-auto bg-slate-100 p-6 flex items-start justify-center print-preview-container">
           <div
+            className="preview-scale-wrapper"
             style={{
               width: `${(theme === 'compact' ? 302 : 794) * scale}px`,
               height: theme === 'compact' ? 'auto' : `${1123 * scale}px`,
               overflow: 'hidden',
             }}
           >
-            <div
-              id="invoice-preview-content"
-              className={`print-area bg-white mx-auto shadow-sm p-8 rounded-lg ${
-                theme === 'compact'
-                  ? 'w-[80mm] max-w-none font-mono text-[10px] space-y-4'
-                  : 'w-[210mm] max-w-none min-h-[297mm] text-xs'
-              }`}
-              style={{
-                transform: `scale(${scale})`,
-                transformOrigin: 'top left',
-                width: theme === 'compact' ? '302px' : '794px',
-                minHeight: theme === 'compact' ? '600px' : '1123px',
-              }}
-            >
-              {/* Business Header */}
-              <div className="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
-                <div>
-                  <h1 className="text-xl font-bold text-slate-900">{businessProfile.name}</h1>
-                  <p className="text-xs text-slate-500">{businessProfile.address}</p>
-                  <p className="text-xs text-slate-600 font-mono">GSTIN: {businessProfile.gstin}</p>
-                  <p className="text-xs text-slate-500">Phone: {businessProfile.phone} | Email: {businessProfile.email}</p>
-                </div>
-                <div className="text-right">
-                  <h2 className="text-lg font-bold uppercase tracking-wider text-blue-700">{invoice.type}</h2>
-                  <p className="font-mono font-bold text-sm text-slate-800 mt-1">{invoice.invoiceNumber}</p>
-                  <p className="text-xs text-slate-500">Date: {invoice.date}</p>
-                  <p className="text-xs text-slate-500">Due: {invoice.dueDate}</p>
-                </div>
-              </div>
+            {(() => {
+              const isCompact = theme === 'compact';
+              const isModern = theme === 'modern';
+              const isElegant = theme === 'elegant';
+              const isBold = theme === 'bold';
+              const isMonochrome = theme === 'monochrome';
 
-              {/* Bill To */}
-              <div className="mb-6 bg-slate-50 p-3 rounded-lg border border-slate-200">
-                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Bill To:</span>
-                <p className="font-bold text-sm text-slate-900">{partyObj.name}</p>
-                <p className="text-xs text-slate-600 font-mono">{partyObj.gstin ? `GSTIN: ${partyObj.gstin}` : 'Unregistered'}</p>
-                <p className="text-xs text-slate-500">{partyObj.billingAddress}</p>
-              </div>
+              const fontClass = isCompact || isMonochrome ? 'font-mono' : isElegant ? 'font-serif' : 'font-sans';
 
-              {/* Items Table */}
-              <table className="w-full text-left border-collapse text-xs mb-6">
-                <thead>
-                  <tr className="border-b-2 border-slate-300 text-slate-600 uppercase text-[10px] font-bold">
-                    <th className="py-2">Item Description</th>
-                    <th className="py-2">HSN</th>
-                    <th className="py-2 text-right">Qty</th>
-                    <th className="py-2 text-right">Rate (₹)</th>
-                    <th className="py-2 text-right">GST %</th>
-                    <th className="py-2 text-right">Total (₹)</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {invoice.items.map((it, idx) => (
-                    <tr key={idx}>
-                      <td className="py-2 font-semibold text-slate-800">{it.name}</td>
-                      <td className="py-2 font-mono text-slate-500">{it.hsnCode}</td>
-                      <td className="py-2 text-right font-mono">{it.qty} {it.unit}</td>
-                      <td className="py-2 text-right font-mono">₹{it.unitPrice.toFixed(2)}</td>
-                      <td className="py-2 text-right font-mono">{it.gstRate}%</td>
-                      <td className="py-2 text-right font-mono font-bold">₹{it.total.toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              return (
+                <div
+                  id="invoice-preview-content"
+                  className={`print-area bg-white mx-auto shadow-sm p-8 rounded-lg ${fontClass} ${
+                    isCompact
+                      ? 'w-[80mm] max-w-none text-[10px] space-y-3'
+                      : 'w-[210mm] max-w-none min-h-[297mm] text-xs'
+                  }`}
+                  style={{
+                    transform: `scale(${scale})`,
+                    transformOrigin: 'top left',
+                    width: isCompact ? '302px' : '794px',
+                    minHeight: isCompact ? '600px' : '1123px',
+                  }}
+                >
+                  {/* Business Header */}
+                  <div className={`pb-4 mb-4 ${
+                    isModern 
+                      ? 'bg-gradient-to-r from-[#14689F] to-[#1F86CC] text-white p-6 -mx-8 -mt-8 mb-6 rounded-t-lg'
+                      : isBold
+                      ? 'bg-[#12263A] text-white p-6 -mx-8 -mt-8 mb-6 rounded-t-lg'
+                      : isElegant
+                      ? 'border-b-4 border-double border-purple-900'
+                      : isMonochrome
+                      ? 'border-b-2 border-black'
+                      : isCompact
+                      ? 'border-b border-dashed border-slate-400 text-center pb-3'
+                      : 'border-b border-slate-300'
+                  }`}>
+                    <div className={isCompact ? 'space-y-1' : 'flex justify-between items-start'}>
+                      <div>
+                        <h1 className={`font-bold ${isCompact ? 'text-sm' : 'text-xl'} ${
+                          isModern || isBold ? 'text-white' : isElegant ? 'text-purple-950' : isMonochrome ? 'text-black' : 'text-[#12263A]'
+                        }`}>
+                          {businessProfile.name}
+                        </h1>
+                        <p className={`text-xs ${isModern || isBold ? 'text-blue-100' : isElegant ? 'text-purple-800' : isMonochrome ? 'text-gray-700' : 'text-[#3E5368]'}`}>
+                          {businessProfile.address}
+                        </p>
+                        <p className={`text-xs font-mono font-semibold ${isModern || isBold ? 'text-white/90' : isElegant ? 'text-purple-900' : isMonochrome ? 'text-black' : 'text-[#12263A]'}`}>
+                          GSTIN: {businessProfile.gstin}
+                        </p>
+                        <p className={`text-xs ${isModern || isBold ? 'text-blue-100' : isElegant ? 'text-purple-800' : isMonochrome ? 'text-gray-700' : 'text-[#3E5368]'}`}>
+                          Phone: {businessProfile.phone} | Email: {businessProfile.email}
+                        </p>
+                      </div>
 
-              {/* Totals */}
-              <div className="flex justify-end mb-6">
-                <div className="w-64 space-y-1.5 text-xs">
-                  <div className="flex justify-between text-slate-600">
-                    <span>Taxable Amount:</span>
-                    <span className="font-mono">₹{invoice.taxableAmount.toFixed(2)}</span>
+                      <div className={isCompact ? 'mt-2 pt-2 border-t border-dashed border-slate-300 text-center' : 'text-right'}>
+                        <h2 className={`font-bold uppercase tracking-wider ${isCompact ? 'text-xs' : 'text-lg'} ${
+                          isModern 
+                            ? 'bg-white/20 px-3 py-1 rounded text-white inline-block' 
+                            : isBold 
+                            ? 'bg-[#E0771A] text-white px-3 py-1 rounded inline-block' 
+                            : isElegant 
+                            ? 'text-purple-900 border border-purple-900 px-2 py-0.5 inline-block' 
+                            : isMonochrome 
+                            ? 'text-black border border-black px-2 py-0.5 inline-block' 
+                            : 'text-[#14689F]'
+                        }`}>
+                          {invoice.type}
+                        </h2>
+                        <p className={`font-mono font-bold mt-1 ${isCompact ? 'text-xs' : 'text-sm'} ${
+                          isModern || isBold ? 'text-white' : isElegant ? 'text-purple-950' : isMonochrome ? 'text-black' : 'text-[#12263A]'
+                        }`}>
+                          {invoice.invoiceNumber}
+                        </p>
+                        <p className={`text-xs ${isModern || isBold ? 'text-blue-100' : isElegant ? 'text-purple-800' : isMonochrome ? 'text-gray-700' : 'text-[#3E5368]'}`}>
+                          Date: {invoice.date}
+                        </p>
+                        <p className={`text-xs ${isModern || isBold ? 'text-blue-100' : isElegant ? 'text-purple-800' : isMonochrome ? 'text-gray-700' : 'text-[#3E5368]'}`}>
+                          Due: {invoice.dueDate}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  {invoice.cgst > 0 && (
-                    <div className="flex justify-between text-slate-600">
-                      <span>CGST:</span>
-                      <span className="font-mono">₹{invoice.cgst.toFixed(2)}</span>
+
+                  {/* Bill To */}
+                  <div className={`mb-6 p-3.5 rounded-lg ${
+                    isModern 
+                      ? 'bg-[#F0F8FD] border border-[#D4EBFA]' 
+                      : isBold 
+                      ? 'bg-[#FFFBF3] border-l-4 border-l-[#E0771A] border border-[#E8DFCF]' 
+                      : isElegant 
+                      ? 'bg-purple-50/60 border border-purple-200' 
+                      : isMonochrome 
+                      ? 'border border-black rounded-none' 
+                      : isCompact
+                      ? 'border-b border-dashed border-slate-300 pb-2 mb-3'
+                      : 'bg-slate-50 border border-slate-200'
+                  }`}>
+                    <span className={`text-[10px] uppercase font-bold tracking-wider ${
+                      isModern ? 'text-[#1F86CC]' : isBold ? 'text-[#E0771A]' : isElegant ? 'text-purple-900' : isMonochrome ? 'text-black' : 'text-slate-400'
+                    }`}>
+                      Bill To:
+                    </span>
+                    <p className={`font-bold text-sm ${isMonochrome ? 'text-black' : 'text-[#12263A]'}`}>{partyObj.name}</p>
+                    <p className={`text-xs font-mono font-semibold ${isMonochrome ? 'text-black' : 'text-[#3E5368]'}`}>
+                      {partyObj.gstin ? `GSTIN: ${partyObj.gstin}` : 'Unregistered Consumer'}
+                    </p>
+                    <p className={`text-xs ${isMonochrome ? 'text-gray-800' : 'text-[#3E5368]'}`}>{partyObj.billingAddress}</p>
+                  </div>
+
+                  {/* Items Table */}
+                  <table className="w-full text-left border-collapse text-xs mb-6">
+                    <thead>
+                      <tr className={`uppercase text-[10px] font-bold ${
+                        isModern 
+                          ? 'bg-[#EAF5FD] text-[#14689F] border-b-2 border-[#1F86CC]' 
+                          : isBold 
+                          ? 'bg-[#12263A] text-white' 
+                          : isElegant 
+                          ? 'bg-purple-50 text-purple-950 border-y border-purple-300' 
+                          : isMonochrome 
+                          ? 'border-y-2 border-black text-black' 
+                          : isCompact
+                          ? 'border-y border-dashed border-slate-400 text-slate-800'
+                          : 'border-b-2 border-slate-300 text-slate-600'
+                      }`}>
+                        <th className="py-2 px-1">Item Description</th>
+                        <th className="py-2">HSN</th>
+                        <th className="py-2 text-right">Qty</th>
+                        <th className="py-2 text-right">Rate (₹)</th>
+                        <th className="py-2 text-right">GST %</th>
+                        <th className="py-2 text-right px-1">Total (₹)</th>
+                      </tr>
+                    </thead>
+                    <tbody className={isCompact ? 'divide-y divide-dashed divide-slate-200' : isMonochrome ? 'divide-y divide-gray-200' : isElegant ? 'divide-y divide-purple-100' : 'divide-y divide-slate-100'}>
+                      {invoice.items.map((it, idx) => (
+                        <tr key={idx} className={idx % 2 === 1 && !isCompact && !isMonochrome ? 'bg-slate-50/50' : ''}>
+                          <td className="py-2 px-1 font-semibold text-slate-800">{it.name}</td>
+                          <td className="py-2 font-mono text-slate-500">{it.hsnCode}</td>
+                          <td className="py-2 text-right font-mono">{it.qty} {it.unit}</td>
+                          <td className="py-2 text-right font-mono">₹{it.unitPrice.toFixed(2)}</td>
+                          <td className="py-2 text-right font-mono">{it.gstRate}%</td>
+                          <td className="py-2 text-right px-1 font-mono font-bold">₹{it.total.toFixed(2)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  {/* Totals */}
+                  <div className="flex justify-end mb-6">
+                    <div className="w-64 space-y-1.5 text-xs">
+                      <div className="flex justify-between text-slate-600">
+                        <span>Taxable Amount:</span>
+                        <span className="font-mono font-semibold">₹{invoice.taxableAmount.toFixed(2)}</span>
+                      </div>
+                      {invoice.cgst > 0 && (
+                        <div className="flex justify-between text-slate-600">
+                          <span>CGST:</span>
+                          <span className="font-mono font-semibold">₹{invoice.cgst.toFixed(2)}</span>
+                        </div>
+                      )}
+                      {invoice.sgst > 0 && (
+                        <div className="flex justify-between text-slate-600">
+                          <span>SGST:</span>
+                          <span className="font-mono font-semibold">₹{invoice.sgst.toFixed(2)}</span>
+                        </div>
+                      )}
+                      {invoice.igst > 0 && (
+                        <div className="flex justify-between text-slate-600">
+                          <span>IGST:</span>
+                          <span className="font-mono font-semibold">₹{invoice.igst.toFixed(2)}</span>
+                        </div>
+                      )}
+                      {invoice.roundOff !== 0 && (
+                        <div className="flex justify-between text-slate-600">
+                          <span>Round Off:</span>
+                          <span className="font-mono">₹{invoice.roundOff.toFixed(2)}</span>
+                        </div>
+                      )}
+                      <div className={`flex justify-between font-bold text-sm pt-2 ${
+                        isModern 
+                          ? 'border-t-2 border-[#1F86CC] text-[#14689F]' 
+                          : isBold 
+                          ? 'bg-[#FFF3DC] border border-[#F28C28]/40 p-2 rounded text-[#B85D0F]' 
+                          : isElegant 
+                          ? 'border-t-2 border-purple-900 text-purple-950' 
+                          : isMonochrome 
+                          ? 'border-t-2 border-black text-black' 
+                          : isCompact
+                          ? 'border-y border-dashed border-slate-800 py-1'
+                          : 'border-t-2 border-slate-800 text-[#12263A]'
+                      }`}>
+                        <span>Grand Total:</span>
+                        <span className="font-mono">₹{invoice.grandTotal.toFixed(2)}</span>
+                      </div>
                     </div>
-                  )}
-                  {invoice.sgst > 0 && (
-                    <div className="flex justify-between text-slate-600">
-                      <span>SGST:</span>
-                      <span className="font-mono">₹{invoice.sgst.toFixed(2)}</span>
-                    </div>
-                  )}
-                  {invoice.igst > 0 && (
-                    <div className="flex justify-between text-slate-600">
-                      <span>IGST:</span>
-                      <span className="font-mono">₹{invoice.igst.toFixed(2)}</span>
-                    </div>
-                  )}
-                  {invoice.roundOff !== 0 && (
-                    <div className="flex justify-between text-slate-600">
-                      <span>Round Off:</span>
-                      <span className="font-mono">₹{invoice.roundOff.toFixed(2)}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between font-bold text-sm border-t-2 border-slate-800 pt-2 text-slate-950">
-                    <span>Grand Total:</span>
-                    <span className="font-mono text-blue-700">₹{invoice.grandTotal.toFixed(2)}</span>
+                  </div>
+
+                  {/* Amount in words & Bank Details */}
+                  <div className={`pt-3 text-xs ${
+                    isMonochrome ? 'border-t border-black' : isElegant ? 'border-t border-purple-200' : 'border-t border-slate-200'
+                  }`}>
+                    <p className="font-serif italic text-slate-500 mb-2">Amount in Words: {invoice.amountInWords}</p>
+                    {businessProfile.bankAccount && (
+                      <div className={`p-2.5 rounded text-[10px] ${
+                        isModern 
+                          ? 'bg-[#EAF5FD] border border-[#D4EBFA]' 
+                          : isBold 
+                          ? 'bg-[#FFFBF3] border border-[#E8DFCF]' 
+                          : isElegant 
+                          ? 'bg-purple-50/60 border border-purple-200' 
+                          : isMonochrome 
+                          ? 'border border-black' 
+                          : isCompact
+                          ? 'border-t border-dashed border-slate-300'
+                          : 'bg-slate-50 border border-slate-200'
+                      }`}>
+                        <span className="font-bold uppercase">Bank Payment Details: </span>
+                        {businessProfile.bankName} | A/C: {businessProfile.bankAccount} | IFSC: {businessProfile.bankIFSC}
+                        {businessProfile.upiId && ` | UPI: ${businessProfile.upiId}`}
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-
-              {/* Amount in words & Bank Details */}
-              <div className="border-t border-slate-200 pt-3 text-xs text-slate-600">
-                <p className="font-serif italic text-slate-500 mb-2">Amount in Words: {invoice.amountInWords}</p>
-                {businessProfile.bankAccount && (
-                  <div className="bg-slate-50 p-2.5 rounded border border-slate-200 text-[10px]">
-                    <span className="font-bold text-slate-700 uppercase">Bank Payment Details: </span>
-                    {businessProfile.bankName} | A/C: {businessProfile.bankAccount} | IFSC: {businessProfile.bankIFSC}
-                    {businessProfile.upiId && ` | UPI: ${businessProfile.upiId}`}
-                  </div>
-                )}
-              </div>
-            </div>
+              );
+            })()}
           </div>
         </div>
 
