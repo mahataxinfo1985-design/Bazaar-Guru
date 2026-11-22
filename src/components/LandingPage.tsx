@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { 
-  FileText, ShoppingCart, Landmark, Boxes, BookOpen, 
-  RefreshCw, Camera, ShieldCheck, ChevronRight, CheckCircle2,
-  HelpCircle, ArrowRight, Menu, X, ArrowUpRight
+  FileText, ShoppingCart, Landmark, BookOpen, 
+  RefreshCw, Camera, ShieldCheck, ChevronRight,
+  ArrowRight, Menu, X
 } from 'lucide-react';
+import Ribbons from './reactbits/Ribbons';
+import StarBorder from './reactbits/StarBorder';
 
 interface LandingPageProps {
   onEnterApp: () => void;
@@ -79,24 +81,20 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
       a: "The engine automatically compares your business registered state with the customer or supplier billing state. Intra-state trades split evenly into CGST and SGST, while inter-state transactions apply IGST."
     },
     {
-      q: "Can I manage multiple bank and cash accounts?",
-      a: "Yes. You can configure multiple commercial bank accounts, cash registers, and petty cash boxes with support for internal contra fund transfers."
+      q: "Where is my business data stored?",
+      a: "Your data is stored securely in encrypted local browser storage (IndexedDB) for zero-latency operations, and backed up in real time to your cloud Supabase database when signed in."
     },
     {
-      q: "Are financial reports generated from real accounting entries?",
-      a: "Yes. Profit & Loss, Balance Sheet, Cash Flow, and Trial Balance statements are dynamically derived from balanced double-entry journal vouchers."
-    },
-    {
-      q: "Can I export data for my Chartered Accountant or tax consultant?",
-      a: "Yes. All invoice registers, ledgers, and cash/bank books can be exported directly into Excel (.xlsx), CSV, and JSON formats."
+      q: "Can I export invoices and reports to Excel and JSON?",
+      a: "Yes. Bazaar-Guru supports one-click exports of GSTR-1, GSTR-3B summaries, Sales registers, P&L statements, and Balance Sheets into formatted Excel (.xlsx) and JSON files."
     }
   ];
 
   return (
-    <div className="min-h-screen bg-[#FFF8EC] text-[#12263A] flex flex-col font-sans selection:bg-[#F28C28]/20 scroll-smooth">
-      
-      {/* 1. Sticky Header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E8DFCF] px-4 sm:px-8 py-3.5 flex items-center justify-between">
+    <div className="w-full bg-[#FFF8EC] text-[#12263A] min-h-screen selection:bg-[#E0771A]/20">
+      {/* 1. Header & Navigation */}
+      <header className="sticky top-0 z-40 bg-[#FFF8EC]/90 backdrop-blur-md border-b border-[#E8DFCF] px-4 sm:px-8 py-3.5 flex items-center justify-between">
+        {/* Logo */}
         <div className="flex items-center gap-3">
           <img 
             src="/logo.png" 
@@ -114,21 +112,31 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
           <a href="#faq" className="hover:text-[#E0771A] transition">FAQ</a>
         </nav>
 
-        {/* CTAs */}
+        {/* CTAs with StarBorder */}
         <div className="hidden sm:flex items-center gap-3">
-          <button
+          <StarBorder
             onClick={onLoginClick || onEnterApp}
-            className="btn-secondary !min-h-[38px] !text-[13px] !px-4"
+            color="#1F86CC"
+            trailColor="#333667"
+            theme="light"
+            thickness={1.5}
+            radius={8}
+            className="!min-h-[38px] !text-[13px] !px-4 !py-1.5 font-semibold text-[#12263A] bg-white hover:bg-[#FFFBF3] border border-[#E8DFCF]"
           >
             Log In
-          </button>
-          <button
+          </StarBorder>
+          <StarBorder
             onClick={onEnterApp}
-            className="btn-primary !min-h-[38px] !text-[13px] !px-5"
+            color="#f97316"
+            trailColor="#ff4d2e"
+            theme="dark"
+            thickness={2}
+            radius={8}
+            className="!min-h-[38px] !text-[13px] !px-5 !py-1.5 font-semibold bg-[#E0771A] text-white shadow-xs hover:bg-[#B85D0F]"
           >
             <span>Get Started</span>
             <ArrowRight size={14} />
-          </button>
+          </StarBorder>
         </div>
 
         {/* Mobile menu button */}
@@ -188,145 +196,185 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
         </div>
       )}
 
-      {/* 2. Hero Section */}
-      <section className="py-16 sm:py-24 px-4 sm:px-8 max-w-6xl mx-auto text-center flex flex-col items-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAF5FD] text-[#14689F] text-[13px] font-semibold border border-[#D4EBFA] mb-6">
-          <ShieldCheck size={15} className="text-[#1F86CC]" />
-          <span>GST Billing, Stock & Double-Entry Accounting for Indian Businesses</span>
+      {/* 2. Hero Section with Interactive Ribbons Canvas */}
+      <div className="relative overflow-hidden">
+        {/* Ribbons Interactive Canvas */}
+        <div className="absolute inset-0 z-0 pointer-events-none opacity-45">
+          <Ribbons
+            colors={["#f97316", "#333667", "#ccaa95"]}
+            thickness={30}
+            length={1.4}
+          />
         </div>
 
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#12263A] max-w-4xl leading-tight">
-          Reliable GST Invoicing & Accounting Software That Works Offline
-        </h1>
-
-        <p className="mt-5 text-base sm:text-lg text-[#3E5368] max-w-2xl leading-relaxed">
-          Manage customer sales, vendor bills, inventory valuation, and multi-bank reconciliation in a fast, privacy-respecting workspace.
-        </p>
-
-        <div className="mt-8 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-          <button
-            onClick={onEnterApp}
-            className="btn-primary w-full sm:w-auto !min-h-[44px] !px-7 !text-[15px]"
-          >
-            <span>Launch Workspace</span>
-            <ArrowRight size={16} />
-          </button>
-          <a
-            href="#features"
-            className="btn-secondary w-full sm:w-auto !min-h-[44px] !px-6 !text-[15px]"
-          >
-            View Features
-          </a>
-        </div>
-
-        {/* CSS Mockup of Dashboard UI */}
-        <div className="mt-14 w-full max-w-4xl bg-white rounded-xl border border-[#E8DFCF] shadow-lg overflow-hidden text-left">
-          <div className="bg-[#FFFBF3] border-b border-[#E8DFCF] px-4 py-2.5 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#C23B3B]/30" />
-              <span className="w-3 h-3 rounded-full bg-[#F28C28]/30" />
-              <span className="w-3 h-3 rounded-full bg-[#1E8E5A]/30" />
-              <span className="ml-2 text-[12px] text-[#3E5368] font-mono">bazaarguru.local / dashboard</span>
-            </div>
-            <span className="badge-status badge-paid">Double-Entry Verified</span>
+        <section className="relative z-10 py-16 sm:py-24 px-4 sm:px-8 max-w-6xl mx-auto text-center flex flex-col items-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAF5FD] text-[#14689F] text-[13px] font-semibold border border-[#D4EBFA] mb-6">
+            <ShieldCheck size={15} className="text-[#1F86CC]" />
+            <span>GST Billing, Stock & Double-Entry Accounting for Indian Businesses</span>
           </div>
-          <div className="p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 bg-white">
-            <div className="p-4 rounded-lg bg-[#FFF8EC] border border-[#E8DFCF]">
-              <span className="text-[12px] text-[#3E5368] font-medium">Sales Revenue</span>
-              <p className="text-xl font-bold text-[#12263A] mt-1 tabular-nums">₹4,82,500.00</p>
+
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#12263A] max-w-4xl leading-tight">
+            Reliable GST Invoicing & Accounting Software That Works Offline
+          </h1>
+
+          <p className="mt-5 text-base sm:text-lg text-[#3E5368] max-w-2xl leading-relaxed">
+            Manage customer sales, vendor bills, inventory valuation, and multi-bank reconciliation in a fast, privacy-respecting workspace.
+          </p>
+
+          <div className="mt-8 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <StarBorder
+              onClick={onEnterApp}
+              color="#f97316"
+              trailColor="#ff4d2e"
+              theme="dark"
+              thickness={2}
+              radius={10}
+              className="w-full sm:w-auto !min-h-[46px] !px-8 !text-[15px] font-semibold bg-[#E0771A] text-white shadow-md hover:bg-[#B85D0F]"
+            >
+              <span>Launch Workspace</span>
+              <ArrowRight size={16} />
+            </StarBorder>
+            <a
+              href="#features"
+              className="btn-secondary w-full sm:w-auto !min-h-[44px] !px-6 !text-[15px]"
+            >
+              View Features
+            </a>
+          </div>
+
+          {/* CSS Mockup of Dashboard UI */}
+          <div className="mt-14 w-full max-w-4xl bg-white rounded-xl border border-[#E8DFCF] shadow-lg overflow-hidden text-left">
+            <div className="bg-[#FFFBF3] border-b border-[#E8DFCF] px-4 py-2.5 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-[#C23B3B]/30" />
+                <span className="w-3 h-3 rounded-full bg-[#F28C28]/30" />
+                <span className="w-3 h-3 rounded-full bg-[#1E8E5A]/30" />
+                <span className="ml-2 text-[12px] text-[#3E5368] font-mono">bazaarguru.local / dashboard</span>
+              </div>
+              <span className="text-[11px] font-semibold text-[#1E8E5A] bg-[#E6F6EE] px-2 py-0.5 rounded">
+                Double-Entry Verified
+              </span>
             </div>
-            <div className="p-4 rounded-lg bg-[#FFF8EC] border border-[#E8DFCF]">
-              <span className="text-[12px] text-[#3E5368] font-medium">Gross Profit</span>
-              <p className="text-xl font-bold text-[#1E8E5A] mt-1 tabular-nums">₹1,14,200.00</p>
-            </div>
-            <div className="p-4 rounded-lg bg-[#FFF8EC] border border-[#E8DFCF]">
-              <span className="text-[12px] text-[#3E5368] font-medium">Liquid Treasury</span>
-              <p className="text-xl font-bold text-[#14689F] mt-1 tabular-nums">₹2,45,000.00</p>
-            </div>
-            <div className="p-4 rounded-lg bg-[#FFF8EC] border border-[#E8DFCF]">
-              <span className="text-[12px] text-[#3E5368] font-medium">Accounts Receivable</span>
-              <p className="text-xl font-bold text-[#B7791F] mt-1 tabular-nums">₹68,300.00</p>
+            
+            <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white">
+              <div className="p-4 rounded-lg border border-[#E8DFCF] bg-[#FFFBF3]">
+                <div className="text-[12px] font-medium text-[#3E5368]">Total Sales (MTD)</div>
+                <div className="text-2xl font-bold text-[#12263A] mt-1">₹12,293.00</div>
+                <div className="text-[11px] text-[#1E8E5A] mt-2 font-medium">↑ Realtime voucher sync</div>
+              </div>
+              <div className="p-4 rounded-lg border border-[#E8DFCF] bg-[#FFFBF3]">
+                <div className="text-[12px] font-medium text-[#3E5368]">GST Liability Due</div>
+                <div className="text-2xl font-bold text-[#12263A] mt-1">₹2,704.48</div>
+                <div className="text-[11px] text-[#14689F] mt-2 font-medium">CGST + SGST + IGST Net</div>
+              </div>
+              <div className="p-4 rounded-lg border border-[#E8DFCF] bg-[#FFFBF3]">
+                <div className="text-[12px] font-medium text-[#3E5368]">Bank & Cash Vault</div>
+                <div className="text-2xl font-bold text-[#12263A] mt-1">₹1,53,74,940.00</div>
+                <div className="text-[11px] text-[#3E5368] mt-2 font-medium">Balanced & Reconciled</div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* 3. Features Grid */}
-      <section id="features" className="py-16 bg-white border-y border-[#E8DFCF] px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#12263A]">Built for Indian Trade & Commerce</h2>
-            <p className="text-[14px] text-[#3E5368] mt-2">
-              Every tool required to record, track, and reconcile your business operations in one place.
-            </p>
-          </div>
+      <section id="features" className="py-20 px-4 sm:px-8 max-w-6xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#12263A]">
+            Complete Financial Control for Indian Traders & Manufacturers
+          </h2>
+          <p className="mt-3 text-[15px] text-[#3E5368]">
+            Everything required for daily business billing, double-entry ledgers, and audit compliance.
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feat, idx) => {
-              const Icon = feat.icon;
-              return (
-                <div 
-                  key={idx}
-                  className="p-6 rounded-xl border border-[#E8DFCF] bg-[#FFFBF3] hover:border-[#1F86CC] transition shadow-xs flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="w-10 h-10 rounded-lg bg-[#EAF5FD] text-[#14689F] flex items-center justify-center mb-4">
-                      <Icon size={20} />
-                    </div>
-                    <h3 className="text-base font-bold text-[#12263A]">{feat.title}</h3>
-                    <p className="text-[13px] text-[#3E5368] mt-2 leading-relaxed">{feat.desc}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <div 
+                key={i} 
+                className="p-6 bg-white rounded-xl border border-[#E8DFCF] shadow-2xs hover:shadow-md transition duration-200 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-lg bg-[#FFF8EC] border border-[#E8DFCF] flex items-center justify-center text-[#E0771A] mb-4">
+                    <Icon size={20} />
                   </div>
+                  <h3 className="text-lg font-bold text-[#12263A] mb-2">{f.title}</h3>
+                  <p className="text-[13px] text-[#3E5368] leading-relaxed">{f.desc}</p>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
       {/* 4. How It Works (3 Steps) */}
-      <section id="how-it-works" className="py-16 px-4 sm:px-8 max-w-6xl mx-auto w-full">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#12263A]">How It Works</h2>
-          <p className="text-[14px] text-[#3E5368] mt-2">Simple three-step workflow from setup to financial closure.</p>
-        </div>
+      <section id="how-it-works" className="py-20 px-4 sm:px-8 bg-white border-y border-[#E8DFCF]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#12263A]">
+              Get Started in Minutes
+            </h2>
+            <p className="mt-3 text-[15px] text-[#3E5368]">
+              No complicated configuration. Seamless onboarding for Indian business owners.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {steps.map((st, idx) => (
-            <div key={idx} className="bg-white p-6 rounded-xl border border-[#E8DFCF] relative">
-              <span className="text-2xl font-bold text-[#F28C28] font-mono">{st.num}</span>
-              <h3 className="text-lg font-bold text-[#12263A] mt-2">{st.title}</h3>
-              <p className="text-[13px] text-[#3E5368] mt-2 leading-relaxed">{st.desc}</p>
-            </div>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {steps.map((s, i) => (
+              <div key={i} className="flex flex-col items-start p-6 rounded-xl bg-[#FFFBF3] border border-[#E8DFCF]">
+                <div className="text-3xl font-black text-[#E0771A] font-mono mb-3">{s.num}</div>
+                <h3 className="text-lg font-bold text-[#12263A] mb-2">{s.title}</h3>
+                <p className="text-[13px] text-[#3E5368] leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* 5. GST Compliance Strip */}
-      <section id="compliance" className="py-12 bg-[#FFFBF3] border-y border-[#E8DFCF] px-4 sm:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div>
-              <h3 className="text-xl font-bold text-[#12263A]">GST-Compliant Documentation</h3>
-              <p className="text-[13px] text-[#3E5368] mt-1">
-                Formatted according to statutory requirements with valid HSN/SAC, state codes, and automated tax slabs.
-              </p>
+      {/* 5. GST Compliance Highlights */}
+      <section id="compliance" className="py-20 px-4 sm:px-8 max-w-6xl mx-auto">
+        <div className="bg-[#FFFBF3] rounded-2xl border border-[#E8DFCF] p-8 sm:p-12 flex flex-col lg:flex-row items-center justify-between gap-10">
+          <div className="max-w-xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E6F6EE] text-[#1E8E5A] text-[12px] font-semibold border border-[#1E8E5A]/20 mb-4">
+              <span>Statutory Compliance Assured</span>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {['CGST + SGST (Intra-state)', 'IGST (Inter-state)', 'HSN / SAC Master', 'Rupee Amount in Words', 'Input Tax Credit (ITC)'].map((tag, i) => (
-                <span key={i} className="px-3 py-1 rounded-md bg-white border border-[#E8DFCF] text-[12px] font-medium text-[#14689F]">
-                  ✓ {tag}
-                </span>
-              ))}
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#12263A]">
+              Designed Specifically for Indian Tax Regulations
+            </h2>
+            <p className="mt-3 text-[14px] text-[#3E5368] leading-relaxed">
+              Every sales and purchase transaction automatically generates compliant journal entries, computes intra-state (CGST + SGST) vs inter-state (IGST) breakdowns, and prepares GSTR-1 & GSTR-3B audit tables with HSN summary reporting.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-4 text-[13px] font-medium text-[#12263A]">
+              <span className="flex items-center gap-1.5"><span className="text-[#1E8E5A]">✓</span> 15-Digit GSTIN Verification</span>
+              <span className="flex items-center gap-1.5"><span className="text-[#1E8E5A]">✓</span> State POS Determination</span>
+              <span className="flex items-center gap-1.5"><span className="text-[#1E8E5A]">✓</span> Rounding Rule Offsets</span>
             </div>
+          </div>
+          <div className="w-full lg:w-auto shrink-0">
+            <StarBorder
+              onClick={onEnterApp}
+              color="#f97316"
+              trailColor="#ff4d2e"
+              theme="dark"
+              thickness={2}
+              radius={10}
+              className="w-full lg:w-auto !min-h-[46px] !px-8 !text-[15px] font-semibold bg-[#E0771A] text-white shadow-md hover:bg-[#B85D0F]"
+            >
+              <span>Explore GST System</span>
+              <ArrowRight size={16} />
+            </StarBorder>
           </div>
         </div>
       </section>
 
       {/* 6. FAQ Section */}
-      <section id="faq" className="py-16 px-4 sm:px-8 max-w-4xl mx-auto w-full">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#12263A]">Frequently Asked Questions</h2>
-          <p className="text-[14px] text-[#3E5368] mt-1">Common answers about Bazaar-Guru capabilities.</p>
+      <section id="faq" className="py-20 px-4 sm:px-8 max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#12263A]">
+            Frequently Asked Questions
+          </h2>
         </div>
 
         <div className="space-y-3">
@@ -365,13 +413,18 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
             No credit card required. Works directly in your browser with secure local storage.
           </p>
           <div className="mt-6 flex justify-center">
-            <button
+            <StarBorder
               onClick={onEnterApp}
-              className="btn-primary !min-h-[44px] !px-8 !text-[15px]"
+              color="#f97316"
+              trailColor="#ff4d2e"
+              theme="dark"
+              thickness={2}
+              radius={10}
+              className="!min-h-[46px] !px-8 !text-[15px] font-semibold bg-[#E0771A] text-white shadow-md hover:bg-[#B85D0F]"
             >
               <span>Get Started Now</span>
               <ArrowRight size={16} />
-            </button>
+            </StarBorder>
           </div>
         </div>
       </section>

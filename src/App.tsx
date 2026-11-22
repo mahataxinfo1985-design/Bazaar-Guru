@@ -174,6 +174,7 @@ export default function App() {
 
   // Modals State
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
   const [partyModal, setPartyModal] = useState<{ isOpen: boolean; type: PartyType }>({
     isOpen: false,
     type: 'customer'
@@ -1823,10 +1824,14 @@ export default function App() {
             if (session) {
               setCurrentTab('dashboard');
             } else {
+              setAuthModalMode('signup');
               setIsAuthModalOpen(true);
             }
           }} 
-          onLoginClick={() => setIsAuthModalOpen(true)} 
+          onLoginClick={() => {
+            setAuthModalMode('signin');
+            setIsAuthModalOpen(true);
+          }} 
         />
         {isAuthModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
@@ -1838,6 +1843,7 @@ export default function App() {
                 ✕
               </button>
               <AuthScreen
+                initialMode={authModalMode}
                 onAuthSuccess={() => {
                   setIsAuthModalOpen(false);
                   setCurrentTab('dashboard');
@@ -2337,6 +2343,7 @@ export default function App() {
               ✕
             </button>
             <AuthScreen
+              initialMode={authModalMode}
               onAuthSuccess={() => {
                 setIsAuthModalOpen(false);
                 triggerSync();

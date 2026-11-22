@@ -1,19 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Mail, Lock, LogIn, UserPlus, Sparkles, Building2, AlertCircle, KeyRound, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, LogIn, UserPlus, Sparkles, Building2, AlertCircle, KeyRound, ArrowLeft, Check, X } from 'lucide-react';
 
 interface AuthScreenProps {
   onAuthSuccess: () => void;
+  initialMode?: 'signin' | 'signup';
 }
 
-export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
+export default function AuthScreen({ onAuthSuccess, initialMode = 'signin' }: AuthScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [businessName, setBusinessName] = useState('');
-  const [mode, setMode] = useState<'signin' | 'signup' | 'magiclink' | 'forgot_password'>('signin');
+  const [mode, setMode] = useState<'signin' | 'signup' | 'magiclink' | 'forgot_password'>(initialMode);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  useEffect(() => {
+    if (initialMode) {
+      setMode(initialMode);
+      setMessage(null);
+    }
+  }, [initialMode]);
+
+  // Password Security Strength Evaluation
+  const checkPasswordStrength = (pwd: string) => {
+    const hasMinLength = pwd.length >= 8;
+    const hasNumber = /\d/.test(pwd);
+    const hasLetters = /[a-zA-Z]/.test(pwd);
+    const hasUpperLower = /[a-z]/.test(pwd) && /[A-Z]/.test(pwd);
+    const hasSpecial = /[^a-zA-Z0-9]/.test(pwd);
+
+    let score = 0;
+    if (pwd.length > 0) score += 15;
+    if (hasMinLength) score += 35;
+    if (hasNumber) score += 20;
+    if (hasUpperLower || (hasLetters && hasSpecial)) score += 15;
+    if (hasSpecial) score += 15;
+
+    score = Math.min(score, 100);
+
+    let label = 'Too short';
+    let barColor = 'bg-red-500';
+    let textColor = 'text-red-600';
+
+    if (!hasMinLength) {
+      label = 'Weak (Must be at least 8 digits/characters)';
+      barColor = 'bg-red-500';
+      textColor = 'text-red-600';
+    } else if (score < 60) {
+      label = 'Moderate (Add uppercase letters & symbols)';
+      barColor = 'bg-amber-500';
+      textColor = 'text-amber-600';
+    } else if (score < 85) {
+      label = 'Good password';
+      barColor = 'bg-blue-500';
+      textColor = 'text-blue-600';
+    } else {
+      label = 'Strong password';
+      barColor = 'bg-emerald-600';
+      textColor = 'text-emerald-700';
+    }
+
+    return {
+      score,
+      label,
+      barColor,
+      textColor,
+      hasMinLength,
+      hasNumber,
+      hasUpperLower,
+      hasSpecial
+    };
+  };
+
+  const pwdSecurity = checkPasswordStrength(password);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -68,6 +129,16 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           text: 'Password recovery email sent! Check your inbox to set a new password.',
         });
       } else if (mode === 'signup') {
+        // Enforce 8 digits / characters minimum
+        if (password.length < 8) {
+          setMessage({
+            type: 'error',
+            text: 'Password security requirement: Minimum 8 characters or digits are required.',
+          });
+          setLoading(false);
+          return;
+        }
+
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -115,7 +186,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
         </div>
         <p className="text-[#3E5368] text-xs font-semibold">
           {mode === 'signup' 
-            ? 'Create Your Business Workspace' 
+            ? 'Create Your Business Workspace (Register New Account)' 
             : mode === 'forgot_password'
             ? 'Reset Your Password'
             : 'Sign in to access your cloud accounting records'}
@@ -214,7 +285,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block text-[11px] font-semibold text-[#3E5368] uppercase tracking-wider">
-                Password
+                Password {mode === 'signup' && <span className="text-[#E0771A] font-bold">(Min. 8 digits/chars)</span>}
               </label>
               {mode === 'signin' && (
                 <button
@@ -233,12 +304,50 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
               <input
                 type="password"
                 required
-                placeholder="••••••••"
+                placeholder={mode === 'signup' ? 'Min 8 characters / digits' : '••••••••'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="block w-full pl-9 pr-3 h-10 bg-[#FFFBF3] border border-[#E8DFCF] rounded-lg focus:outline-hidden focus:border-[#3BA0E6] text-[#12263A] placeholder-[#3E5368]/50 text-xs font-medium"
               />
             </div>
+
+            {/* Real-time Password Security Progress Bar & Checklist for Registration */}
+            {mode === 'signup' && password.length > 0 && (
+              <div className="mt-2 p-2.5 bg-[#FFF8EC] rounded-lg border border-[#E8DFCF]/70 space-y-2">
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="font-semibold text-[#3E5368]">Security Strength:</span>
+                  <span className={`font-bold ${pwdSecurity.textColor}`}>{pwdSecurity.label}</span>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="w-full h-1.5 bg-[#E8DFCF] rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full transition-all duration-300 rounded-full ${pwdSecurity.barColor}`}
+                    style={{ width: `${pwdSecurity.score}%` }}
+                  />
+                </div>
+
+                {/* Requirements Checklist */}
+                <div className="grid grid-cols-2 gap-1.5 pt-1 text-[10px]">
+                  <div className={`flex items-center gap-1 ${pwdSecurity.hasMinLength ? 'text-[#1E8E5A] font-semibold' : 'text-[#3E5368]/70'}`}>
+                    {pwdSecurity.hasMinLength ? <Check size={11} className="text-[#1E8E5A]" /> : <X size={11} className="text-red-400" />}
+                    <span>Min. 8 characters/digits</span>
+                  </div>
+                  <div className={`flex items-center gap-1 ${pwdSecurity.hasNumber ? 'text-[#1E8E5A] font-semibold' : 'text-[#3E5368]/70'}`}>
+                    {pwdSecurity.hasNumber ? <Check size={11} className="text-[#1E8E5A]" /> : <X size={11} className="text-red-400" />}
+                    <span>At least 1 digit (0-9)</span>
+                  </div>
+                  <div className={`flex items-center gap-1 ${pwdSecurity.hasUpperLower ? 'text-[#1E8E5A] font-semibold' : 'text-[#3E5368]/70'}`}>
+                    {pwdSecurity.hasUpperLower ? <Check size={11} className="text-[#1E8E5A]" /> : <X size={11} className="text-red-400" />}
+                    <span>Upper & lower letters</span>
+                  </div>
+                  <div className={`flex items-center gap-1 ${pwdSecurity.hasSpecial ? 'text-[#1E8E5A] font-semibold' : 'text-[#3E5368]/70'}`}>
+                    {pwdSecurity.hasSpecial ? <Check size={11} className="text-[#1E8E5A]" /> : <X size={11} className="text-red-400" />}
+                    <span>Special character (!@#)</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -262,7 +371,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
           ) : mode === 'signup' ? (
             <>
               <UserPlus className="w-4 h-4" />
-              Register Business
+              Register Business & Create Account
             </>
           ) : (
             <>
@@ -294,7 +403,7 @@ export default function AuthScreen({ onAuthSuccess }: AuthScreenProps) {
               }}
               className="text-[#1F86CC] hover:underline font-semibold cursor-pointer"
             >
-              {mode === 'signup' ? 'Already have an account? Sign In' : "Don't have an account? Register new business"}
+              {mode === 'signup' ? 'Already registered? Sign In here' : "Don't have an account? Register new business"}
             </button>
 
             <button
