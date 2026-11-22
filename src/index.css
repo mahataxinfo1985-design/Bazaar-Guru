@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-accent-blue: #1E40AF;
+  --color-primary: #1E40AF;
+}
+
+/* Fallback & Explict utility CSS for High Density theme */
+.accent-blue {
+  color: #1E40AF !important;
+}
+
+.bg-accent-blue {
+  background-color: #1E40AF !important;
+}
+
+.status-paid {
+  background-color: #DCFCE7 !important;
+  color: #166534 !important;
+}
+
+.status-partial {
+  background-color: #FFEDD5 !important;
+  color: #9A3412 !important;
+}
+
+.status-overdue {
+  background-color: #FEE2E2 !important;
+  color: #991B1B !important;
+}
+
+.sidebar-active {
+  background-color: #EFF6FF !important;
+  border-right: 4px solid #1E40AF !important;
+  color: #1E40AF !important;
+}
+
+/* High density layouts */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F3F4F6;
+  color: #1E293B;
+  overflow-x: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+/* Override Tailwind v4 oklch colors with RGB/Hex values inside print-area to prevent html2canvas failures */
+.print-area {
+  --color-slate-50: #f8fafc !important;
+  --color-slate-100: #f1f5f9 !important;
+  --color-slate-200: #e2e8f0 !important;
+  --color-slate-300: #cbd5e1 !important;
+  --color-slate-400: #94a3b8 !important;
+  --color-slate-500: #64748b !important;
+  --color-slate-600: #475569 !important;
+  --color-slate-700: #334155 !important;
+  --color-slate-800: #1e293b !important;
+  --color-slate-900: #0f172a !important;
+  --color-slate-950: #020617 !important;
+  
+  --color-blue-50: #eff6ff !important;
+  --color-blue-100: #dbeafe !important;
+  --color-blue-800: #1e40af !important;
+  --color-blue-900: #1e3a8a !important;
+  
+  --color-amber-600: #d97706 !important;
+  --color-red-500: #ef4444 !important;
+  --color-red-600: #dc2626 !important;
+  --color-emerald-600: #059669 !important;
+}
+
+/* Print styles */
+@media print {
+  /* Hide the main app layout elements (sidebar & main register area) completely from print layout flow */
+  body > #root > div > :not(.print-modal-backdrop) {
+    display: none !important;
+  }
+
+  /* Hide screen-only modal elements like toolbar and footer buttons */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Reset layout constraints on root and body elements during printing */
+  html, body, #root, body > #root > div {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Allow modal containers and print preview containers to flow naturally on print page canvas */
+  .print-modal-backdrop {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .print-modal-card {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  .print-preview-container {
+    display: block !important;
+    padding: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .preview-scale-wrapper {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Reset layout, transform-scaling, and margins on the tax invoice template for perfect A4 page bounds */
+  #invoice-preview-content {
+    position: static !important;
+    margin: 0 auto !important;
+    padding: 10mm !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    color: black !important;
+    transform: none !important; /* Ensure scale transform is reset for printing */
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Force background colors to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ensure page pagination rules */
+  tr, blockquote, pre {
+    page-break-inside: avoid !important;
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "InvoicePro",
+  "description": "GST-compliant Sales & Purchase invoice management and double-entry accounting system for Indian small businesses with customizable PDF/thermal print layouts and financial reporting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
