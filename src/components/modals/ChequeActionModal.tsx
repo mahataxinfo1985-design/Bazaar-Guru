@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, AlertTriangle, Check, ShieldAlert, ArrowDownRight, ArrowUpRight, DollarSign, Calendar } from 'lucide-react';
+import { X, AlertTriangle, Check, ShieldAlert, ArrowDownRight, ArrowUpRight, IndianRupee, Calendar } from 'lucide-react';
 import { ChequeRecord, ChequeStatus, BankAccount } from '../../types/banking';
 import { maskAccountNumber } from '../../services/banking/bankAccountService';
 import { formatCurrency } from '../../utils/formatters';

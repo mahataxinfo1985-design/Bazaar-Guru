@@ -109,30 +109,6 @@ export default function DashboardView({
 
   return (
     <div className="space-y-6">
-      {/* Header & Quick Action Buttons */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold text-[#12263A] tracking-tight">Dashboard</h2>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onCreatePurchase}
-            className="flex items-center gap-1.5 rounded-lg border border-[#14689F] bg-white px-4 py-2 text-[14px] font-semibold text-[#14689F] hover:bg-[#EAF5FD] transition cursor-pointer min-h-[40px]"
-          >
-            <Plus size={16} />
-            <span>Log Purchase Bill</span>
-          </button>
-          <button
-            onClick={onCreateSales}
-            className="flex items-center gap-1.5 rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] px-4 py-2 text-[14px] font-semibold text-white shadow-xs transition cursor-pointer min-h-[40px]"
-          >
-            <Plus size={16} />
-            <span>Create Sales Invoice</span>
-          </button>
-        </div>
-      </div>
-
       {/* 4-Up Quick Actions Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <button

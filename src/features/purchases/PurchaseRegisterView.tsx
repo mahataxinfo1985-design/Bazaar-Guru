@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Eye, Edit3, X, Trash2, DollarSign, MoreHorizontal, Camera } from 'lucide-react';
+import { Plus, Search, Eye, Edit3, X, Trash2, IndianRupee, MoreHorizontal, Camera } from 'lucide-react';
 import { Invoice, Party, BusinessProfile } from '../../types';
 import ExportDropdown from '../../components/shared/ExportDropdown';
 
@@ -185,7 +185,7 @@ export default function PurchaseRegisterView({
                               className="p-1.5 hover:bg-[#E6F6EE] text-[#1E8E5A] rounded-md transition cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center"
                               title="Pay supplier"
                             >
-                              <DollarSign size={16} />
+                              <IndianRupee size={16} />
                             </button>
                           )}
 

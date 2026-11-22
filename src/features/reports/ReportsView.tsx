@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { 
   Landmark, FileSpreadsheet, Package, Users, BarChart3, ArrowUpRight, 
   ArrowDownRight, Scale, Activity, BookOpen, Layers, CheckCircle2, 
-  AlertCircle, DollarSign, Calendar, TrendingUp, Download 
+  AlertCircle, IndianRupee, Calendar, TrendingUp, Download 
 } from 'lucide-react';
 import { Invoice, Party, Item, Expense } from '../../types';
 import { Account, JournalEntry } from '../../types/accounting';

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  X, Package, Barcode, ShieldCheck, DollarSign, Layers, 
+  X, Package, Barcode, ShieldCheck, IndianRupee, Layers, 
   Calendar, AlertCircle, Check, Tag 
 } from 'lucide-react';
 import { Product, ItemType, Warehouse } from '../../types/inventory';

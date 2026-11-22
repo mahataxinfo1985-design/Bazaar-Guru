@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { 
   Package, Plus, Search, Filter, AlertTriangle, ArrowRightLeft, 
-  SlidersHorizontal, Calendar, Layers, Barcode, DollarSign, 
+  SlidersHorizontal, Calendar, Layers, Barcode, IndianRupee, 
   CheckCircle, ShieldAlert, ArrowUpRight, ArrowDownRight, Warehouse as WarehouseIcon
 } from 'lucide-react';
 import { Product, Warehouse, StockMovement, StockTransfer, StockAdjustment, ProductBatch } from '../../types/inventory';
@@ -122,7 +122,7 @@ export default function InventoryView({
         <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs">
           <div className="flex items-center justify-between text-[#3E5368] mb-1">
             <span className="text-[11px] font-semibold">Total Stock Valuation</span>
-            <DollarSign size={16} className="text-[#1E8E5A]" />
+            <IndianRupee size={16} className="text-[#1E8E5A]" />
           </div>
           <h3 className="text-xl font-bold tabular-nums text-[#12263A]">{formatCurrency(totalValuation)}</h3>
           <p className="text-[11px] text-[#3E5368]/80 mt-1">Weighted average cost</p>

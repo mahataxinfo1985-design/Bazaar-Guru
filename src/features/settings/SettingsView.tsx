@@ -249,44 +249,8 @@ export default function SettingsView({
           </div>
         </div>
 
-        {/* Right 1 Col: Test Suite & Backup */}
+        {/* Right 1 Col: Backup & Reset */}
         <div className="space-y-4">
-          {/* GST Engine Verifier */}
-          <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs space-y-3">
-            <h3 className="font-bold text-[#12263A] text-sm border-b border-[#E8DFCF] pb-2 flex items-center gap-1.5">
-              <ShieldCheck size={16} className="text-[#1E8E5A]" /> GST Engine Verification
-            </h3>
-            <p className="text-xs text-[#3E5368]">
-              Run test scenarios verifying intrastate, interstate, multi-tax, and rounding math.
-            </p>
-            <button
-              onClick={() => setTestOutput(runTests())}
-              className="w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#E6F6EE] border border-[#1E8E5A]/30 py-2 text-xs font-semibold text-[#1E8E5A] hover:bg-[#1E8E5A]/15 transition cursor-pointer"
-            >
-              <CheckCircle2 size={14} />
-              <span>Run Verification (5 Scenarios)</span>
-            </button>
-
-            {testOutput && (
-              <div className="p-3 bg-[#FFFBF3] border border-[#E8DFCF] text-[10px] text-[#12263A] rounded-lg max-h-48 overflow-y-auto space-y-1">
-                {testOutput.results.map((line, lIdx) => (
-                  <div
-                    key={lIdx}
-                    className={
-                      line.includes('✅')
-                        ? 'text-[#1E8E5A] font-semibold'
-                        : line.includes('❌')
-                        ? 'text-[#C23B3B] font-bold'
-                        : 'text-[#3E5368]'
-                    }
-                  >
-                    {line}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* Backup & Restore Card */}
           <div className="rounded-xl border border-[#E8DFCF] bg-white p-4 shadow-2xs space-y-3">
             <h3 className="font-bold text-[#12263A] text-sm border-b border-[#E8DFCF] pb-2 flex items-center gap-1.5">

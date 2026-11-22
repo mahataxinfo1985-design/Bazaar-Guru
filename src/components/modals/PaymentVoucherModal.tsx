@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, DollarSign, Calendar, FileText, CheckCircle2 } from 'lucide-react';
+import { X, IndianRupee, Calendar, FileText, CheckCircle2 } from 'lucide-react';
 import { Party, Invoice, PaymentMode } from '../../types';
 import { Account, PaymentVoucher, PaymentAllocation } from '../../types/accounting';
 import { round2, safeSub } from '../../utils/decimal';
@@ -115,7 +115,7 @@ export default function PaymentVoucherModal({
         {/* Header */}
         <div className="flex h-14 items-center justify-between border-b border-slate-200 bg-white px-6">
           <div className="flex items-center gap-2">
-            <DollarSign className="w-5 h-5 text-emerald-600" />
+            <IndianRupee className="w-5 h-5 text-emerald-600" />
             <span className="font-bold text-sm tracking-wide text-slate-900">
               {type === 'payment_in' ? 'Record Customer Receipt (Payment In)' : 'Record Supplier Payment (Payment Out)'}
             </span>

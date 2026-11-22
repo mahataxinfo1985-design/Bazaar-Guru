@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Calendar, DollarSign, User, FileText, Camera, ShieldAlert } from 'lucide-react';
+import { X, Calendar, IndianRupee, User, FileText, Camera, ShieldAlert } from 'lucide-react';
 import { Expense, ExpenseCategory } from '../types';
 
 interface ExpenseModalProps {
@@ -158,7 +158,7 @@ export default function ExpenseModal({ isOpen, onClose, onSave, expenseToEdit }:
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <DollarSign size={14} />
+                  <IndianRupee size={14} />
                 </div>
                 <input
                   type="number"

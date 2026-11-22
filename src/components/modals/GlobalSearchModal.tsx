@@ -28,6 +28,20 @@ export default function GlobalSearchModal({
     }
   }, [isOpen]);
 
+  // Handle ESC key press inside modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   useEffect(() => {
     const timer = setTimeout(async () => {
       if (query.trim().length >= 2) {
@@ -73,33 +87,50 @@ export default function GlobalSearchModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-black/60 backdrop-blur-xs">
+    <div 
+      className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-black/50 backdrop-blur-xs"
+      onClick={onClose}
+    >
       <div 
-        className="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col"
+        className="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-[#E8DFCF] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Input Bar */}
-        <div className="flex items-center px-4 py-3 border-b border-slate-200 gap-3 bg-slate-50">
-          <Search size={18} className="text-slate-400" />
+        <div className="flex items-center px-4 py-3 border-b border-[#E8DFCF] gap-3 bg-[#FFFBF3]">
+          <Search size={18} className="text-[#3E5368]" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search invoices, parties, items, quotes, vouchers, phone, GSTIN..."
-            className="flex-1 bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-[#12263A] placeholder-[#3E5368] focus:outline-none"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="text-slate-400 hover:text-slate-600 p-1 rounded"
+              className="text-[#3E5368] hover:text-[#12263A] p-1 rounded cursor-pointer"
+              title="Clear input"
             >
               <X size={16} />
             </button>
           )}
-          <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono text-slate-500 bg-slate-200 rounded border border-slate-300">
+          <button
+            type="button"
+            onClick={onClose}
+            className="hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-mono font-semibold text-[#3E5368] hover:text-[#12263A] bg-white hover:bg-[#EAF5FD] rounded border border-[#E8DFCF] transition cursor-pointer"
+            title="Close search (Esc)"
+          >
             ESC
-          </kbd>
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="sm:hidden text-[#3E5368] hover:text-[#12263A] p-1 rounded cursor-pointer"
+            title="Close"
+          >
+            <X size={18} />
+          </button>
         </div>
 
         {/* Results List */}

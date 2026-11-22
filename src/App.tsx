@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
-  Menu, Wifi, WifiOff, RefreshCw, Plus, CreditCard, Search, RotateCcw
+  Menu, Wifi, WifiOff, RefreshCw, Plus, CreditCard, Search, RotateCcw,
+  ChevronDown, Receipt, ShoppingCart, Users, Package
 } from 'lucide-react';
 import { 
   Invoice, Party, Item, Expense, BusinessProfile, InvoiceStatus, PaymentStatus, PartyType 
@@ -116,6 +117,9 @@ export default function App() {
   // Navigation & UI State
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [quickActionMenuOpen, setQuickActionMenuOpen] = useState(false);
+  const quickActionRef = useRef<HTMLDivElement>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [pendingSyncCount, setPendingSyncCount] = useState(0);
   const [conflictCount, setConflictCount] = useState(0);
@@ -239,13 +243,24 @@ export default function App() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
         e.preventDefault();
         setGlobalSearchOpen(prev => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Close quick action menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (quickActionRef.current && !quickActionRef.current.contains(e.target as Node)) {
+        setQuickActionMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   // Refresh pending mutation count and conflicts
@@ -1659,6 +1674,55 @@ export default function App() {
     setCashAccounts(prev => [fullCash, ...prev.filter(c => c.id !== fullCash.id)]);
   };
 
+  const getViewTitle = (tab: string) => {
+    switch (tab) {
+      case 'dashboard': return 'Dashboard';
+      case 'sales': return 'Sales Invoices';
+      case 'sales-create': return 'Create Sales Invoice';
+      case 'purchase': return 'Purchase Invoices';
+      case 'purchases-create': return 'Create Purchase Bill';
+      case 'banking': return 'Payments & Banking';
+      case 'parties': return 'Customers & Suppliers';
+      case 'items': return 'Product Inventory';
+      case 'accounting': return 'Accounting & Ledgers';
+      case 'reports': return 'GST & Sales Reports';
+      case 'expenses': return 'Expenses';
+      case 'sync-backup': return 'Sync & Backup';
+      case 'settings': return 'Business Profile';
+      default: return 'Workspace';
+    }
+  };
+
+  // Fullscreen Landing Page (No sidebar, no dashboard header)
+  if (currentTab === 'landing') {
+    return (
+      <div className="min-h-screen bg-[#FFF8EC]">
+        <LandingPage 
+          onEnterApp={() => setCurrentTab('dashboard')} 
+          onLoginClick={() => setIsAuthModalOpen(true)} 
+        />
+        {isAuthModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 border border-[#E8DFCF]">
+              <button
+                onClick={() => setIsAuthModalOpen(false)}
+                className="absolute top-4 right-4 text-[#3E5368] hover:text-[#12263A] cursor-pointer"
+              >
+                ✕
+              </button>
+              <AuthScreen
+                onAuthSuccess={() => {
+                  setIsAuthModalOpen(false);
+                  setCurrentTab('dashboard');
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-[#FFF8EC] text-[#12263A] antialiased overflow-hidden font-sans">
       {/* Sidebar Navigation */}
@@ -1669,91 +1733,117 @@ export default function App() {
         setIsOpen={setSidebarOpen}
         businessName={profile.name}
         businessGstin={profile.gstin}
-        onLogout={async () => {
-          await supabase.auth.signOut();
-          setUser(null);
-        }}
-        onLoginClick={() => setIsAuthModalOpen(true)}
-        isAuthenticated={!!user}
-        onOpenLanding={() => setCurrentTab('landing')}
+        isCollapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(prev => !prev)}
       />
 
       {/* Main App Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top Header Bar */}
-        <header className="h-16 bg-white border-b border-[#E8DFCF] px-4 md:px-6 flex items-center justify-between shrink-0 z-10 shadow-xs">
-          <div className="flex items-center gap-3">
+        {/* Streamlined Unified Top Bar */}
+        <header className="h-16 bg-white border-b border-[#E8DFCF] px-4 md:px-6 flex items-center justify-between shrink-0 z-20 shadow-2xs">
+          {/* Left: View Title & Mobile Menu toggle */}
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="p-2 text-[#3E5368] hover:bg-[#EAF5FD] rounded-lg md:hidden cursor-pointer"
+              className="p-2 text-[#3E5368] hover:bg-[#EAF5FD] rounded-lg md:hidden cursor-pointer shrink-0"
+              title="Open Navigation"
             >
               <Menu size={20} />
             </button>
-            <div>
-              <h2 className="text-base font-semibold text-[#12263A] leading-tight">
-                {profile.name || 'Bazaar-Guru Workspace'}
-              </h2>
-            </div>
+            <h1 className="text-xl md:text-2xl font-bold text-[#12263A] tracking-tight truncate">
+              {getViewTitle(currentTab)}
+            </h1>
           </div>
 
-          {/* Quick Actions & Status Indicators */}
-          <div className="flex items-center gap-2 md:gap-3">
-            {/* Global Search Omnibar Trigger */}
+          {/* Center: Wider Search Bar */}
+          <div className="flex-1 max-w-md mx-4 hidden sm:block">
             <button
               onClick={() => setGlobalSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-[#FFFBF3] hover:bg-[#EAF5FD] text-[#3E5368] rounded-lg text-[13px] font-medium transition cursor-pointer border border-[#E8DFCF]"
+              className="w-full flex items-center justify-between px-3.5 py-2 bg-[#FFFBF3] hover:bg-[#EAF5FD] text-[#3E5368] hover:text-[#12263A] rounded-xl text-[13px] font-medium transition cursor-pointer border border-[#E8DFCF] shadow-xs"
               title="Search records (Ctrl+K)"
             >
-              <Search size={14} className="text-[#3E5368]" />
-              <span className="hidden lg:inline">Search records...</span>
-              <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[11px] font-mono text-[#3E5368] bg-white rounded border border-[#E8DFCF]">
+              <div className="flex items-center gap-2.5 truncate">
+                <Search size={16} className="text-[#3E5368]" />
+                <span className="truncate">Search invoices, parties, items, vouchers...</span>
+              </div>
+              <kbd className="px-1.5 py-0.5 text-[11px] font-mono text-[#3E5368] bg-white rounded border border-[#E8DFCF] shrink-0 ml-2">
                 Ctrl+K
               </kbd>
             </button>
+          </div>
+
+          {/* Right: Quick Action ("New") & Notification Center */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Mobile search icon */}
+            <button
+              onClick={() => setGlobalSearchOpen(true)}
+              className="sm:hidden p-2 text-[#3E5368] hover:bg-[#EAF5FD] rounded-lg cursor-pointer"
+              title="Search records"
+            >
+              <Search size={18} />
+            </button>
+
+            {/* Quick Action "New" Button with Dropdown */}
+            <div className="relative" ref={quickActionRef}>
+              <button
+                onClick={() => setQuickActionMenuOpen(prev => !prev)}
+                className="flex items-center gap-1.5 px-3.5 py-2 bg-[#E0771A] hover:bg-[#B85D0F] text-white rounded-lg text-[13px] font-semibold transition cursor-pointer shadow-xs min-h-[38px]"
+                title="Quick create"
+              >
+                <Plus size={16} />
+                <span>New</span>
+                <ChevronDown size={14} className={`transition-transform duration-150 ${quickActionMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {quickActionMenuOpen && (
+                <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-[#E8DFCF] py-1.5 z-50 text-[13px]">
+                  <button
+                    onClick={() => { setQuickActionMenuOpen(false); setCurrentTab('sales-create'); }}
+                    className="flex items-center gap-2.5 w-full px-3.5 py-2 text-left text-[#12263A] hover:bg-[#EAF5FD] transition cursor-pointer font-medium"
+                  >
+                    <Receipt size={16} className="text-[#1F86CC]" />
+                    <span>New Sales Invoice</span>
+                  </button>
+                  <button
+                    onClick={() => { setQuickActionMenuOpen(false); setPaymentVoucherModal({ isOpen: true, defaultType: 'payment_in' }); }}
+                    className="flex items-center gap-2.5 w-full px-3.5 py-2 text-left text-[#12263A] hover:bg-[#EAF5FD] transition cursor-pointer font-medium"
+                  >
+                    <CreditCard size={16} className="text-[#1E8E5A]" />
+                    <span>Record Payment</span>
+                  </button>
+                  <button
+                    onClick={() => { setQuickActionMenuOpen(false); setCurrentTab('purchases-create'); }}
+                    className="flex items-center gap-2.5 w-full px-3.5 py-2 text-left text-[#12263A] hover:bg-[#EAF5FD] transition cursor-pointer font-medium"
+                  >
+                    <ShoppingCart size={16} className="text-[#B85D0F]" />
+                    <span>New Purchase Bill</span>
+                  </button>
+                  <div className="my-1 border-t border-[#E8DFCF]" />
+                  <button
+                    onClick={() => { setQuickActionMenuOpen(false); setPartyModal({ isOpen: true, type: 'customer' }); }}
+                    className="flex items-center gap-2.5 w-full px-3.5 py-2 text-left text-[#12263A] hover:bg-[#EAF5FD] transition cursor-pointer font-medium"
+                  >
+                    <Users size={16} className="text-[#14689F]" />
+                    <span>Add Customer / Supplier</span>
+                  </button>
+                  <button
+                    onClick={() => { setQuickActionMenuOpen(false); setItemModalOpen(true); }}
+                    className="flex items-center gap-2.5 w-full px-3.5 py-2 text-left text-[#12263A] hover:bg-[#EAF5FD] transition cursor-pointer font-medium"
+                  >
+                    <Package size={16} className="text-[#E0771A]" />
+                    <span>Add Product / Item</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Notification Center */}
             <NotificationCenter onNavigate={(tab) => setCurrentTab(tab)} />
-
-            {/* Sync & Connectivity Status */}
-            <SyncStatusPill
-              isOnline={isOnline}
-              isSyncing={isSyncing}
-              pendingCount={pendingSyncCount}
-              conflictCount={conflictCount}
-              onSyncClick={triggerSync}
-              onOpenHub={() => setCurrentTab('sync-backup')}
-            />
-
-            {/* Quick Action: Record Payment (Secondary) */}
-            <button
-              onClick={() => setPaymentVoucherModal({ isOpen: true, defaultType: 'payment_in' })}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-white border border-[#14689F] hover:bg-[#EAF5FD] text-[#14689F] rounded-lg text-[13px] font-semibold transition cursor-pointer min-h-[38px]"
-              title="Record customer receipt or payment voucher"
-            >
-              <CreditCard size={15} />
-              <span className="hidden md:inline">Record Payment</span>
-            </button>
-
-            {/* Single Primary Action: New Sale (Orange) */}
-            <button
-              onClick={() => setCurrentTab('sales-create')}
-              className="flex items-center gap-1.5 px-4 py-2 bg-[#E0771A] hover:bg-[#B85D0F] text-white rounded-lg text-[13px] font-semibold transition cursor-pointer shadow-xs min-h-[38px]"
-              title="Create new sales invoice"
-            >
-              <Plus size={16} />
-              <span className="hidden sm:inline">New Sale</span>
-            </button>
           </div>
         </header>
 
         {/* View Switcher Container */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-[#FFF8EC]">
-          {currentTab === 'landing' && (
-            <LandingPage 
-              onEnterApp={() => setCurrentTab('dashboard')} 
-              onLoginClick={() => setIsAuthModalOpen(true)} 
-            />
-          )}
           {currentTab === 'dashboard' && (
             <DashboardView
               invoices={invoices}

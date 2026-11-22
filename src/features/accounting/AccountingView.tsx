@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  BookOpen, DollarSign, ArrowUpRight, ArrowDownRight, Layers, FileSpreadsheet,
+  BookOpen, IndianRupee, ArrowUpRight, ArrowDownRight, Layers, FileSpreadsheet,
   Plus, Search, Filter, ShieldCheck, Lock, Unlock, Eye, Calendar, RefreshCw, AlertCircle, CheckCircle2, X
 } from 'lucide-react';
 import { Account, JournalEntry, PaymentVoucher, AccountingPeriod, Party, Invoice, Expense } from '../../types';
@@ -512,13 +512,13 @@ export default function AccountingView({
                   onClick={() => onOpenPaymentModal('payment_in')}
                   className="flex items-center gap-1 text-xs font-semibold text-[#1E8E5A] bg-[#E6F6EE] px-2.5 py-1 rounded-md border border-[#1E8E5A]/20 hover:bg-[#1E8E5A]/15 cursor-pointer"
                 >
-                  <DollarSign size={13} /> + Payment In
+                  <IndianRupee size={13} /> + Payment In
                 </button>
                 <button
                   onClick={() => onOpenPaymentModal('payment_out')}
                   className="flex items-center gap-1 text-xs font-semibold text-[#1F86CC] bg-[#EAF5FD] px-2.5 py-1 rounded-md border border-[#3BA0E6]/30 hover:bg-[#D4EBFA] cursor-pointer"
                 >
-                  <DollarSign size={13} /> + Payment Out
+                  <IndianRupee size={13} /> + Payment Out
                 </button>
               </div>
             </div>

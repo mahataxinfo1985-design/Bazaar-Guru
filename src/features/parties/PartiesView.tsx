@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Users, BookOpen, DollarSign, Search, Filter } from 'lucide-react';
+import { Plus, Users, BookOpen, IndianRupee, Search, Filter } from 'lucide-react';
 import { Party, PartyType } from '../../types';
 
 interface PartiesViewProps {
@@ -170,7 +170,7 @@ export default function PartiesView({
                       onClick={() => onRecordPayment(p)}
                       className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-[#1E8E5A]/30 bg-[#E6F6EE] hover:bg-[#1E8E5A]/15 text-xs font-semibold text-[#1E8E5A] transition cursor-pointer"
                     >
-                      <DollarSign size={13} />
+                      <IndianRupee size={13} />
                       <span>{activeType === 'customer' ? 'Receive Payment' : 'Pay Supplier'}</span>
                     </button>
                   </div>

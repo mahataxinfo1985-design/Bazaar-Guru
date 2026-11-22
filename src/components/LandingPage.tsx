@@ -93,7 +93,7 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
   ];
 
   return (
-    <div className="min-h-screen bg-[#FFF8EC] text-[#12263A] flex flex-col font-sans selection:bg-[#F28C28]/20">
+    <div className="min-h-screen bg-[#FFF8EC] text-[#12263A] flex flex-col font-sans selection:bg-[#F28C28]/20 scroll-smooth">
       
       {/* 1. Sticky Header */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E8DFCF] px-4 sm:px-8 py-3.5 flex items-center justify-between">
@@ -342,7 +342,7 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
                 <span>{faq.q}</span>
                 <ChevronRight 
                   size={18} 
-                  className={`text-[#3E5368] transition-transform ${openFaq === idx ? 'rotate-90' : ''}`} 
+                  className={`text-[#3E5368] transition-transform duration-200 ${openFaq === idx ? 'rotate-90 text-[#E0771A]' : ''}`} 
                 />
               </button>
               {openFaq === idx && (
