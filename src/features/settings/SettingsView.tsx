@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Building2, CheckCircle2, Download, Upload, ShieldCheck, Database, AlertTriangle, Trash2 } from 'lucide-react';
+import { Building2, Download, Upload, Database, AlertTriangle, Trash2 } from 'lucide-react';
 import { BusinessProfile } from '../../types';
 import { INDIAN_STATES } from '../../utils/gstEngine';
-import { runTests } from '../../utils/gstEngine.test';
 import { exportBusinessBackup, restoreBusinessBackup } from '../../services/storage/backupRestore';
 import { idbClear } from '../../services/storage/idb';
 
@@ -18,7 +17,6 @@ export default function SettingsView({
   onRestoreSuccess,
 }: SettingsViewProps) {
   const [profile, setProfile] = useState<BusinessProfile>(businessProfile);
-  const [testOutput, setTestOutput] = useState<{ success: boolean; results: string[] } | null>(null);
   const [restoreMessage, setRestoreMessage] = useState<string | null>(null);
 
   // Reset confirmation state

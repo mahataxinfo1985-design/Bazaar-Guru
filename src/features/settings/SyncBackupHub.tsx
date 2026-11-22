@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   RefreshCw, AlertTriangle, ShieldCheck, Download, Upload, 
   Smartphone, Laptop, Monitor, Tablet, CheckCircle2, XCircle, 
-  ArrowRight, Database, FileText, Layers, Trash2, Check, AlertCircle, History
+  ArrowRight, Database, FileText, Layers, Trash2, Check, AlertCircle, History,
+  Cloud, CloudUpload, CloudDownload, Server
 } from 'lucide-react';
 import { 
   OutboxOperation, SyncConflict, SyncDevice, RestorePreviewResult, RestoreExecutionResult 
@@ -21,6 +22,8 @@ import {
   exportBusinessBackup, previewBackup, restoreBusinessBackup 
 } from '../../services/storage/backupRestore';
 import { idbGetAll } from '../../services/storage/idb';
+import { pushLocalDataToCloud, pullCloudDataToLocal, MigrationSummary } from '../../services/storage/cloudMigrator';
+import { supabase } from '../../lib/supabase';
 
 interface SyncBackupHubProps {
   isOnline: boolean;
@@ -33,7 +36,7 @@ export default function SyncBackupHub({
   onTriggerSync,
   onRestoreCompleted
 }: SyncBackupHubProps) {
-  const [activeTab, setActiveTab] = useState<'outbox' | 'conflicts' | 'devices' | 'backup'>('outbox');
+  const [activeTab, setActiveTab] = useState<'outbox' | 'conflicts' | 'devices' | 'backup' | 'cloud'>('outbox');
 
   // State for data
   const [outboxOps, setOutboxOps] = useState<OutboxOperation[]>([]);
@@ -43,6 +46,11 @@ export default function SyncBackupHub({
   const [backupHistory, setBackupHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+  // Cloud & Migration states
+  const [cloudUser, setCloudUser] = useState<any>(null);
+  const [migrationRunning, setMigrationRunning] = useState(false);
+  const [migrationSummary, setMigrationSummary] = useState<MigrationSummary | null>(null);
 
   // Backup & Restore states
   const [restoreFileContent, setRestoreFileContent] = useState<string | null>(null);
@@ -67,6 +75,10 @@ export default function SyncBackupHub({
       setDevices(devs);
       setBackupHistory(baks.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
       setCurrentDeviceId(getCurrentDeviceId());
+
+      // Check Supabase session
+      const { data: { session } } = await supabase.auth.getSession();
+      setCloudUser(session?.user ?? null);
     } catch (e: any) {
       console.error('Error loading sync hub data:', e);
     } finally {
@@ -76,6 +88,10 @@ export default function SyncBackupHub({
 
   useEffect(() => {
     loadData();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setCloudUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   const showMsg = (text: string, type: 'success' | 'error' | 'info' = 'success') => {
@@ -121,6 +137,43 @@ export default function SyncBackupHub({
     const count = await purgeSyncedOperations(0);
     await loadData();
     showMsg(`Purged ${count} synced operations.`);
+  };
+
+  // Cloud Migration handlers
+  const handlePushToCloud = async () => {
+    try {
+      setMigrationRunning(true);
+      const res = await pushLocalDataToCloud();
+      setMigrationSummary(res);
+      if (res.success) {
+        showMsg(res.message, 'success');
+      } else {
+        showMsg(res.message, 'error');
+      }
+      await loadData();
+    } catch (err: any) {
+      showMsg(`Migration error: ${err.message}`, 'error');
+    } finally {
+      setMigrationRunning(false);
+    }
+  };
+
+  const handlePullFromCloud = async () => {
+    try {
+      setMigrationRunning(true);
+      const res = await pullCloudDataToLocal();
+      if (res.success) {
+        showMsg(res.message, 'success');
+        if (onRestoreCompleted) onRestoreCompleted();
+      } else {
+        showMsg(res.message, 'error');
+      }
+      await loadData();
+    } catch (err: any) {
+      showMsg(`Pull error: ${err.message}`, 'error');
+    } finally {
+      setMigrationRunning(false);
+    }
   };
 
   // Conflict handlers
@@ -344,6 +397,23 @@ export default function SyncBackupHub({
         >
           <Database size={14} />
           <span>Backup & Restore (v3.0)</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('cloud')}
+          className={`px-3.5 py-2 rounded-lg flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
+            activeTab === 'cloud' 
+              ? 'bg-[#EAF5FD] text-[#1F86CC] border border-[#3BA0E6]/30 shadow-2xs font-semibold' 
+              : 'text-[#3E5368] hover:bg-[#FFFBF3] hover:text-[#12263A]'
+          }`}
+        >
+          <Cloud size={14} />
+          <span>Supabase Cloud Sync</span>
+          {cloudUser ? (
+            <span className="w-2 h-2 rounded-full bg-[#1E8E5A]" title="Authenticated" />
+          ) : (
+            <span className="w-2 h-2 rounded-full bg-[#B7791F]" title="Guest / Offline" />
+          )}
         </button>
       </div>
 
@@ -831,6 +901,141 @@ export default function SyncBackupHub({
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 5: Supabase Cloud Sync & Migration */}
+      {activeTab === 'cloud' && (
+        <div className="bg-white rounded-xl border border-[#E8DFCF] p-5 shadow-2xs space-y-5">
+          {/* Header & Status */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#E8DFCF] gap-3">
+            <div>
+              <h2 className="text-sm font-bold text-[#12263A] flex items-center gap-2">
+                <Cloud className="text-[#1F86CC]" size={18} />
+                <span>Supabase Cloud Integration & Database Sync</span>
+              </h2>
+              <p className="text-xs text-[#3E5368] mt-0.5">
+                Bidirectional synchronization between local offline IndexedDB and PostgreSQL cloud tenant.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${
+                cloudUser 
+                  ? 'bg-[#E6F6EE] text-[#1E8E5A]' 
+                  : 'bg-[#FFF3DC] text-[#B7791F]'
+              }`}>
+                <span className={`w-2 h-2 rounded-full ${cloudUser ? 'bg-[#1E8E5A]' : 'bg-[#B7791F]'}`} />
+                {cloudUser ? 'Connected & Authenticated' : 'Not Signed In'}
+              </span>
+            </div>
+          </div>
+
+          {/* Cloud Account Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl border border-[#E8DFCF] bg-[#FFFBF3] space-y-2">
+              <h3 className="text-xs font-bold text-[#12263A] flex items-center gap-1.5">
+                <Server size={14} className="text-[#1F86CC]" /> Supabase Cloud Project
+              </h3>
+              <div className="text-xs space-y-1 font-mono text-[#3E5368]">
+                <p><strong className="text-[#12263A]">Project URL:</strong> https://lftbzabnaxvnhbamyhot.supabase.co</p>
+                <p><strong className="text-[#12263A]">Database:</strong> PostgreSQL (Row-Level Security Enabled)</p>
+                <p><strong className="text-[#12263A]">API Engine:</strong> PostgREST / Realtime WebSockets</p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-[#E8DFCF] bg-[#FFFBF3] space-y-2">
+              <h3 className="text-xs font-bold text-[#12263A] flex items-center gap-1.5">
+                <Smartphone size={14} className="text-[#E0771A]" /> Active Cloud Session
+              </h3>
+              <div className="text-xs space-y-1 text-[#3E5368]">
+                <p><strong className="text-[#12263A]">User Email:</strong> {cloudUser?.email || 'Guest / Local Session'}</p>
+                <p><strong className="text-[#12263A]">Auth Provider:</strong> {cloudUser?.app_metadata?.provider || 'local'}</p>
+                <p><strong className="text-[#12263A]">User ID:</strong> <span className="font-mono text-[11px]">{cloudUser?.id || 'offline'}</span></p>
+              </div>
+            </div>
+          </div>
+
+          {/* Migration Action Buttons */}
+          <div className="p-4 rounded-xl border border-[#E8DFCF] space-y-3">
+            <h3 className="text-xs font-bold text-[#12263A]">Cloud Data Transfer & Migration</h3>
+            <p className="text-xs text-[#3E5368]">
+              Upload all local transactions (invoices, parties, items, bank records, ledger journals) to the cloud, or download cloud state into your offline cache.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                onClick={handlePushToCloud}
+                disabled={migrationRunning || !cloudUser}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#E0771A] hover:bg-[#B85D0F] text-white text-xs font-semibold shadow-2xs transition disabled:opacity-50 cursor-pointer"
+              >
+                <CloudUpload size={15} className={migrationRunning ? 'animate-bounce' : ''} />
+                <span>{migrationRunning ? 'Migrating Data...' : 'Push Local Data to Supabase'}</span>
+              </button>
+
+              <button
+                onClick={handlePullFromCloud}
+                disabled={migrationRunning || !cloudUser}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#E8DFCF] bg-white hover:bg-[#EAF5FD] text-[#12263A] text-xs font-semibold shadow-2xs transition disabled:opacity-50 cursor-pointer"
+              >
+                <CloudDownload size={15} className="text-[#1F86CC]" />
+                <span>Pull Cloud Data to Local Cache</span>
+              </button>
+
+              {!cloudUser && (
+                <span className="text-xs text-[#B7791F] font-medium">
+                  Please log in to synchronize with cloud database.
+                </span>
+              )}
+            </div>
+
+            {/* Migration Results Summary */}
+            {migrationSummary && (
+              <div className="mt-4 p-3.5 rounded-xl border border-[#E8DFCF] bg-[#FFFBF3] text-xs space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#12263A]">Migration Report:</span>
+                  <span className={`font-semibold ${migrationSummary.success ? 'text-[#1E8E5A]' : 'text-[#B7791F]'}`}>
+                    {migrationSummary.message}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[11px] pt-1">
+                  <div className="p-2 bg-white rounded border border-[#E8DFCF]">Parties: <strong>{migrationSummary.pushed.parties}</strong></div>
+                  <div className="p-2 bg-white rounded border border-[#E8DFCF]">Items: <strong>{migrationSummary.pushed.items}</strong></div>
+                  <div className="p-2 bg-white rounded border border-[#E8DFCF]">Invoices: <strong>{migrationSummary.pushed.invoices}</strong></div>
+                  <div className="p-2 bg-white rounded border border-[#E8DFCF]">Expenses: <strong>{migrationSummary.pushed.expenses}</strong></div>
+                  <div className="p-2 bg-white rounded border border-[#E8DFCF]">Vouchers: <strong>{migrationSummary.pushed.vouchers}</strong></div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Supabase Storage Buckets Status */}
+          <div className="border border-[#E8DFCF] rounded-xl p-4 space-y-3">
+            <h3 className="text-xs font-bold text-[#12263A] flex items-center gap-1.5">
+              <Layers size={14} className="text-[#1F86CC]" /> Supabase Storage Buckets
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              <div className="p-3 rounded-lg border border-[#E8DFCF] bg-white">
+                <p className="font-semibold text-[#12263A]">business-logos</p>
+                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Public bucket active</p>
+                <p className="text-[11px] text-[#3E5368] mt-1">Company logo branding assets</p>
+              </div>
+              <div className="p-3 rounded-lg border border-[#E8DFCF] bg-white">
+                <p className="font-semibold text-[#12263A]">invoice-attachments</p>
+                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Private bucket active</p>
+                <p className="text-[11px] text-[#3E5368] mt-1">Signed e-invoices, PDFs, PO slips</p>
+              </div>
+              <div className="p-3 rounded-lg border border-[#E8DFCF] bg-white">
+                <p className="font-semibold text-[#12263A]">expense-receipts</p>
+                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Private bucket active</p>
+                <p className="text-[11px] text-[#3E5368] mt-1">Vendor bills and payment receipts</p>
+              </div>
+              <div className="p-3 rounded-lg border border-[#E8DFCF] bg-white">
+                <p className="font-semibold text-[#12263A]">business-documents</p>
+                <p className="text-[10px] text-[#1E8E5A] font-semibold mt-0.5">● Private bucket active</p>
+                <p className="text-[11px] text-[#3E5368] mt-1">GST certificates and bank slips</p>
+              </div>
+            </div>
           </div>
         </div>
       )}
