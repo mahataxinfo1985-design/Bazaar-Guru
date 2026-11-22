@@ -1,0 +1,42 @@
+name: Bazaar-Guru CI Pipeline
+
+on:
+  push:
+    branches: [ main, ui-redesign, staging ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test_and_build:
+    name: Test, Security Audit & Build
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: test
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://lftbzabnaxvnhbamyhot.supabase.co' }}
+      VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmdGJ6YWJuYXh2bmhiYW15aG90Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUzMzMwMDcsImV4cCI6MjExMDkwOTAwN30.5UwIac8Qb9u1ZMUcj3Y0zzFQVSxKZiU_LG3o53EQNe8' }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: TypeScript Type Checking (Lint)
+        run: npm run lint
+
+      - name: Run GST Calculation Tests
+        run: npm run test:gst
+
+      - name: Run Comprehensive Accounting, Inventory & E2E Tests
+        run: npm run test
+
+      - name: Production Bundle Build
+        run: npm run build

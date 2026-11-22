@@ -7,17 +7,39 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT = Number(process.env.PORT || 3000);
+const PORT = Number(process.env.PORT || 3001);
+
+// Disable fingerprinting header
+app.disable('x-powered-by');
+
+// Security Headers Middleware
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+  next();
+});
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// REST Endpoints
+// REST Health Check Endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', time: new Date().toISOString() });
+  res.status(200).json({
+    status: 'ok',
+    app: 'Bazaar-Guru',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+  });
 });
 
-// Configure Vite or Static Files
+// Configure Vite or Static Production Files
 async function setupViteOrStatic() {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
@@ -33,9 +55,25 @@ async function setupViteOrStatic() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`InvoicePro server listening on http://localhost:${PORT}`);
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Bazaar-Guru server listening on http://localhost:${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
   });
+
+  // Graceful shutdown handling
+  const shutdown = (signal: string) => {
+    console.log(`\nReceived ${signal}. Shutting down Bazaar-Guru server gracefully...`);
+    server.close(() => {
+      console.log('HTTP server closed.');
+      process.exit(0);
+    });
+    setTimeout(() => {
+      console.error('Forcefully terminating server.');
+      process.exit(1);
+    }, 5000).unref();
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
 setupViteOrStatic();
