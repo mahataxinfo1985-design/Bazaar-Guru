@@ -17,25 +17,30 @@ export async function loadCompleteSettings(baseProfile: BusinessProfile): Promis
     const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      settings = {
-        ...DEFAULT_COMPLETE_SETTINGS,
-        ...parsed,
-        identity: { ...DEFAULT_COMPLETE_SETTINGS.identity, ...(parsed.identity || {}) },
-        contact: { ...DEFAULT_COMPLETE_SETTINGS.contact, ...(parsed.contact || {}) },
-        branding: { ...DEFAULT_COMPLETE_SETTINGS.branding, ...(parsed.branding || {}) },
-        primaryBank: { ...DEFAULT_COMPLETE_SETTINGS.primaryBank, ...(parsed.primaryBank || {}) },
-        financialYear: { ...DEFAULT_COMPLETE_SETTINGS.financialYear, ...(parsed.financialYear || {}) },
-        regional: { ...DEFAULT_COMPLETE_SETTINGS.regional, ...(parsed.regional || {}) },
-        invoiceDefaults: { ...DEFAULT_COMPLETE_SETTINGS.invoiceDefaults, ...(parsed.invoiceDefaults || {}) },
-        invoiceAppearance: { ...DEFAULT_COMPLETE_SETTINGS.invoiceAppearance, ...(parsed.invoiceAppearance || {}) },
-        documentDefaults: { ...DEFAULT_COMPLETE_SETTINGS.documentDefaults, ...(parsed.documentDefaults || {}) },
-        printExport: { ...DEFAULT_COMPLETE_SETTINGS.printExport, ...(parsed.printExport || {}) },
-        taxGst: { ...DEFAULT_COMPLETE_SETTINGS.taxGst, ...(parsed.taxGst || {}) },
-        inventory: { ...DEFAULT_COMPLETE_SETTINGS.inventory, ...(parsed.inventory || {}) },
-        paymentsBanking: { ...DEFAULT_COMPLETE_SETTINGS.paymentsBanking, ...(parsed.paymentsBanking || {}) },
-        notifications: { ...DEFAULT_COMPLETE_SETTINGS.notifications, ...(parsed.notifications || {}) },
-        security: { ...DEFAULT_COMPLETE_SETTINGS.security, ...(parsed.security || {}) }
-      };
+      // Purge legacy mock data if detected in local storage
+      if (parsed.identity?.tradeName?.includes('Aditya Retail')) {
+        localStorage.removeItem(SETTINGS_STORAGE_KEY);
+      } else {
+        settings = {
+          ...DEFAULT_COMPLETE_SETTINGS,
+          ...parsed,
+          identity: { ...DEFAULT_COMPLETE_SETTINGS.identity, ...(parsed.identity || {}) },
+          contact: { ...DEFAULT_COMPLETE_SETTINGS.contact, ...(parsed.contact || {}) },
+          branding: { ...DEFAULT_COMPLETE_SETTINGS.branding, ...(parsed.branding || {}) },
+          primaryBank: { ...DEFAULT_COMPLETE_SETTINGS.primaryBank, ...(parsed.primaryBank || {}) },
+          financialYear: { ...DEFAULT_COMPLETE_SETTINGS.financialYear, ...(parsed.financialYear || {}) },
+          regional: { ...DEFAULT_COMPLETE_SETTINGS.regional, ...(parsed.regional || {}) },
+          invoiceDefaults: { ...DEFAULT_COMPLETE_SETTINGS.invoiceDefaults, ...(parsed.invoiceDefaults || {}) },
+          invoiceAppearance: { ...DEFAULT_COMPLETE_SETTINGS.invoiceAppearance, ...(parsed.invoiceAppearance || {}) },
+          documentDefaults: { ...DEFAULT_COMPLETE_SETTINGS.documentDefaults, ...(parsed.documentDefaults || {}) },
+          printExport: { ...DEFAULT_COMPLETE_SETTINGS.printExport, ...(parsed.printExport || {}) },
+          taxGst: { ...DEFAULT_COMPLETE_SETTINGS.taxGst, ...(parsed.taxGst || {}) },
+          inventory: { ...DEFAULT_COMPLETE_SETTINGS.inventory, ...(parsed.inventory || {}) },
+          paymentsBanking: { ...DEFAULT_COMPLETE_SETTINGS.paymentsBanking, ...(parsed.paymentsBanking || {}) },
+          notifications: { ...DEFAULT_COMPLETE_SETTINGS.notifications, ...(parsed.notifications || {}) },
+          security: { ...DEFAULT_COMPLETE_SETTINGS.security, ...(parsed.security || {}) }
+        };
+      }
     }
   } catch (e) {
     console.warn('Failed to parse stored complete settings, using defaults', e);

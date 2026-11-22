@@ -13,7 +13,7 @@ import {
 // Storage & Sync
 import { 
   initializeLocalDatabase, idbPut, idbDelete, 
-  DEFAULT_BUSINESS_PROFILE 
+  DEFAULT_BUSINESS_PROFILE, getIDB 
 } from './services/storage/idb';
 import { 
   enqueueMutation, syncPendingMutations, getPendingMutations 
@@ -313,7 +313,7 @@ export default function App() {
   }, []);
 
   // Cloud-First: Authoritative Data Loading from Supabase
-  const loadCloudBusinessData = async (userId: string) => {
+  const loadCloudBusinessData = async (userId: string, authUser?: any) => {
     try {
       const [
         cloudProfile,
@@ -337,6 +337,26 @@ export default function App() {
 
       if (cloudProfile && cloudProfile.name) {
         setProfile(cloudProfile);
+      } else {
+        // Fresh cloud user profile - Clean state without mock company data
+        const activeUser = authUser || user || session?.user;
+        const userEmail = activeUser?.email || '';
+        const userBizName = activeUser?.user_metadata?.business_name || activeUser?.user_metadata?.name || '';
+        const cleanProfile: BusinessProfile = {
+          name: userBizName || (userEmail ? userEmail.split('@')[0] : ''),
+          gstin: '',
+          address: '',
+          state: 'Maharashtra',
+          phone: '',
+          email: userEmail,
+          bankName: '',
+          bankAccount: '',
+          bankIFSC: '',
+          bankBranch: '',
+          termsTemplate: '1. Goods once sold will not be returned or exchanged.\n2. Please mention Invoice Number on payment transfers.\n3. Payment is due within standard terms.',
+          upiId: ''
+        };
+        setProfile(cleanProfile);
       }
       setParties(cloudParties || []);
       setItems(cloudItems || []);
@@ -346,6 +366,31 @@ export default function App() {
       setJournalEntries(cloudJournals || []);
       if (cloudAccounts && cloudAccounts.length > 0) {
         setAccounts(cloudAccounts);
+      }
+
+      // Synchronize local IDB stores to strictly mirror authoritative cloud records
+      const db = await getIDB().catch(() => null);
+      if (db) {
+        try {
+          await db.clear('parties');
+          for (const p of (cloudParties || [])) await db.put('parties', p);
+
+          await db.clear('items');
+          for (const it of (cloudItems || [])) await db.put('items', it);
+
+          await db.clear('invoices');
+          for (const inv of (cloudInvoices || [])) await db.put('invoices', inv);
+
+          await db.clear('expenses');
+          for (const exp of (cloudExpenses || [])) await db.put('expenses', exp);
+
+          // If user has no active items or invoices, purge stale mock notifications
+          if ((!cloudItems || cloudItems.length === 0) && (!cloudInvoices || cloudInvoices.length === 0)) {
+            await db.clear('notifications').catch(() => {});
+          }
+        } catch (dbErr) {
+          console.warn('Could not synchronize IDB cache', dbErr);
+        }
       }
     } catch (err) {
       console.error('Error loading authoritative cloud data:', err);
@@ -379,7 +424,7 @@ export default function App() {
         }
 
         // Authenticated user -> Load their authoritative business records from Supabase
-        await loadCloudBusinessData(initialSession.user.id);
+        await loadCloudBusinessData(initialSession.user.id, initialSession.user);
         setCurrentTab('dashboard');
       } catch (err) {
         console.error('Failed to bootstrap application:', err);
@@ -406,7 +451,7 @@ export default function App() {
       setUser(newSession?.user ?? null);
 
       if ((event === 'SIGNED_IN' || event === 'USER_UPDATED') && newSession?.user) {
-        await loadCloudBusinessData(newSession.user.id);
+        await loadCloudBusinessData(newSession.user.id, newSession.user);
         setCurrentTab('dashboard');
         setIsAuthModalOpen(false);
       } else if (event === 'SIGNED_OUT') {
@@ -418,6 +463,23 @@ export default function App() {
         setExpenses([]);
         setPaymentVouchers([]);
         setJournalEntries([]);
+        setProfile(DEFAULT_BUSINESS_PROFILE);
+        const db = await getIDB().catch(() => null);
+        if (db) {
+          await Promise.all([
+            db.clear('parties').catch(() => {}),
+            db.clear('items').catch(() => {}),
+            db.clear('invoices').catch(() => {}),
+            db.clear('expenses').catch(() => {}),
+            db.clear('notifications').catch(() => {}),
+          ]);
+        }
+        localStorage.removeItem('invoice_pro_profile');
+        localStorage.removeItem('invoice_pro_parties');
+        localStorage.removeItem('invoice_pro_items');
+        localStorage.removeItem('invoice_pro_invoices');
+        localStorage.removeItem('bazaar_guru_complete_settings_v1');
+        localStorage.removeItem('bazaar_guru_dismissed_notifications_v1');
         setCurrentTab('landing');
       }
     });
@@ -1978,7 +2040,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setUserMenuOpen(prev => !prev)}
-                className="flex items-center gap-2 p-1.5 pl-2 pr-2.5 rounded-lg border border-[#E8DFCF] hover:bg-[#FFFBF3] transition cursor-pointer text-xs"
+                className="flex items-center gap-2 h-[38px] px-2.5 rounded-lg border border-[#E8DFCF] hover:bg-[#FFFBF3] transition cursor-pointer text-xs shadow-xs"
                 title="Account menu"
               >
                 <div className="w-7 h-7 rounded-full bg-[#E0771A] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">

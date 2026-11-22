@@ -1,18 +1,18 @@
 import { BusinessProfile, Party, Item, Invoice } from '../types';
 
 export const DEFAULT_BUSINESS_PROFILE: BusinessProfile = {
-  name: "Aditya Retail & Distribution Private Limited",
-  gstin: "27AAACA1234F1Z5", // Maharashtra (27)
-  address: "Plot B-12, Wagle Industrial Estate, Thane West, Mumbai, Maharashtra",
+  name: "",
+  gstin: "",
+  address: "",
   state: "Maharashtra",
-  phone: "+91 98765 43210",
-  email: "billing@adityaretail.in",
-  bankName: "State Bank of India",
-  bankAccount: "30512345678",
-  bankIFSC: "SBIN0004561",
-  bankBranch: "Thane East, Mumbai",
-  termsTemplate: "1. Goods once sold will not be returned or exchanged.\n2. Please mention Invoice Number on payment transfers.\n3. Payment is due within standard terms.\n4. Disputes, if any, shall be subject to Mumbai jurisdiction.",
-  upiId: "adityaretail@upi"
+  phone: "",
+  email: "",
+  bankName: "",
+  bankAccount: "",
+  bankIFSC: "",
+  bankBranch: "",
+  termsTemplate: "1. Goods once sold will not be returned or exchanged.\n2. Please mention Invoice Number on payment transfers.\n3. Payment is due within standard terms.",
+  upiId: ""
 };
 
 export const MOCK_PARTIES: Party[] = [

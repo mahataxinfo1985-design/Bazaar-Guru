@@ -219,48 +219,48 @@ export const DEFAULT_COMPLETE_SETTINGS: CompleteBusinessSettings = {
   updatedAt: new Date().toISOString(),
   
   identity: {
-    tradeName: 'Aditya Retail & Distribution Private Limited',
-    legalName: 'Aditya Retail & Distribution Private Limited',
-    pan: 'AAACA1234F',
-    gstin: '27AAACA1234F1Z5',
+    tradeName: '',
+    legalName: '',
+    pan: '',
+    gstin: '',
     constitution: 'pvt_ltd',
     gstType: 'regular',
-    cin: 'U72900MH2021PTC123456',
-    msmeRegNo: 'UDYAM-MH-01-0012345'
+    cin: '',
+    msmeRegNo: ''
   },
   contact: {
-    address: 'Plot B-12, Wagle Industrial Estate, Thane West',
-    city: 'Mumbai',
+    address: '',
+    city: '',
     state: 'Maharashtra',
-    pincode: '400604',
-    phone: '+91 98765 43210',
-    mobile: '+91 98765 43211',
-    email: 'billing@adityaretail.in',
-    supportEmail: 'support@adityaretail.in',
-    website: 'https://adityaretail.in'
+    pincode: '',
+    phone: '',
+    mobile: '',
+    email: '',
+    supportEmail: '',
+    website: ''
   },
   branding: {
     logoUrl: '',
     signatureUrl: '',
-    tagline: 'Reliable GST Invoicing & Accounting Software That Works Offline',
+    tagline: '',
     showQrOnInvoice: true
   },
   primaryBank: {
-    bankName: 'State Bank of India',
-    accountHolderName: 'Aditya Retail & Distribution Private Limited',
-    bankAccount: '30512345678',
-    bankIFSC: 'SBIN0004561',
-    bankBranch: 'Wagle Estate Branch, Thane',
-    upiId: 'adityaretail@upi',
+    bankName: '',
+    accountHolderName: '',
+    bankAccount: '',
+    bankIFSC: '',
+    bankBranch: '',
+    upiId: '',
     upiQrEnabled: true
   },
   secondaryBank: {
-    bankName: 'HDFC Bank Ltd',
-    accountHolderName: 'Aditya Retail & Distribution Private Limited',
-    bankAccount: '50200012345678',
-    bankIFSC: 'HDFC0000123',
-    bankBranch: 'Naupada Branch, Thane',
-    upiId: 'adityaretail@hdfcbank',
+    bankName: '',
+    accountHolderName: '',
+    bankAccount: '',
+    bankIFSC: '',
+    bankBranch: '',
+    upiId: '',
     upiQrEnabled: false
   },
   financialYear: {
@@ -360,35 +360,7 @@ export const DEFAULT_COMPLETE_SETTINGS: CompleteBusinessSettings = {
     chequeGraceDays: 3,
     autoRemindPdcDays: 3
   },
-  team: [
-    {
-      id: 'usr_owner_1',
-      name: 'Aditya Sharma',
-      email: 'owner@adityaretail.in',
-      role: 'owner',
-      isActive: true,
-      assignedWarehouseId: 'wh_main',
-      createdAt: '2024-01-01T00:00:00.000Z'
-    },
-    {
-      id: 'usr_acc_1',
-      name: 'Rajesh Gupta',
-      email: 'accounts@adityaretail.in',
-      role: 'accountant',
-      isActive: true,
-      assignedWarehouseId: 'wh_main',
-      createdAt: '2024-02-15T00:00:00.000Z'
-    },
-    {
-      id: 'usr_sales_1',
-      name: 'Pooja Verma',
-      email: 'sales@adityaretail.in',
-      role: 'sales_staff',
-      isActive: true,
-      assignedWarehouseId: 'wh_main',
-      createdAt: '2024-03-10T00:00:00.000Z'
-    }
-  ],
+  team: [],
   notifications: {
     alertLowStock: true,
     alertExpiringBatch: true,

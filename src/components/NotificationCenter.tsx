@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bell, Check, Trash2, AlertTriangle, AlertCircle, Info, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Bell, Check, Trash2, AlertTriangle, AlertCircle, Info, CheckCircle2 } from 'lucide-react';
 import { BusinessNotification } from '../types/workspace';
 import { 
   generateSystemNotifications, getAllNotifications, 
-  markNotificationAsRead, markAllNotificationsAsRead, deleteNotification 
+  markNotificationAsRead, markAllNotificationsAsRead, deleteNotification,
+  clearAllNotifications
 } from '../services/notifications/notificationService';
 
 interface NotificationCenterProps {
@@ -62,6 +63,11 @@ export default function NotificationCenter({ onNavigate }: NotificationCenterPro
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
+  const handleClearAll = async () => {
+    await clearAllNotifications();
+    setNotifications([]);
+  };
+
   const handleNotificationClick = async (notif: BusinessNotification) => {
     if (!notif.isRead) {
       await markNotificationAsRead(notif.id);
@@ -89,15 +95,15 @@ export default function NotificationCenter({ onNavigate }: NotificationCenterPro
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Bell Trigger Button */}
+      {/* Bell Trigger Button - Vertically and Horizontally Aligned (h-[38px] w-[38px]) */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-[#3E5368] hover:text-[#12263A] hover:bg-[#EAF5FD] rounded-lg transition cursor-pointer"
+        className="relative flex items-center justify-center h-[38px] w-[38px] text-[#3E5368] hover:text-[#12263A] hover:bg-[#FFFBF3] rounded-lg transition cursor-pointer border border-[#E8DFCF] shadow-xs"
         title="Notifications"
       >
-        <Bell size={18} />
+        <Bell size={17} />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#E0771A] text-[10px] font-bold text-white shadow-xs">
+          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-[#E0771A] text-[10px] font-bold text-white shadow-xs">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -115,20 +121,30 @@ export default function NotificationCenter({ onNavigate }: NotificationCenterPro
                 </span>
               )}
             </div>
-            {unreadCount > 0 && (
-              <button
-                onClick={handleMarkAllRead}
-                className="text-[12px] font-medium text-[#14689F] hover:underline transition cursor-pointer"
-              >
-                Mark all read
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {unreadCount > 0 && (
+                <button
+                  onClick={handleMarkAllRead}
+                  className="text-[12px] font-medium text-[#14689F] hover:underline transition cursor-pointer"
+                >
+                  Mark all read
+                </button>
+              )}
+              {notifications.length > 0 && (
+                <button
+                  onClick={handleClearAll}
+                  className="text-[12px] font-medium text-[#C23B3B] hover:underline transition cursor-pointer"
+                >
+                  Clear all
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="max-h-80 overflow-y-auto divide-y divide-[#E8DFCF]/50">
             {notifications.length === 0 ? (
               <div className="p-8 text-center text-[13px] text-[#3E5368]">
-                No new notifications. Everything is running smoothly.
+                No notifications. Everything is running smoothly.
               </div>
             ) : (
               notifications.map((notif) => (
@@ -164,7 +180,7 @@ export default function NotificationCenter({ onNavigate }: NotificationCenterPro
                     <button
                       onClick={(e) => handleDelete(notif.id, e)}
                       className="p-1 text-[#3E5368] hover:text-[#C23B3B] rounded transition cursor-pointer"
-                      title="Dismiss"
+                      title="Dismiss permanently"
                     >
                       <Trash2 size={13} />
                     </button>

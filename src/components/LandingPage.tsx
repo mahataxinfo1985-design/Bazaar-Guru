@@ -93,9 +93,9 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
   return (
     <div className="w-full bg-[#FFF8EC] text-[#12263A] min-h-screen selection:bg-[#E0771A]/20">
       {/* 1. Header & Navigation */}
-      <header className="sticky top-0 z-40 bg-[#FFF8EC]/90 backdrop-blur-md border-b border-[#E8DFCF] px-4 sm:px-8 py-3.5 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-[#FFF8EC]/90 backdrop-blur-md border-b border-[#E8DFCF] px-4 sm:px-8 py-3.5 flex items-center justify-between relative">
         {/* Logo */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 z-10 min-w-[140px]">
           <img 
             src="/logo.png" 
             alt="Bazaar-Guru" 
@@ -104,16 +104,16 @@ export default function LandingPage({ onEnterApp, onLoginClick }: LandingPagePro
           />
         </div>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8 text-[14px] font-medium text-[#3E5368]">
-          <a href="#features" className="hover:text-[#E0771A] transition">Features</a>
-          <a href="#how-it-works" className="hover:text-[#E0771A] transition">How It Works</a>
-          <a href="#compliance" className="hover:text-[#E0771A] transition">GST Compliance</a>
-          <a href="#faq" className="hover:text-[#E0771A] transition">FAQ</a>
+        {/* Center: Desktop Nav - Exactly Center-Aligned */}
+        <nav className="hidden md:flex items-center justify-center gap-8 text-[14px] font-medium text-[#3E5368] absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+          <a href="#features" className="hover:text-[#E0771A] transition py-1">Features</a>
+          <a href="#how-it-works" className="hover:text-[#E0771A] transition py-1">How It Works</a>
+          <a href="#compliance" className="hover:text-[#E0771A] transition py-1">GST Compliance</a>
+          <a href="#faq" className="hover:text-[#E0771A] transition py-1">FAQ</a>
         </nav>
 
         {/* CTAs with StarBorder */}
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-3 z-10 min-w-[140px] justify-end">
           <StarBorder
             onClick={onLoginClick || onEnterApp}
             color="#1F86CC"

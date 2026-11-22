@@ -296,8 +296,9 @@ export default function SettingsView({
 
   // Reset database handler
   const handleExecuteReset = async () => {
-    if (resetConfirmationInput.trim() !== settings.identity.tradeName.trim()) {
-      alert('Business name does not match. Reset cancelled.');
+    const requiredConfirmation = settings.identity.tradeName?.trim() || 'RESET';
+    if (resetConfirmationInput.trim() !== requiredConfirmation) {
+      alert(`Confirmation does not match "${requiredConfirmation}". Reset cancelled.`);
       return;
     }
     try {
@@ -306,13 +307,20 @@ export default function SettingsView({
         'stock_transfers', 'stock_adjustments', 'product_batches', 'accounts',
         'journal_entries', 'bank_accounts', 'cash_accounts', 'payment_vouchers',
         'cheque_records', 'sync_outbox', 'sync_conflicts', 'audit_events',
-        'quotations', 'sales_orders', 'delivery_challans', 'purchase_orders'
+        'quotations', 'sales_orders', 'delivery_challans', 'purchase_orders',
+        'goods_receipt_notes', 'business_documents', 'notifications'
       ];
       for (const st of stores) {
         await idbClear(st as any).catch(() => {});
       }
+      localStorage.removeItem('invoice_pro_profile');
+      localStorage.removeItem('invoice_pro_parties');
+      localStorage.removeItem('invoice_pro_items');
+      localStorage.removeItem('invoice_pro_invoices');
+      localStorage.removeItem('bazaar_guru_complete_settings_v1');
+      localStorage.removeItem('bazaar_guru_dismissed_notifications_v1');
       setIsResetModalOpen(false);
-      alert('Local database successfully reset.');
+      alert('Local database and cache successfully reset.');
       window.location.reload();
     } catch (err: any) {
       alert(`Error during reset: ${err.message}`);
@@ -2512,11 +2520,11 @@ export default function SettingsView({
             </div>
             <p className="text-xs text-[#3E5368] leading-relaxed">
               This will erase all locally stored data including invoices, parties, items, bank records, and vouchers.
-              To confirm, please type your exact company name: <strong className="text-[#12263A]">{settings.identity.tradeName}</strong>
+              To confirm, please type: <strong className="text-[#12263A]">{settings.identity.tradeName?.trim() || 'RESET'}</strong>
             </p>
             <input
               type="text"
-              placeholder="Type company name exactly"
+              placeholder={settings.identity.tradeName?.trim() || 'RESET'}
               value={resetConfirmationInput}
               onChange={(e) => setResetConfirmationInput(e.target.value)}
               className="w-full h-10 px-3 text-xs rounded-lg border border-[#E8DFCF] bg-[#FFFBF3] text-[#12263A] focus:outline-hidden focus:border-[#C23B3B]"
@@ -2533,7 +2541,7 @@ export default function SettingsView({
               </button>
               <button
                 onClick={handleExecuteReset}
-                disabled={resetConfirmationInput.trim() !== settings.identity.tradeName.trim()}
+                disabled={resetConfirmationInput.trim() !== (settings.identity.tradeName?.trim() || 'RESET')}
                 className="px-4 py-2 rounded-lg bg-[#C23B3B] hover:bg-[#A82B2B] text-white text-xs font-semibold transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-2xs"
               >
                 Confirm & Reset

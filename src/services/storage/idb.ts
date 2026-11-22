@@ -606,9 +606,13 @@ export async function initializeLocalDatabase(): Promise<{
 
   // Check if profile exists
   let profile = await db.get('profile', 'primary_profile');
-  if (!profile) {
+  if (!profile || profile.name?.includes('Aditya Retail')) {
     const saved = localStorage.getItem('invoice_pro_profile');
-    const initProfile = saved ? JSON.parse(saved) : DEFAULT_BUSINESS_PROFILE;
+    let initProfile = saved ? JSON.parse(saved) : DEFAULT_BUSINESS_PROFILE;
+    if (initProfile?.name?.includes('Aditya Retail')) {
+      localStorage.removeItem('invoice_pro_profile');
+      initProfile = DEFAULT_BUSINESS_PROFILE;
+    }
     profile = { ...initProfile, id: 'primary_profile' };
     await db.put('profile', profile);
   }
